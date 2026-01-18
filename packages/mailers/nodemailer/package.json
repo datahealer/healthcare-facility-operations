@@ -20,7 +20,7 @@
     "@kit/mailers-shared": "workspace:*",
     "@kit/prettier-config": "workspace:*",
     "@kit/tsconfig": "workspace:*",
-    "@types/nodemailer": "7.0.4",
+    "@types/nodemailer": "7.0.5",
     "zod": "catalog:"
   },
   "typesVersions": {

@@ -16,7 +16,7 @@
     "@next/eslint-plugin-next": "catalog:",
     "@types/eslint": "9.6.1",
     "eslint-config-next": "catalog:",
-    "eslint-config-turbo": "^2.7.3"
+    "eslint-config-turbo": "^2.7.5"
   },
   "devDependencies": {
     "@kit/prettier-config": "workspace:*",

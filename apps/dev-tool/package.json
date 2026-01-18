@@ -31,7 +31,7 @@
     "@kit/ui": "workspace:*",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "catalog:",
-    "@types/nodemailer": "7.0.4",
+    "@types/nodemailer": "7.0.5",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "1.0.0",
