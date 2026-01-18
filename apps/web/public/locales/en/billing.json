@@ -1,4 +1,8 @@
 {
+  "units": {
+    "member_one": "member",
+    "member_other": "members"
+  },
   "subscriptionTabSubheading": "Manage your Subscription and Billing",
   "planCardTitle": "Your Plan",
   "planCardDescription": "Below are the details of your current plan. You can change your plan or cancel your subscription at any time.",

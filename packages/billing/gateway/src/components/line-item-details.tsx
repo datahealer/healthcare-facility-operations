@@ -19,7 +19,8 @@ export function LineItemDetails(
     selectedInterval?: string | undefined;
   }>,
 ) {
-  const locale = useTranslation().i18n.language;
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
   const currencyCode = props?.currency.toLowerCase();
 
   return (
@@ -115,7 +116,7 @@ export function LineItemDetails(
                     <Trans
                       i18nKey={'billing:perUnit'}
                       values={{
-                        unit: item.unit,
+                        unit: t(`billing:units.${item.unit}`, { count: 1 }),
                       }}
                     />
                   </span>
@@ -171,7 +172,7 @@ export function LineItemDetails(
                       <Trans
                         i18nKey={'billing:perUnit'}
                         values={{
-                          unit: item.unit,
+                          unit: t(`billing:units.${item.unit}`, { count: 1 }),
                         }}
                       />
                     </span>
@@ -223,8 +224,17 @@ function Tiers({
   currency: string;
   item: z.infer<typeof LineItemSchema>;
 }) {
-  const unit = item.unit;
-  const locale = useTranslation().i18n.language;
+  const unitKey = `billing:units.${item.unit}`;
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
+
+  // Helper to safely convert tier values to numbers for pluralization
+  // Falls back to plural form (2) for 'unlimited' values
+  const getSafeCount = (value: number | 'unlimited' | string): number => {
+    if (value === 'unlimited') return 2;
+    const num = typeof value === 'number' ? value : Number(value);
+    return Number.isNaN(num) ? 2 : num;
+  };
 
   const tiers = item.tiers?.map((tier, index) => {
     const tiersLength = item.tiers?.length ?? 0;
@@ -257,8 +267,10 @@ function Tiers({
               <Trans
                 i18nKey={'billing:andAbove'}
                 values={{
-                  unit,
-                  previousTier: (Number(previousTierFrom) as number) - 1,
+                  unit: t(unitKey, {
+                    count: getSafeCount(previousTierFrom) - 1,
+                  }),
+                  previousTier: getSafeCount(previousTierFrom) - 1,
                 }}
               />
             </span>
@@ -268,7 +280,7 @@ function Tiers({
               <Trans
                 i18nKey={'billing:forEveryUnit'}
                 values={{
-                  unit,
+                  unit: t(unitKey, { count: 1 }),
                 }}
               />
             </span>
@@ -277,7 +289,13 @@ function Tiers({
         <If condition={!isLastTier}>
           <If condition={isIncluded}>
             <span>
-              <Trans i18nKey={'billing:includedUpTo'} values={{ unit, upTo }} />
+              <Trans
+                i18nKey={'billing:includedUpTo'}
+                values={{
+                  unit: t(unitKey, { count: getSafeCount(upTo) }),
+                  upTo,
+                }}
+              />
             </span>
           </If>{' '}
           <If condition={!isIncluded}>
@@ -291,7 +309,11 @@ function Tiers({
             <span>
               <Trans
                 i18nKey={'billing:fromPreviousTierUpTo'}
-                values={{ previousTierFrom, unit, upTo }}
+                values={{
+                  previousTierFrom,
+                  unit: t(unitKey, { count: getSafeCount(previousTierFrom) }),
+                  upTo,
+                }}
               />
             </span>
           </If>
