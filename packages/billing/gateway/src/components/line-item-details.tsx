@@ -183,7 +183,6 @@ export function LineItemDetails(
                   </If>
                 </span>
 
-
                 <If condition={!item.tiers?.length}>
                   <span>-</span>
 

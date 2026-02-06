@@ -162,10 +162,12 @@ function PricingItem(
   const i18nKey = `billing:units.${lineItem.unit}`;
 
   const unitLabel = lineItem?.unit
-    ? i18n.exists(i18nKey) ? t(i18nKey, {
-      count: 1,
-      defaultValue: lineItem.unit,
-    }) : lineItem.unit
+    ? i18n.exists(i18nKey)
+      ? t(i18nKey, {
+          count: 1,
+          defaultValue: lineItem.unit,
+        })
+      : lineItem.unit
     : '';
 
   const isDefaultSeatUnit = lineItem?.unit === 'member';

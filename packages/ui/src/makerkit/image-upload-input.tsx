@@ -1,6 +1,6 @@
 'use client';
 
-import type { FormEvent, MouseEventHandler } from 'react';
+import type { MouseEventHandler } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import Image from 'next/image';
@@ -39,40 +39,41 @@ export const ImageUploadInput: React.FC<Props> =
       fileName: '',
     });
 
-    const onInputChange = useCallback(
-      (e: FormEvent<HTMLInputElement>) => {
-        e.preventDefault();
+    const onInputChange: React.InputEventHandler<HTMLInputElement> =
+      useCallback(
+        (e) => {
+          e.preventDefault();
 
-        const files = e.currentTarget.files;
+          const files = e.currentTarget.files;
 
-        if (files?.length) {
-          const file = files[0];
+          if (files?.length) {
+            const file = files[0];
 
-          if (!file) {
-            return;
-          }
+            if (!file) {
+              return;
+            }
 
-          const data = URL.createObjectURL(file);
+            const data = URL.createObjectURL(file);
 
-          setState({
-            image: data,
-            fileName: file.name,
-          });
-
-          if (onValueChange) {
-            onValueChange({
+            setState({
               image: data,
-              file,
+              fileName: file.name,
             });
-          }
-        }
 
-        if (onInput) {
-          onInput(e);
-        }
-      },
-      [onInput, onValueChange],
-    );
+            if (onValueChange) {
+              onValueChange({
+                image: data,
+                file,
+              });
+            }
+          }
+
+          if (onInput) {
+            onInput(e);
+          }
+        },
+        [onInput, onValueChange],
+      );
 
     const onRemove = useCallback(() => {
       setState({

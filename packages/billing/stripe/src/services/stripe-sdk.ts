@@ -2,7 +2,7 @@ import 'server-only';
 
 import { StripeServerEnvSchema } from '../schema/stripe-server-env.schema';
 
-const STRIPE_API_VERSION = '2025-12-15.clover';
+const STRIPE_API_VERSION = '2026-01-28.clover';
 
 /**
  * @description returns a Stripe instance

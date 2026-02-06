@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { ChevronDownIcon, Loader2Icon } from 'lucide-react';
+import { ChevronDownIcon } from 'lucide-react';
 import { Subject, debounceTime } from 'rxjs';
 
 import { Button } from '@kit/ui/button';
@@ -32,10 +32,7 @@ import {
 } from '@kit/ui/table';
 import { cn } from '@kit/ui/utils';
 
-import {
-  translateWithAIAction,
-  updateTranslationAction,
-} from '../lib/server-actions';
+import { updateTranslationAction } from '../lib/server-actions';
 import type { TranslationData, Translations } from '../lib/translations-loader';
 
 function flattenTranslations(
@@ -64,7 +61,6 @@ export function TranslationsComparison({
   translations: Translations;
 }) {
   const [search, setSearch] = useState('');
-  const [isTranslating, setIsTranslating] = useState(false);
 
   // Create RxJS Subject for handling translation updates
   const subject$ = useMemo(
@@ -131,60 +127,6 @@ export function TranslationsComparison({
 
     setSelectedLocales(newSelectedLocales);
   };
-
-  const handleTranslateWithAI = useCallback(async () => {
-    try {
-      setIsTranslating(true);
-
-      // Get missing translations for the selected namespace
-      const missingTranslations: Record<string, string> = {};
-      const baseTranslations = flattenedTranslations[baseLocale] ?? {};
-
-      for (const locale of visibleLocales) {
-        if (locale === baseLocale) continue;
-
-        const localeTranslations = flattenedTranslations[locale] ?? {};
-
-        for (const [key, value] of Object.entries(baseTranslations)) {
-          if (!localeTranslations[key]) {
-            missingTranslations[key] = value;
-          }
-        }
-
-        if (Object.keys(missingTranslations).length > 0) {
-          await translateWithAIAction({
-            sourceLocale: baseLocale,
-            targetLocale: locale,
-            namespace: selectedNamespace,
-            translations: missingTranslations,
-          });
-
-          toast.success(`Translated missing strings to ${locale}`);
-        }
-      }
-    } catch (error) {
-      toast.error('Failed to translate: ' + (error as Error).message);
-    } finally {
-      setIsTranslating(false);
-    }
-  }, [flattenedTranslations, baseLocale, visibleLocales, selectedNamespace]);
-
-  // Calculate if there are any missing translations
-  const hasMissingTranslations = useMemo(() => {
-    if (!flattenedTranslations || !baseLocale || !visibleLocales) return false;
-
-    const baseTranslations = flattenedTranslations[baseLocale] ?? {};
-
-    return visibleLocales.some((locale) => {
-      if (locale === baseLocale) return false;
-
-      const localeTranslations = flattenedTranslations[locale] ?? {};
-
-      return Object.keys(baseTranslations).some(
-        (key) => !localeTranslations[key],
-      );
-    });
-  }, [flattenedTranslations, baseLocale, visibleLocales]);
 
   // Set up subscription to handle debounced updates
   useEffect(() => {
@@ -261,22 +203,6 @@ export function TranslationsComparison({
                 ))}
               </SelectContent>
             </Select>
-          </div>
-
-          <div>
-            <Button
-              onClick={handleTranslateWithAI}
-              disabled={isTranslating || !hasMissingTranslations}
-            >
-              {isTranslating ? (
-                <>
-                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
-                  Translating...
-                </>
-              ) : (
-                'Translate missing with AI'
-              )}
-            </Button>
           </div>
         </div>
       </div>

@@ -152,14 +152,12 @@ test.describe('Admin', () => {
         ),
       ]);
 
-      // TODO: find out why we need to reload the page only in CI
-      await page.reload();
-
       // Verify ban badge is removed
       await expect(page.getByText('Banned')).not.toBeVisible();
 
       // Log out
       await page.context().clearCookies();
+      await page.reload();
 
       // Verify user can log in again
       await page.goto('/auth/sign-in');

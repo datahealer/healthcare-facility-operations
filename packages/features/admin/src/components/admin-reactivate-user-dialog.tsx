@@ -52,7 +52,10 @@ export function AdminReactivateUserDialog(
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <ReactivateUserForm userId={props.userId} onSuccess={() => setOpen(false)} />
+        <ReactivateUserForm
+          userId={props.userId}
+          onSuccess={() => setOpen(false)}
+        />
       </AlertDialogContent>
     </AlertDialog>
   );

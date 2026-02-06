@@ -1,11 +1,12 @@
-import { initializeServerI18n } from '@kit/i18n/server';
 import { createI18nSettings } from '@kit/i18n';
+import { initializeServerI18n } from '@kit/i18n/server';
 
 export function initializeEmailI18n(params: {
   language: string | undefined;
   namespace: string;
 }) {
-  const language = params.language ?? process.env.NEXT_PUBLIC_DEFAULT_LOCALE ?? 'en';
+  const language =
+    params.language ?? process.env.NEXT_PUBLIC_DEFAULT_LOCALE ?? 'en';
 
   return initializeServerI18n(
     createI18nSettings({
