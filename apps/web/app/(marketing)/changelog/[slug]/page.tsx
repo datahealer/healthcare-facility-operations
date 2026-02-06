@@ -72,10 +72,10 @@ export async function generateMetadata({
       url: data.entry.url,
       images: image
         ? [
-            {
-              url: image,
-            },
-          ]
+          {
+            url: image,
+          },
+        ]
         : [],
     },
     twitter: {
