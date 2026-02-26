@@ -133,7 +133,7 @@ class TeamBillingService {
         `Error creating the checkout session`,
       );
 
-      throw new Error(`Checkout not created`);
+      throw new Error(`Checkout not created`, { cause: error });
     }
   }
 
@@ -234,7 +234,7 @@ class TeamBillingService {
         `Billing Portal session was not created`,
       );
 
-      throw new Error(`Error creating Billing Portal`);
+      throw new Error(`Error creating Billing Portal`, { cause: error });
     }
   }
 

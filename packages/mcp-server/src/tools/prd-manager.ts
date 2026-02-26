@@ -967,7 +967,11 @@ export class PRDManager {
 }
 
 // MCP Server Tool Registration
-export function registerPRDTools(server: McpServer) {
+export function registerPRDTools(server: McpServer, rootPath?: string) {
+  if (rootPath) {
+    PRDManager.setRootPath(rootPath);
+  }
+
   createListPRDsTool(server);
   createGetPRDTool(server);
   createCreatePRDTool(server);

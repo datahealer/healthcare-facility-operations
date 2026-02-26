@@ -27,8 +27,13 @@ type TextContent = {
   text: string;
 };
 
-export function registerKitTranslationsTools(server: McpServer) {
-  const service = createKitTranslationsService(createKitTranslationsDeps());
+export function registerKitTranslationsTools(
+  server: McpServer,
+  rootPath?: string,
+) {
+  const service = createKitTranslationsService(
+    createKitTranslationsDeps(rootPath),
+  );
 
   server.registerTool(
     'kit_translations_list',

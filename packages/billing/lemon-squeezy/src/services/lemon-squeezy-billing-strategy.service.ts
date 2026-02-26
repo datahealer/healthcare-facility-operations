@@ -101,7 +101,9 @@ export class LemonSqueezyBillingStrategyService implements BillingStrategyProvid
         'Failed to create billing portal session',
       );
 
-      throw new Error('Failed to create billing portal session');
+      throw new Error('Failed to create billing portal session', {
+        cause: error,
+      });
     }
 
     logger.info(ctx, 'Billing portal session created successfully');
@@ -138,7 +140,7 @@ export class LemonSqueezyBillingStrategyService implements BillingStrategyProvid
           'Failed to cancel subscription',
         );
 
-        throw new Error('Failed to cancel subscription');
+        throw new Error('Failed to cancel subscription', { cause: error });
       }
 
       logger.info(ctx, 'Subscription cancelled successfully');

@@ -77,7 +77,7 @@ class DeletePersonalAccountService {
         'Encountered an error deleting user',
       );
 
-      throw new Error('Error deleting user');
+      throw new Error('Error deleting user', { cause: error });
     }
   }
 

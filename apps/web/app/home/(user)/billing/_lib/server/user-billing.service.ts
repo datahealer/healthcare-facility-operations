@@ -118,7 +118,7 @@ class UserBillingService {
         `Checkout session not created due to an error`,
       );
 
-      throw new Error(`Failed to create a checkout session`);
+      throw new Error(`Failed to create a checkout session`, { cause: error });
     }
   }
 
@@ -177,6 +177,7 @@ class UserBillingService {
 
       throw new Error(
         `Encountered an error creating the Billing Portal session`,
+        { cause: error },
       );
     }
 

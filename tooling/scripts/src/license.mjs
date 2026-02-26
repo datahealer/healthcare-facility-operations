@@ -1,40 +1,35 @@
-import { execSync } from 'child_process';
-import { readFileSync } from 'fs';
-import path from 'path';
+import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 
 const endpoint = 'https://makerkit.dev/api/license/check';
+
+function runGitCommand(...args) {
+  try {
+    return execFileSync('git', args, {
+      encoding: 'utf8',
+      stdio: 'pipe',
+    }).trim();
+  } catch {
+    return '';
+  }
+}
 
 async function checkLicense() {
   let gitUser, gitEmail;
 
-  try {
-    gitUser = execSync('git config user.username').toString().trim();
+  gitUser = runGitCommand('config', 'user.username');
 
-    if (!gitUser) {
-      gitUser = execSync('git config user.name').toString().trim();
-    }
-
-    gitEmail = execSync('git config user.email').toString().trim();
-  } catch (error) {
-    console.warn(`Error checking git user: ${error.message}`);
+  if (!gitUser) {
+    gitUser = runGitCommand('config', 'user.name');
   }
 
-  if (!gitUser && !gitEmail) {
+  gitEmail = runGitCommand('config', 'user.email');
+
+  if (!gitUser || !gitEmail) {
     throw new Error(
       "Please set the git user name with the command 'git config user.username <username>'. The username needs to match the GitHub username in your Makerkit organization.",
     );
-  }
-
-  try {
-    gitEmail = execSync('git config user.email').toString().trim();
-  } catch (error) {
-    console.info('Error getting git config:', error.message);
-
-    if (!gitUser) {
-      throw new Error(
-        "Please set the git user name with the command 'git config user.username <username>'. The username needs to match the GitHub username in your Makerkit organization.",
-      );
-    }
   }
 
   const searchParams = new URLSearchParams();
@@ -77,9 +72,7 @@ function checkVisibility() {
   let remoteUrl;
 
   try {
-    remoteUrl = execSync('git config --get remote.origin.url')
-      .toString()
-      .trim();
+    remoteUrl = runGitCommand('config', '--get', 'remote.origin.url');
   } catch (error) {
     return Promise.resolve();
   }
@@ -158,6 +151,8 @@ async function main() {
       console.error(`Check failed with error: ${error.message}`);
       process.exit(1);
     });
+
+    process.exit(0);
   } catch (error) {
     console.error(`Check failed with error: ${error.message}`);
 

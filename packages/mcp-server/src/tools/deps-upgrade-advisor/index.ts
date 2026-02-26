@@ -1,7 +1,6 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { execFile } from 'node:child_process';
-import { promisify } from 'node:util';
 
+import { execFileAsync } from '../../lib/process-utils';
 import {
   type DepsUpgradeAdvisorDeps,
   createDepsUpgradeAdvisorService,
@@ -11,12 +10,13 @@ import {
   DepsUpgradeAdvisorOutputSchema,
 } from './schema';
 
-const execFileAsync = promisify(execFile);
-
-export function registerDepsUpgradeAdvisorTool(server: McpServer) {
+export function registerDepsUpgradeAdvisorTool(
+  server: McpServer,
+  rootPath?: string,
+) {
   return registerDepsUpgradeAdvisorToolWithDeps(
     server,
-    createDepsUpgradeAdvisorDeps(),
+    createDepsUpgradeAdvisorDeps(rootPath),
   );
 }
 
@@ -63,9 +63,9 @@ export function registerDepsUpgradeAdvisorToolWithDeps(
   );
 }
 
-function createDepsUpgradeAdvisorDeps(): DepsUpgradeAdvisorDeps {
-  const rootPath = process.cwd();
-
+function createDepsUpgradeAdvisorDeps(
+  rootPath = process.cwd(),
+): DepsUpgradeAdvisorDeps {
   return {
     async executeCommand(command, args) {
       try {

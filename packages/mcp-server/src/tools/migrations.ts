@@ -1,33 +1,60 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { execSync } from 'node:child_process';
 import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { z } from 'zod/v3';
 
+import { crossExecFileSync } from '../lib/process-utils';
+
 export class MigrationsTool {
+  private static _rootPath = process.cwd();
+
+  static setRootPath(path: string) {
+    this._rootPath = path;
+  }
+
+  private static get MIGRATIONS_DIR() {
+    return join(this._rootPath, 'apps', 'web', 'supabase', 'migrations');
+  }
+
   static GetMigrations() {
-    return readdir(
-      join(process.cwd(), 'apps', 'web', 'supabase', 'migrations'),
-    );
+    return readdir(this.MIGRATIONS_DIR);
   }
 
   static getMigrationContent(path: string) {
-    return readFile(
-      join(process.cwd(), 'apps', 'web', 'supabase', 'migrations', path),
-      'utf8',
-    );
+    return readFile(join(this.MIGRATIONS_DIR, path), 'utf8');
   }
 
   static CreateMigration(name: string) {
-    return execSync(`pnpm --filter web supabase migrations new ${name}`);
+    if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
+      throw new Error(
+        'Migration name must contain only letters, numbers, hyphens, or underscores',
+      );
+    }
+
+    return crossExecFileSync(
+      'pnpm',
+      ['--filter', 'web', 'supabase', 'migrations', 'new', name],
+      { cwd: this._rootPath },
+    );
   }
 
   static Diff() {
-    return execSync(`pnpm --filter web supabase db diff`);
+    return crossExecFileSync(
+      'pnpm',
+      ['--filter', 'web', 'supabase', 'db', 'diff'],
+      { cwd: this._rootPath },
+    );
   }
 }
 
-export function registerGetMigrationsTools(server: McpServer) {
+export function registerGetMigrationsTools(
+  server: McpServer,
+  rootPath?: string,
+) {
+  if (rootPath) {
+    MigrationsTool.setRootPath(rootPath);
+  }
+
   createGetMigrationsTool(server);
   createGetMigrationContentTool(server);
   createCreateMigrationTool(server);
@@ -89,7 +116,7 @@ function createGetMigrationContentTool(server: McpServer) {
     'get_migration_content',
     {
       description:
-        '📜 Get migration file content (HISTORICAL) - For current state use get_schema_content instead',
+        'Get migration file content (HISTORICAL) - For current state use get_schema_content instead',
       inputSchema: {
         state: z.object({
           path: z.string(),
@@ -103,7 +130,7 @@ function createGetMigrationContentTool(server: McpServer) {
         content: [
           {
             type: 'text',
-            text: `📜 MIGRATION FILE: ${state.path} (HISTORICAL)\n\nNote: This shows historical changes. For current database state, use get_schema_content instead.\n\n${content}`,
+            text: `MIGRATION FILE: ${state.path} (HISTORICAL)\n\nNote: This shows historical changes. For current database state, use get_schema_content instead.\n\n${content}`,
           },
         ],
       };
@@ -116,7 +143,7 @@ function createGetMigrationsTool(server: McpServer) {
     'get_migrations',
     {
       description:
-        '📜 Get migration files (HISTORICAL CHANGES) - Use schema files for current state instead',
+        'Get migration files (HISTORICAL CHANGES) - Use schema files for current state instead',
     },
     async () => {
       const migrations = await MigrationsTool.GetMigrations();
@@ -125,7 +152,7 @@ function createGetMigrationsTool(server: McpServer) {
         content: [
           {
             type: 'text',
-            text: `📜 MIGRATION FILES (HISTORICAL CHANGES)\n\nNote: For current database state, use get_schema_files instead. Migrations show historical changes.\n\n${migrations.join('\n')}`,
+            text: `MIGRATION FILES (HISTORICAL CHANGES)\n\nNote: For current database state, use get_schema_files instead. Migrations show historical changes.\n\n${migrations.join('\n')}`,
           },
         ],
       };

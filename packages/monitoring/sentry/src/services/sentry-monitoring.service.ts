@@ -1,4 +1,5 @@
 import {
+  ExclusiveEventHintOrCaptureContext,
   Event as SentryEvent,
   User as SentryUser,
   captureEvent,
@@ -29,8 +30,11 @@ export class SentryMonitoringService implements MonitoringService {
     return this.readyPromise;
   }
 
-  captureException(error: Error | null) {
-    return captureException(error);
+  captureException(
+    error: Error | null,
+    context?: ExclusiveEventHintOrCaptureContext,
+  ) {
+    return captureException(error, context);
   }
 
   captureEvent<Extra extends SentryEvent>(event: string, extra?: Extra) {

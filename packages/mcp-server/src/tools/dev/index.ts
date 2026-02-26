@@ -1,10 +1,15 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { execFile, spawn } from 'node:child_process';
 import { access, readFile } from 'node:fs/promises';
 import { Socket } from 'node:net';
 import { join } from 'node:path';
-import { promisify } from 'node:util';
 
+import {
+  execFileAsync,
+  findProcessesByName,
+  getPortProcess,
+  killProcess,
+  spawnDetached,
+} from '../../lib/process-utils';
 import {
   DEFAULT_PORT_CONFIG,
   type KitDevServiceDeps,
@@ -21,10 +26,8 @@ import {
   KitMailboxStatusOutputSchema,
 } from './schema';
 
-const execFileAsync = promisify(execFile);
-
-export function registerKitDevTools(server: McpServer) {
-  const service = createKitDevService(createKitDevDeps());
+export function registerKitDevTools(server: McpServer, rootPath?: string) {
+  const service = createKitDevService(createKitDevDeps(rootPath));
 
   server.registerTool(
     'kit_dev_start',
@@ -235,13 +238,7 @@ export function createKitDevDeps(rootPath = process.cwd()): KitDevServiceDeps {
       };
     },
     async spawnDetached(command: string, args: string[]) {
-      const child = spawn(command, args, {
-        cwd: rootPath,
-        detached: true,
-        stdio: 'ignore',
-      });
-
-      child.unref();
+      const child = spawnDetached(command, args, { cwd: rootPath });
 
       if (!child.pid) {
         throw new Error(`Failed to spawn ${command}`);
@@ -264,42 +261,7 @@ export function createKitDevDeps(rootPath = process.cwd()): KitDevServiceDeps {
       return response.json();
     },
     async getPortProcess(port: number) {
-      try {
-        const result = await execFileAsync(
-          'lsof',
-          ['-nP', `-iTCP:${port}`, '-sTCP:LISTEN', '-Fpc'],
-          {
-            cwd: rootPath,
-          },
-        );
-
-        const pidLine = result.stdout
-          .split('\n')
-          .map((line) => line.trim())
-          .find((line) => line.startsWith('p'));
-
-        const commandLine = result.stdout
-          .split('\n')
-          .map((line) => line.trim())
-          .find((line) => line.startsWith('c'));
-
-        if (!pidLine || !commandLine) {
-          return null;
-        }
-
-        const pid = Number(pidLine.slice(1));
-
-        if (!Number.isFinite(pid)) {
-          return null;
-        }
-
-        return {
-          pid,
-          command: commandLine.slice(1),
-        };
-      } catch {
-        return null;
-      }
+      return getPortProcess(port, rootPath);
     },
     async isProcessRunning(pid: number) {
       try {
@@ -310,44 +272,10 @@ export function createKitDevDeps(rootPath = process.cwd()): KitDevServiceDeps {
       }
     },
     async findProcessesByName(pattern: string) {
-      try {
-        const result = await execFileAsync('pgrep', ['-fl', pattern], {
-          cwd: rootPath,
-        });
-
-        return result.stdout
-          .split('\n')
-          .filter(Boolean)
-          .map((line) => {
-            const spaceIdx = line.indexOf(' ');
-
-            if (spaceIdx <= 0) {
-              return null;
-            }
-
-            const pid = Number(line.slice(0, spaceIdx));
-            const command = line.slice(spaceIdx + 1).trim();
-
-            if (!Number.isFinite(pid)) {
-              return null;
-            }
-
-            return { pid, command };
-          })
-          .filter((p): p is { pid: number; command: string } => p !== null);
-      } catch {
-        return [];
-      }
+      return findProcessesByName(pattern, rootPath);
     },
     async killProcess(pid: number, signal = 'SIGTERM') {
-      try {
-        // Kill the entire process group (negative PID) since services
-        // are spawned detached and become process group leaders.
-        process.kill(-pid, signal);
-      } catch {
-        // Fall back to killing the individual process if group kill fails.
-        process.kill(pid, signal);
-      }
+      return killProcess(pid, signal);
     },
     async sleep(ms: number) {
       await new Promise((resolve) => setTimeout(resolve, ms));

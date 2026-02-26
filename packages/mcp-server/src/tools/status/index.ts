@@ -1,19 +1,16 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { execFile } from 'node:child_process';
 import { access, readFile, stat } from 'node:fs/promises';
 import { Socket } from 'node:net';
 import { join } from 'node:path';
-import { promisify } from 'node:util';
 
+import { execFileAsync } from '../../lib/process-utils';
 import {
   type KitStatusDeps,
   createKitStatusService,
 } from './kit-status.service';
 import { KitStatusInputSchema, KitStatusOutputSchema } from './schema';
 
-const execFileAsync = promisify(execFile);
-
-export function registerKitStatusTool(server: McpServer) {
+export function registerKitStatusTool(server: McpServer, rootPath?: string) {
   return server.registerTool(
     'kit_status',
     {
@@ -25,7 +22,7 @@ export function registerKitStatusTool(server: McpServer) {
       const parsedInput = KitStatusInputSchema.parse(input);
 
       try {
-        const service = createKitStatusService(createKitStatusDeps());
+        const service = createKitStatusService(createKitStatusDeps(rootPath));
         const status = await service.getStatus(parsedInput);
 
         return {
@@ -54,9 +51,7 @@ export function registerKitStatusTool(server: McpServer) {
   );
 }
 
-function createKitStatusDeps(): KitStatusDeps {
-  const rootPath = process.cwd();
-
+function createKitStatusDeps(rootPath = process.cwd()): KitStatusDeps {
   return {
     rootPath,
     async readJsonFile(path: string): Promise<unknown> {

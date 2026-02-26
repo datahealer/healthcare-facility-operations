@@ -1116,7 +1116,11 @@ export class DatabaseTool {
   }
 }
 
-export function registerDatabaseTools(server: McpServer) {
+export function registerDatabaseTools(server: McpServer, rootPath?: string) {
+  if (rootPath) {
+    DatabaseTool.ROOT_PATH = rootPath;
+  }
+
   createGetSchemaFilesTool(server);
   createGetSchemaContentTool(server);
   createGetSchemasByTopicTool(server);
@@ -1126,7 +1130,10 @@ export function registerDatabaseTools(server: McpServer) {
   createSearchFunctionsTool(server);
 }
 
-export function registerDatabaseResources(server: McpServer) {
+export function registerDatabaseResources(
+  server: McpServer,
+  _rootPath?: string,
+) {
   createDatabaseSummaryTool(server);
   createDatabaseTablesListTool(server);
   createGetTableInfoTool(server);

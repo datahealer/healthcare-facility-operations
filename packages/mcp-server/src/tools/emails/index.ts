@@ -17,8 +17,11 @@ type TextContent = {
   text: string;
 };
 
-export function registerKitEmailTemplatesTools(server: McpServer) {
-  const service = createKitEmailsService(createKitEmailsDeps());
+export function registerKitEmailTemplatesTools(
+  server: McpServer,
+  rootPath?: string,
+) {
+  const service = createKitEmailsService(createKitEmailsDeps(rootPath));
 
   server.registerTool(
     'kit_email_templates_list',

@@ -23,8 +23,8 @@ type TextContent = {
   text: string;
 };
 
-export function registerKitEnvTools(server: McpServer) {
-  const service = createKitEnvService(createKitEnvDeps());
+export function registerKitEnvTools(server: McpServer, rootPath?: string) {
+  const service = createKitEnvService(createKitEnvDeps(rootPath));
 
   server.registerTool(
     'kit_env_schema',

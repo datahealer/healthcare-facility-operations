@@ -13,6 +13,7 @@
     "format": "prettier --check \"**/*.{js,json}\""
   },
   "dependencies": {
+    "@eslint/js": "catalog:",
     "@next/eslint-plugin-next": "catalog:",
     "@types/eslint": "catalog:",
     "eslint-config-next": "catalog:",

@@ -1,6 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
+import { resolveProjectRoot } from './resolve-root';
 import { registerComponentsTools } from './tools/components';
 import {
   registerDatabaseResources,
@@ -22,30 +23,30 @@ import { registerKitStatusTool } from './tools/status/index';
 import { registerKitTranslationsTools } from './tools/translations/index';
 
 async function main() {
-  // Create server instance
   const server = new McpServer({
     name: 'makerkit',
     version: '1.0.0',
   });
 
   const transport = new StdioServerTransport();
+  const rootPath = resolveProjectRoot();
 
-  registerGetMigrationsTools(server);
-  registerKitStatusTool(server);
-  registerKitPrerequisitesTool(server);
-  registerKitEnvTools(server);
-  registerKitDevTools(server);
-  registerKitDbTools(server);
-  registerKitEmailsTools(server);
-  registerKitEmailTemplatesTools(server);
-  registerKitTranslationsTools(server);
-  registerDatabaseTools(server);
-  registerDatabaseResources(server);
-  registerComponentsTools(server);
-  registerScriptsTools(server);
-  registerRunChecksTool(server);
-  registerDepsUpgradeAdvisorTool(server);
-  registerPRDTools(server);
+  registerGetMigrationsTools(server, rootPath);
+  registerKitStatusTool(server, rootPath);
+  registerKitPrerequisitesTool(server, rootPath);
+  registerKitEnvTools(server, rootPath);
+  registerKitDevTools(server, rootPath);
+  registerKitDbTools(server, rootPath);
+  registerKitEmailsTools(server, rootPath);
+  registerKitEmailTemplatesTools(server, rootPath);
+  registerKitTranslationsTools(server, rootPath);
+  registerDatabaseTools(server, rootPath);
+  registerDatabaseResources(server, rootPath);
+  registerComponentsTools(server, rootPath);
+  registerScriptsTools(server, rootPath);
+  registerRunChecksTool(server, rootPath);
+  registerDepsUpgradeAdvisorTool(server, rootPath);
+  registerPRDTools(server, rootPath);
   registerPromptsSystem(server);
 
   await server.connect(transport);

@@ -21,8 +21,14 @@ interface ScriptInfo {
 }
 
 export class ScriptsTool {
+  private static _rootPath = process.cwd();
+
+  static setRootPath(path: string) {
+    this._rootPath = path;
+  }
+
   static async getScripts(): Promise<ScriptInfo[]> {
-    const packageJsonPath = join(process.cwd(), 'package.json');
+    const packageJsonPath = join(this._rootPath, 'package.json');
     const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
 
     const scripts: ScriptInfo[] = [];
@@ -41,7 +47,7 @@ export class ScriptsTool {
   }
 
   static async getScriptDetails(scriptName: string): Promise<ScriptInfo> {
-    const packageJsonPath = join(process.cwd(), 'package.json');
+    const packageJsonPath = join(this._rootPath, 'package.json');
     const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
 
     const command = packageJson.scripts[scriptName];
@@ -234,7 +240,11 @@ export class ScriptsTool {
   }
 }
 
-export function registerScriptsTools(server: McpServer) {
+export function registerScriptsTools(server: McpServer, rootPath?: string) {
+  if (rootPath) {
+    ScriptsTool.setRootPath(rootPath);
+  }
+
   createGetScriptsTool(server);
   createGetScriptDetailsTool(server);
   createGetHealthcheckScriptsTool(server);

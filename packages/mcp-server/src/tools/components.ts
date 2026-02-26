@@ -12,9 +12,15 @@ interface ComponentInfo {
 }
 
 export class ComponentsTool {
+  private static _rootPath = process.cwd();
+
+  static setRootPath(path: string) {
+    this._rootPath = path;
+  }
+
   static async getComponents(): Promise<ComponentInfo[]> {
     const packageJsonPath = join(
-      process.cwd(),
+      this._rootPath,
       'packages',
       'ui',
       'package.json',
@@ -179,7 +185,7 @@ export class ComponentsTool {
 
   static async getComponentContent(componentName: string): Promise<string> {
     const packageJsonPath = join(
-      process.cwd(),
+      this._rootPath,
       'packages',
       'ui',
       'package.json',
@@ -193,7 +199,7 @@ export class ComponentsTool {
       throw new Error(`Component "${componentName}" not found in exports`);
     }
 
-    const fullPath = join(process.cwd(), 'packages', 'ui', filePath);
+    const fullPath = join(this._rootPath, 'packages', 'ui', filePath);
     return readFile(fullPath, 'utf8');
   }
 
@@ -337,7 +343,11 @@ export class ComponentsTool {
   }
 }
 
-export function registerComponentsTools(server: McpServer) {
+export function registerComponentsTools(server: McpServer, rootPath?: string) {
+  if (rootPath) {
+    ComponentsTool.setRootPath(rootPath);
+  }
+
   createGetComponentsTool(server);
   createGetComponentContentTool(server);
   createComponentsSearchTool(server);

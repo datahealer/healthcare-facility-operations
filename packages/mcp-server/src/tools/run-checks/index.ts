@@ -1,19 +1,16 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { execFile } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { promisify } from 'node:util';
 
+import { execFileAsync } from '../../lib/process-utils';
 import {
   type RunChecksDeps,
   createRunChecksService,
 } from './run-checks.service';
 import { RunChecksInputSchema, RunChecksOutputSchema } from './schema';
 
-const execFileAsync = promisify(execFile);
-
-export function registerRunChecksTool(server: McpServer) {
-  const service = createRunChecksService(createRunChecksDeps());
+export function registerRunChecksTool(server: McpServer, rootPath?: string) {
+  const service = createRunChecksService(createRunChecksDeps(rootPath));
 
   return server.registerTool(
     'run_checks',

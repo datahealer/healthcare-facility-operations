@@ -1,10 +1,9 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { execFile } from 'node:child_process';
 import { access, readFile, readdir } from 'node:fs/promises';
 import { Socket } from 'node:net';
 import { join } from 'node:path';
-import { promisify } from 'node:util';
 
+import { execFileAsync } from '../../lib/process-utils';
 import { type KitDbServiceDeps, createKitDbService } from './kit-db.service';
 import {
   KitDbMigrateInputSchema,
@@ -17,15 +16,13 @@ import {
   KitDbStatusOutputSchema,
 } from './schema';
 
-const execFileAsync = promisify(execFile);
-
 type TextContent = {
   type: 'text';
   text: string;
 };
 
-export function registerKitDbTools(server: McpServer) {
-  const service = createKitDbService(createKitDbDeps());
+export function registerKitDbTools(server: McpServer, rootPath?: string) {
+  const service = createKitDbService(createKitDbDeps(rootPath));
 
   server.registerTool(
     'kit_db_status',

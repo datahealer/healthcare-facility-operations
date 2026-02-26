@@ -1,8 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { execFile } from 'node:child_process';
 import { Socket } from 'node:net';
-import { promisify } from 'node:util';
 
+import { execFileAsync } from '../../lib/process-utils';
 import {
   type KitMailboxDeps,
   createKitMailboxService,
@@ -16,15 +15,13 @@ import {
   KitEmailsSetReadStatusOutputSchema,
 } from './schema';
 
-const execFileAsync = promisify(execFile);
-
 type TextContent = {
   type: 'text';
   text: string;
 };
 
-export function registerKitEmailsTools(server: McpServer) {
-  const service = createKitMailboxService(createKitMailboxDeps());
+export function registerKitEmailsTools(server: McpServer, rootPath?: string) {
+  const service = createKitMailboxService(createKitMailboxDeps(rootPath));
 
   server.registerTool(
     'kit_emails_list',

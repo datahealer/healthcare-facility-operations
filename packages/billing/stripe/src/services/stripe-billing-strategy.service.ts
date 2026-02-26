@@ -174,7 +174,7 @@ export class StripeBillingStrategyService implements BillingStrategyProviderServ
         'Failed to retrieve checkout session',
       );
 
-      throw new Error('Failed to retrieve checkout session');
+      throw new Error('Failed to retrieve checkout session', { cause: error });
     }
   }
 
@@ -218,7 +218,7 @@ export class StripeBillingStrategyService implements BillingStrategyProviderServ
         'Failed to report usage',
       );
 
-      throw new Error('Failed to report usage');
+      throw new Error('Failed to report usage', { cause: error });
     }
 
     return {
@@ -277,7 +277,7 @@ export class StripeBillingStrategyService implements BillingStrategyProviderServ
         'Failed to report usage',
       );
 
-      throw new Error('Failed to report usage');
+      throw new Error('Failed to report usage', { cause: error });
     }
   }
 
@@ -317,7 +317,7 @@ export class StripeBillingStrategyService implements BillingStrategyProviderServ
     } catch (error) {
       logger.error({ ...ctx, error }, 'Failed to update subscription');
 
-      throw new Error('Failed to update subscription');
+      throw new Error('Failed to update subscription', { cause: error });
     }
   }
 
@@ -357,7 +357,7 @@ export class StripeBillingStrategyService implements BillingStrategyProviderServ
     } catch (error) {
       logger.error({ ...ctx, error }, 'Failed to retrieve plan');
 
-      throw new Error('Failed to retrieve plan');
+      throw new Error('Failed to retrieve plan', { cause: error });
     }
   }
 
@@ -413,7 +413,7 @@ export class StripeBillingStrategyService implements BillingStrategyProviderServ
     } catch (error) {
       logger.error({ ...ctx, error }, 'Failed to retrieve subscription');
 
-      throw new Error('Failed to retrieve subscription');
+      throw new Error('Failed to retrieve subscription', { cause: error });
     }
   }
 

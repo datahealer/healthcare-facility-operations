@@ -1,9 +1,8 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { execFile } from 'node:child_process';
 import { access, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { promisify } from 'node:util';
 
+import { execFileAsync } from '../../lib/process-utils';
 import {
   type KitPrerequisitesDeps,
   createKitPrerequisitesService,
@@ -13,9 +12,10 @@ import {
   KitPrerequisitesOutputSchema,
 } from './schema';
 
-const execFileAsync = promisify(execFile);
-
-export function registerKitPrerequisitesTool(server: McpServer) {
+export function registerKitPrerequisitesTool(
+  server: McpServer,
+  rootPath?: string,
+) {
   return server.registerTool(
     'kit_prerequisites',
     {
@@ -28,7 +28,7 @@ export function registerKitPrerequisitesTool(server: McpServer) {
 
       try {
         const service = createKitPrerequisitesService(
-          createKitPrerequisitesDeps(),
+          createKitPrerequisitesDeps(rootPath),
         );
 
         const result = await service.check(parsedInput);
@@ -57,9 +57,9 @@ export function registerKitPrerequisitesTool(server: McpServer) {
   );
 }
 
-function createKitPrerequisitesDeps(): KitPrerequisitesDeps {
-  const rootPath = process.cwd();
-
+function createKitPrerequisitesDeps(
+  rootPath = process.cwd(),
+): KitPrerequisitesDeps {
   return {
     async getVariantFamily() {
       const variant = await resolveVariant(rootPath);
