@@ -23,7 +23,7 @@ export function CurrentPlanBadge(
     status: Status;
   }>,
 ) {
-  const text = `billing:status.${props.status}.badge`;
+  const text = `billing.status.${props.status}.badge`;
   const variant = statusBadgeMap[props.status];
 
   return (

@@ -19,7 +19,7 @@ export function MembershipRoleSelector({
   roles: Role[];
   value: Role;
   currentUserRole?: Role;
-  onChange: (role: Role) => unknown;
+  onChange: (role: Role | null) => unknown;
   triggerClassName?: string;
 }) {
   return (
@@ -28,7 +28,15 @@ export function MembershipRoleSelector({
         className={triggerClassName}
         data-test={'role-selector-trigger'}
       >
-        <SelectValue />
+        <SelectValue>
+          {(value) =>
+            value ? (
+              <Trans i18nKey={`common.roles.${value}.label`} defaults={value} />
+            ) : (
+              ''
+            )
+          }
+        </SelectValue>
       </SelectTrigger>
 
       <SelectContent>
@@ -41,7 +49,7 @@ export function MembershipRoleSelector({
               value={role}
             >
               <span className={'text-sm capitalize'}>
-                <Trans i18nKey={`common:roles.${role}.label`} defaults={role} />
+                <Trans i18nKey={`common.roles.${role}.label`} defaults={role} />
               </span>
             </SelectItem>
           );

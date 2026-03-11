@@ -4,7 +4,8 @@ This package owns transactional email templates and renderers using React Email.
 
 ## Non-negotiables
 
-1. New email must be added to `src/registry.ts` (`EMAIL_TEMPLATE_RENDERERS`) or dynamic inclusion/discovery will miss it.
+1. New email must be added to `src/registry.ts` (`EMAIL_TEMPLATE_RENDERERS`) or dynamic inclusion/discovery will miss
+   it.
 2. New email renderer must be exported from `src/index.ts`.
 3. Renderer contract: async function returning `{ html, subject }`.
 4. i18n namespace must match locale filename in `src/locales/<lang>/<namespace>.json`.
@@ -19,4 +20,5 @@ This package owns transactional email templates and renderers using React Email.
 3. Export template renderer from `src/index.ts`.
 4. Add renderer to `src/registry.ts` (`EMAIL_TEMPLATE_RENDERERS`).
 
-`src/registry.ts` is required for dynamic inclusion/discovery. If not added there, dynamic template listing/rendering will miss it.
+`src/registry.ts` is required for dynamic inclusion/discovery. If not added there, dynamic template listing/rendering
+will miss it.

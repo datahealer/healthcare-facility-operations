@@ -17,19 +17,19 @@ export function BillingPortalCard() {
     <Card>
       <CardHeader>
         <CardTitle>
-          <Trans i18nKey="billing:billingPortalCardTitle" />
+          <Trans i18nKey="billing.billingPortalCardTitle" />
         </CardTitle>
 
         <CardDescription>
-          <Trans i18nKey="billing:billingPortalCardDescription" />
+          <Trans i18nKey="billing.billingPortalCardDescription" />
         </CardDescription>
       </CardHeader>
 
       <CardContent className={'space-y-2'}>
         <div>
-          <Button data-test={'manage-billing-redirect-button'}>
+          <Button type="submit" data-test={'manage-billing-redirect-button'}>
             <span>
-              <Trans i18nKey="billing:billingPortalCardButton" />
+              <Trans i18nKey="billing.billingPortalCardButton" />
             </span>
 
             <ArrowUpRight className={'h-4'} />

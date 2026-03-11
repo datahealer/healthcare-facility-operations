@@ -62,9 +62,9 @@ interface TabsControlsProps {
 const variantClasses = {
   default: '',
   pills:
-    '[&>div]:bg-background [&>div]:border [&>div]:rounded-lg [&>div]:p-1 [&_button]:rounded-md [&_button[data-state=active]]:bg-primary [&_button[data-state=active]]:text-primary-foreground',
+    '[&>div]:bg-background [&>div]:border [&>div]:rounded-lg [&>div]:p-1 [&_button]:rounded-md [&_button[data-active]]:bg-primary [&_button[data-active]]:text-primary-foreground',
   underline:
-    '[&>div]:bg-transparent [&>div]:border-b [&>div]:rounded-none [&_button]:rounded-none [&_button]:border-b-2 [&_button]:border-transparent [&_button[data-state=active]]:border-primary [&_button[data-state=active]]:bg-transparent',
+    '[&>div]:bg-transparent [&>div]:border-b [&>div]:rounded-none [&_button]:rounded-none [&_button]:border-b-2 [&_button]:border-transparent [&_button[data-active]]:border-primary [&_button[data-active]]:bg-transparent',
 };
 
 const sizeClasses = {
@@ -683,28 +683,28 @@ function App() {
               <TabsList className="h-auto rounded-none border-b bg-transparent p-0">
                 <TabsTrigger
                   value="overview"
-                  className="data-[state=active]:border-primary rounded-none border-b-2 border-transparent data-[state=active]:bg-transparent"
+                  className="data-active:border-primary rounded-none border-b-2 border-transparent data-active:bg-transparent"
                 >
                   <BarChart3 className="mr-2 h-4 w-4" />
                   Overview
                 </TabsTrigger>
                 <TabsTrigger
                   value="users"
-                  className="data-[state=active]:border-primary rounded-none border-b-2 border-transparent data-[state=active]:bg-transparent"
+                  className="data-active:border-primary rounded-none border-b-2 border-transparent data-active:bg-transparent"
                 >
                   <User className="mr-2 h-4 w-4" />
                   Users
                 </TabsTrigger>
                 <TabsTrigger
                   value="revenue"
-                  className="data-[state=active]:border-primary rounded-none border-b-2 border-transparent data-[state=active]:bg-transparent"
+                  className="data-active:border-primary rounded-none border-b-2 border-transparent data-active:bg-transparent"
                 >
                   <CreditCard className="mr-2 h-4 w-4" />
                   Revenue
                 </TabsTrigger>
                 <TabsTrigger
                   value="reports"
-                  className="data-[state=active]:border-primary rounded-none border-b-2 border-transparent data-[state=active]:bg-transparent"
+                  className="data-active:border-primary rounded-none border-b-2 border-transparent data-active:bg-transparent"
                 >
                   <FileText className="mr-2 h-4 w-4" />
                   Reports
@@ -905,8 +905,7 @@ const apiReference = {
     {
       name: '...props',
       type: 'React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>',
-      description:
-        'All props from Radix UI Tabs.Root component including asChild, id, etc.',
+      description: 'All additional props from Base UI Tabs.Root component.',
     },
   ],
   examples: [

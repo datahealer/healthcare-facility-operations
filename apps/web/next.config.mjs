@@ -1,4 +1,8 @@
 import withBundleAnalyzer from '@next/bundle-analyzer';
+import createNextIntlPlugin from 'next-intl/plugin';
+
+// Create next-intl plugin with the request config path
+const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -57,9 +61,6 @@ const config = {
     optimizePackageImports: [
       'recharts',
       'lucide-react',
-      '@radix-ui/react-icons',
-      '@radix-ui/react-avatar',
-      '@radix-ui/react-select',
       'date-fns',
       ...INTERNAL_PACKAGES,
     ],
@@ -75,7 +76,7 @@ const config = {
 
 export default withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
-})(config);
+})(withNextIntl(config));
 
 /** @returns {import('next').NextConfig['images']} */
 function getImagesConfig() {

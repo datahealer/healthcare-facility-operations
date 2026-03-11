@@ -48,11 +48,11 @@ export function CurrentSubscriptionCard({
     <Card>
       <CardHeader>
         <CardTitle>
-          <Trans i18nKey="billing:planCardTitle" />
+          <Trans i18nKey="billing.planCardTitle" />
         </CardTitle>
 
         <CardDescription>
-          <Trans i18nKey="billing:planCardDescription" />
+          <Trans i18nKey="billing.planCardDescription" />
         </CardDescription>
       </CardHeader>
 
@@ -94,7 +94,7 @@ export function CurrentSubscriptionCard({
 
         <div className="flex flex-col gap-y-1 border-y border-dashed py-4">
           <span className="font-semibold">
-            <Trans i18nKey="billing:detailsLabel" />
+            <Trans i18nKey="billing.detailsLabel" />
           </span>
 
           <LineItemDetails
@@ -110,12 +110,12 @@ export function CurrentSubscriptionCard({
               <InfoIcon className={'h-4 w-4'} />
 
               <AlertTitle>
-                <Trans i18nKey="billing:trialAlertTitle" />
+                <Trans i18nKey="billing.trialAlertTitle" />
               </AlertTitle>
 
               <AlertDescription>
                 <Trans
-                  i18nKey="billing:trialAlertDescription"
+                  i18nKey="billing.trialAlertDescription"
                   values={{
                     date: formatDate(
                       subscription.trial_ends_at ?? '',
@@ -134,12 +134,12 @@ export function CurrentSubscriptionCard({
               <MessageCircleWarning className={'h-4 w-4'} />
 
               <AlertTitle>
-                <Trans i18nKey="billing:subscriptionCancelled" />
+                <Trans i18nKey="billing.subscriptionCancelled" />
               </AlertTitle>
 
               <AlertDescription>
                 <Trans
-                  i18nKey="billing:cancelSubscriptionDate"
+                  i18nKey="billing.cancelSubscriptionDate"
                   values={{
                     date: formatDate(
                       subscription.period_ends_at ?? '',

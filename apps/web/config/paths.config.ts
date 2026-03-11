@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 
 const PathsSchema = z.object({
   auth: z.object({
@@ -19,6 +19,8 @@ const PathsSchema = z.object({
     accountBilling: z.string().min(1),
     accountMembers: z.string().min(1),
     accountBillingReturn: z.string().min(1),
+    accountProfileSettings: z.string().min(1),
+    createTeam: z.string().min(1),
     joinTeam: z.string().min(1),
   }),
 });
@@ -42,8 +44,10 @@ const pathsConfig = PathsSchema.parse({
     accountBilling: `/home/[account]/billing`,
     accountMembers: `/home/[account]/members`,
     accountBillingReturn: `/home/[account]/billing/return`,
+    accountProfileSettings: `/home/[account]/settings/profile`,
+    createTeam: '/home/create-team',
     joinTeam: '/join',
   },
-} satisfies z.infer<typeof PathsSchema>);
+} satisfies z.output<typeof PathsSchema>);
 
 export default pathsConfig;

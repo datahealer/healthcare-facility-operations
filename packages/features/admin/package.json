@@ -26,6 +26,7 @@
     "@types/react": "catalog:",
     "lucide-react": "catalog:",
     "next": "catalog:",
+    "next-safe-action": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-hook-form": "catalog:",

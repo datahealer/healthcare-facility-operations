@@ -55,7 +55,10 @@ create policy "projects_write" on public.projects for all
 
 Use `server-action-builder` skill for detailed patterns.
 
-**Rule: Services are decoupled from interfaces.** The service is pure logic that receives dependencies (database client, etc.) as arguments — it never imports framework-specific modules. The server action is a thin adapter that resolves dependencies and calls the service. This means the same service can be called from a server action, an MCP tool, a CLI command, or a unit test with zero changes.
+**Rule: Services are decoupled from interfaces.** The service is pure logic that receives dependencies (database client,
+etc.) as arguments — it never imports framework-specific modules. The server action is a thin adapter that resolves
+dependencies and calls the service. This means the same service can be called from a server action, an MCP tool, a CLI
+command, or a unit test with zero changes.
 
 Create in route's `_lib/server/` directory:
 

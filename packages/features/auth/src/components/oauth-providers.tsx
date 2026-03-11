@@ -114,7 +114,7 @@ export const OauthProviders: React.FC<{
                 }}
               >
                 <Trans
-                  i18nKey={'auth:signInWithProvider'}
+                  i18nKey={'auth.signInWithProvider'}
                   values={{
                     provider: getProviderName(provider),
                   }}

@@ -1,18 +1,17 @@
 'use server';
 
-import 'server-only';
-
 import { redirect } from 'next/navigation';
 
-import { enhanceAction } from '@kit/next/actions';
+import { authActionClient } from '@kit/next/safe-action';
 import { getLogger } from '@kit/shared/logger';
 
 import { CreateTeamSchema } from '../../schema/create-team.schema';
 import { createAccountCreationPolicyEvaluator } from '../policies';
 import { createCreateTeamAccountService } from '../services/create-team-account.service';
 
-export const createTeamAccountAction = enhanceAction(
-  async ({ name, slug }, user) => {
+export const createTeamAccountAction = authActionClient
+  .schema(CreateTeamSchema)
+  .action(async ({ parsedInput: { name, slug }, ctx: { user } }) => {
     const logger = await getLogger();
     const service = createCreateTeamAccountService();
 
@@ -61,7 +60,7 @@ export const createTeamAccountAction = enhanceAction(
     if (error === 'duplicate_slug') {
       return {
         error: true,
-        message: 'teams:duplicateSlugError',
+        message: 'teams.duplicateSlugError',
       };
     }
 
@@ -70,8 +69,4 @@ export const createTeamAccountAction = enhanceAction(
     const accountHomePath = '/home/' + data.slug;
 
     redirect(accountHomePath);
-  },
-  {
-    schema: CreateTeamSchema,
-  },
-);
+  });

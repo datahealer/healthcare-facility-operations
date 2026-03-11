@@ -1,10 +1,9 @@
 'use client';
 
-import { useState, useTransition } from 'react';
-
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { Alert, AlertDescription, AlertTitle } from '@kit/ui/alert';
 import {
@@ -51,33 +50,22 @@ export function AdminResetPasswordDialog(
     },
   });
 
-  const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-
-  const onSubmit = form.handleSubmit((data) => {
-    setError(null);
-    setSuccess(false);
-
-    startTransition(async () => {
-      try {
-        await resetPasswordAction(data);
-
-        setSuccess(true);
+  const { execute, isPending, hasErrored, hasSucceeded } = useAction(
+    resetPasswordAction,
+    {
+      onSuccess: () => {
         form.reset({ userId: props.userId, confirmation: '' });
-
         toast.success('Password reset email successfully sent');
-      } catch (e) {
-        setError(e instanceof Error ? e.message : String(e));
-
+      },
+      onError: () => {
         toast.error('We hit an error. Please read the logs.');
-      }
-    });
-  });
+      },
+    },
+  );
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>{props.children}</AlertDialogTrigger>
+      <AlertDialogTrigger render={props.children as React.ReactElement} />
 
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -90,7 +78,10 @@ export function AdminResetPasswordDialog(
 
         <div className="relative">
           <Form {...form}>
-            <form onSubmit={onSubmit} className="space-y-4">
+            <form
+              onSubmit={form.handleSubmit((data) => execute(data))}
+              className="space-y-4"
+            >
               <FormField
                 control={form.control}
                 name="confirmation"
@@ -115,7 +106,7 @@ export function AdminResetPasswordDialog(
                 )}
               />
 
-              <If condition={!!error}>
+              <If condition={hasErrored}>
                 <Alert variant="destructive">
                   <AlertTitle>
                     We encountered an error while sending the email
@@ -127,7 +118,7 @@ export function AdminResetPasswordDialog(
                 </Alert>
               </If>
 
-              <If condition={success}>
+              <If condition={hasSucceeded}>
                 <Alert>
                   <AlertTitle>
                     Password reset email sent successfully

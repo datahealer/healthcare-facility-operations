@@ -81,7 +81,7 @@ export function MagicLinkForm() {
 
 import { enhanceAction } from '@kit/next/actions';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
-import { z } from 'zod';
+import * as z from 'zod';
 
 export const sendMagicLinkAction = enhanceAction(
   async (data) => {

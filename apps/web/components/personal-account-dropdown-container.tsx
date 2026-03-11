@@ -8,10 +8,6 @@ import { JWTUserData } from '@kit/supabase/types';
 import featuresFlagConfig from '~/config/feature-flags.config';
 import pathsConfig from '~/config/paths.config';
 
-const paths = {
-  home: pathsConfig.app.home,
-};
-
 const features = {
   enableThemeToggle: featuresFlagConfig.enableThemeToggle,
 };
@@ -19,6 +15,7 @@ const features = {
 export function ProfileAccountDropdownContainer(props: {
   user?: JWTUserData | null;
   showProfileName?: boolean;
+  accountSlug?: string;
 
   account?: {
     id: string | null;
@@ -34,10 +31,22 @@ export function ProfileAccountDropdownContainer(props: {
     return null;
   }
 
+  const homePath =
+    featuresFlagConfig.enableTeamsOnly && props.accountSlug
+      ? pathsConfig.app.accountHome.replace('[account]', props.accountSlug)
+      : pathsConfig.app.home;
+
+  const profileSettingsPath = props.accountSlug
+    ? pathsConfig.app.accountProfileSettings.replace(
+        '[account]',
+        props.accountSlug,
+      )
+    : pathsConfig.app.personalAccountSettings;
+
   return (
     <PersonalAccountDropdown
       className={'w-full'}
-      paths={paths}
+      paths={{ home: homePath, profileSettings: profileSettingsPath }}
       features={features}
       user={userData}
       account={props.account}

@@ -67,10 +67,10 @@ export default async function EmailPage(props: EmailPageProps) {
           Remember that the below is an approximation of the email. Always test
           it in your inbox.{' '}
           <Dialog>
-            <DialogTrigger asChild>
-              <Button variant={'link'} className="p-0 underline">
-                Test Email
-              </Button>
+            <DialogTrigger
+              render={<Button variant={'link'} className="p-0 underline" />}
+            >
+              Test Email
             </DialogTrigger>
 
             <DialogContent>

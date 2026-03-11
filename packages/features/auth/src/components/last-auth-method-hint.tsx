@@ -32,13 +32,13 @@ function LastAuthMethodHintImpl({ className }: LastAuthMethodHintProps) {
   const methodKey = useMemo(() => {
     switch (methodType) {
       case 'password':
-        return 'auth:methodPassword';
+        return 'auth.methodPassword';
       case 'otp':
-        return 'auth:methodOtp';
+        return 'auth.methodOtp';
       case 'magic_link':
-        return 'auth:methodMagicLink';
+        return 'auth.methodMagicLink';
       case 'oauth':
-        return 'auth:methodOauth';
+        return 'auth.methodOauth';
       default:
         return null;
     }
@@ -61,10 +61,10 @@ function LastAuthMethodHintImpl({ className }: LastAuthMethodHintProps) {
       <Lightbulb className="h-3 w-3" />
 
       <span>
-        <Trans i18nKey="auth:lastUsedMethodPrefix" />{' '}
+        <Trans i18nKey="auth.lastUsedMethodPrefix" />{' '}
         <If condition={isOAuth && Boolean(providerName)}>
           <Trans
-            i18nKey="auth:methodOauthWithProvider"
+            i18nKey="auth.methodOauthWithProvider"
             values={{ provider: providerName }}
             components={{
               provider: <span className="text-muted-foreground font-medium" />,

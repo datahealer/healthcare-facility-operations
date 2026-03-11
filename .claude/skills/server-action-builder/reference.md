@@ -28,10 +28,10 @@ export const myAction = enhanceAction(
 
 ### Handler Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `data` | `z.infer<Schema>` | Validated input data |
-| `user` | `User` | Authenticated user (if auth: true) |
+| Parameter | Type               | Description                        |
+|-----------|--------------------|------------------------------------|
+| `data`    | `z.output<Schema>` | Validated input data               |
+| `user`    | `User`             | Authenticated user (if auth: true) |
 
 ## enhanceRouteHandler API
 
@@ -69,7 +69,7 @@ export const GET = enhanceRouteHandler(
 ## Common Zod Patterns
 
 ```typescript
-import { z } from 'zod';
+import * as z from 'zod';
 
 // Basic schema
 export const CreateItemSchema = z.object({

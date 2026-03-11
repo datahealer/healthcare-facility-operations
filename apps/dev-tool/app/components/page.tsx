@@ -1,4 +1,3 @@
-import { withI18n } from '../../lib/i18n/with-i18n';
 import { DocsContent } from './components/docs-content';
 import { DocsHeader } from './components/docs-header';
 import { DocsSidebar } from './components/docs-sidebar';
@@ -29,4 +28,4 @@ async function ComponentDocsPage(props: ComponentDocsPageProps) {
   );
 }
 
-export default withI18n(ComponentDocsPage);
+export default ComponentDocsPage;

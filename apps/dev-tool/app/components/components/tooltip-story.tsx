@@ -144,22 +144,23 @@ function TooltipStory() {
 
     let code = `<TooltipProvider${providerPropsString}>\n`;
     code += `  <Tooltip>\n`;
-    code += `    <TooltipTrigger asChild>\n`;
-
     if (controls.triggerType === 'button') {
-      code += `      <Button variant="${controls.triggerVariant}">Hover me</Button>\n`;
+      code += `    <TooltipTrigger render={<Button variant="${controls.triggerVariant}" />}>\n`;
+      code += `      Hover me\n`;
     } else if (controls.triggerType === 'icon') {
-      code += `      <Button variant="${controls.triggerVariant}" size="icon">\n`;
       const iconName = selectedIconData?.icon.name || 'Info';
-      code += `        <${iconName} className="h-4 w-4" />\n`;
-      code += `      </Button>\n`;
+      code += `    <TooltipTrigger render={<Button variant="${controls.triggerVariant}" size="icon" />}>\n`;
+      code += `      <${iconName} className="h-4 w-4" />\n`;
     } else if (controls.triggerType === 'text') {
-      code += `      <span className="cursor-help underline decoration-dotted">Hover me</span>\n`;
+      code += `    <TooltipTrigger render={<span className="cursor-help underline decoration-dotted" />}>\n`;
+      code += `      Hover me\n`;
     } else if (controls.triggerType === 'input') {
-      code += `      <Input placeholder="Hover over this input" />\n`;
+      code += `    <TooltipTrigger render={<Input placeholder="Hover over this input" />} />\n`;
     }
 
-    code += `    </TooltipTrigger>\n`;
+    if (controls.triggerType !== 'input') {
+      code += `    </TooltipTrigger>\n`;
+    }
     code += `    <TooltipContent${contentPropsString}>\n`;
     code += `      <p>${controls.content}</p>\n`;
     code += `    </TooltipContent>\n`;
@@ -170,28 +171,50 @@ function TooltipStory() {
   };
 
   const renderPreview = () => {
-    const trigger = (() => {
+    const renderTrigger = () => {
       switch (controls.triggerType) {
         case 'button':
-          return <Button variant={controls.triggerVariant}>Hover me</Button>;
+          return (
+            <TooltipTrigger
+              render={<Button variant={controls.triggerVariant} />}
+            >
+              Hover me
+            </TooltipTrigger>
+          );
         case 'icon':
           return (
-            <Button variant={controls.triggerVariant} size="icon">
+            <TooltipTrigger
+              render={<Button variant={controls.triggerVariant} size="icon" />}
+            >
               <IconComponent className="h-4 w-4" />
-            </Button>
+            </TooltipTrigger>
           );
         case 'text':
           return (
-            <span className="cursor-help underline decoration-dotted">
+            <TooltipTrigger
+              render={
+                <span className="cursor-help underline decoration-dotted" />
+              }
+            >
               Hover me
-            </span>
+            </TooltipTrigger>
           );
         case 'input':
-          return <Input placeholder="Hover over this input" />;
+          return (
+            <TooltipTrigger
+              render={<Input placeholder="Hover over this input" />}
+            />
+          );
         default:
-          return <Button variant={controls.triggerVariant}>Hover me</Button>;
+          return (
+            <TooltipTrigger
+              render={<Button variant={controls.triggerVariant} />}
+            >
+              Hover me
+            </TooltipTrigger>
+          );
       }
-    })();
+    };
 
     return (
       <div className="flex min-h-[200px] items-center justify-center">
@@ -201,7 +224,7 @@ function TooltipStory() {
           disableHoverableContent={controls.disableHoverableContent}
         >
           <Tooltip>
-            <TooltipTrigger asChild>{trigger}</TooltipTrigger>
+            {renderTrigger()}
             <TooltipContent
               side={controls.side}
               align={controls.align}
@@ -376,11 +399,9 @@ function TooltipStory() {
           <TooltipProvider>
             <div className="flex flex-wrap gap-4">
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline">
-                    <Info className="mr-2 h-4 w-4" />
-                    Info Button
-                  </Button>
+                <TooltipTrigger render={<Button variant="outline" />}>
+                  <Info className="mr-2 h-4 w-4" />
+                  Info Button
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>This provides additional information</p>
@@ -388,10 +409,8 @@ function TooltipStory() {
               </Tooltip>
 
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <HelpCircle className="h-4 w-4" />
-                  </Button>
+                <TooltipTrigger render={<Button variant="ghost" size="icon" />}>
+                  <HelpCircle className="h-4 w-4" />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Click for help documentation</p>
@@ -399,10 +418,12 @@ function TooltipStory() {
               </Tooltip>
 
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="cursor-help underline decoration-dotted">
-                    Hover for explanation
-                  </span>
+                <TooltipTrigger
+                  render={
+                    <span className="cursor-help underline decoration-dotted" />
+                  }
+                >
+                  Hover for explanation
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>This term needs clarification for better understanding</p>
@@ -410,9 +431,9 @@ function TooltipStory() {
               </Tooltip>
 
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <Input placeholder="Hover me" className="w-48" />
-                </TooltipTrigger>
+                <TooltipTrigger
+                  render={<Input placeholder="Hover me" className="w-48" />}
+                />
                 <TooltipContent>
                   <p>Enter your email address here</p>
                 </TooltipContent>
@@ -434,10 +455,10 @@ function TooltipStory() {
                 {/* Top Row */}
                 <div></div>
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="outline" size="sm">
-                      Top
-                    </Button>
+                  <TooltipTrigger
+                    render={<Button variant="outline" size="sm" />}
+                  >
+                    Top
                   </TooltipTrigger>
                   <TooltipContent side="top">
                     <p>Tooltip on top</p>
@@ -447,10 +468,10 @@ function TooltipStory() {
 
                 {/* Middle Row */}
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="outline" size="sm">
-                      Left
-                    </Button>
+                  <TooltipTrigger
+                    render={<Button variant="outline" size="sm" />}
+                  >
+                    Left
                   </TooltipTrigger>
                   <TooltipContent side="left">
                     <p>Tooltip on left</p>
@@ -460,10 +481,10 @@ function TooltipStory() {
                   <span className="text-muted-foreground text-sm">Center</span>
                 </div>
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="outline" size="sm">
-                      Right
-                    </Button>
+                  <TooltipTrigger
+                    render={<Button variant="outline" size="sm" />}
+                  >
+                    Right
                   </TooltipTrigger>
                   <TooltipContent side="right">
                     <p>Tooltip on right</p>
@@ -473,10 +494,10 @@ function TooltipStory() {
                 {/* Bottom Row */}
                 <div></div>
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="outline" size="sm">
-                      Bottom
-                    </Button>
+                  <TooltipTrigger
+                    render={<Button variant="outline" size="sm" />}
+                  >
+                    Bottom
                   </TooltipTrigger>
                   <TooltipContent side="bottom">
                     <p>Tooltip on bottom</p>
@@ -498,11 +519,9 @@ function TooltipStory() {
           <TooltipProvider>
             <div className="flex flex-wrap gap-4">
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline">
-                    <Star className="mr-2 h-4 w-4" />
-                    Premium Feature
-                  </Button>
+                <TooltipTrigger render={<Button variant="outline" />}>
+                  <Star className="mr-2 h-4 w-4" />
+                  Premium Feature
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">
                   <div className="space-y-1">
@@ -516,11 +535,9 @@ function TooltipStory() {
               </Tooltip>
 
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Advanced Settings
-                  </Button>
+                <TooltipTrigger render={<Button variant="outline" />}>
+                  <Settings className="mr-2 h-4 w-4" />
+                  Advanced Settings
                 </TooltipTrigger>
                 <TooltipContent>
                   <div className="space-y-1">
@@ -537,11 +554,9 @@ function TooltipStory() {
               </Tooltip>
 
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="destructive">
-                    <AlertCircle className="mr-2 h-4 w-4" />
-                    Delete Account
-                  </Button>
+                <TooltipTrigger render={<Button variant="destructive" />}>
+                  <AlertCircle className="mr-2 h-4 w-4" />
+                  Delete Account
                 </TooltipTrigger>
                 <TooltipContent className="border-destructive bg-destructive text-destructive-foreground max-w-xs">
                   <div className="space-y-1">
@@ -568,10 +583,10 @@ function TooltipStory() {
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button size="icon" variant="ghost">
-                      <Copy className="h-4 w-4" />
-                    </Button>
+                  <TooltipTrigger
+                    render={<Button size="icon" variant="ghost" />}
+                  >
+                    <Copy className="h-4 w-4" />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Copy to clipboard</p>
@@ -579,10 +594,10 @@ function TooltipStory() {
                 </Tooltip>
 
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button size="icon" variant="ghost">
-                      <Download className="h-4 w-4" />
-                    </Button>
+                  <TooltipTrigger
+                    render={<Button size="icon" variant="ghost" />}
+                  >
+                    <Download className="h-4 w-4" />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Download file</p>
@@ -590,10 +605,10 @@ function TooltipStory() {
                 </Tooltip>
 
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button size="icon" variant="ghost">
-                      <Share className="h-4 w-4" />
-                    </Button>
+                  <TooltipTrigger
+                    render={<Button size="icon" variant="ghost" />}
+                  >
+                    <Share className="h-4 w-4" />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Share with others</p>
@@ -605,9 +620,11 @@ function TooltipStory() {
                 <div className="space-y-2">
                   <Label htmlFor="username">Username</Label>
                   <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Input id="username" placeholder="Enter username" />
-                    </TooltipTrigger>
+                    <TooltipTrigger
+                      render={
+                        <Input id="username" placeholder="Enter username" />
+                      }
+                    />
                     <TooltipContent>
                       <p>Must be 3-20 characters, letters and numbers only</p>
                     </TooltipContent>
@@ -616,9 +633,7 @@ function TooltipStory() {
 
                 <div className="flex items-center space-x-2">
                   <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Checkbox id="terms" />
-                    </TooltipTrigger>
+                    <TooltipTrigger render={<Checkbox id="terms" />} />
                     <TooltipContent className="max-w-xs">
                       <p>
                         By checking this, you agree to our Terms of Service and
@@ -751,7 +766,7 @@ function TooltipStory() {
               </li>
               <li>
                 <strong>TooltipTrigger:</strong> Element that triggers the
-                tooltip (use asChild prop)
+                tooltip (use render prop)
               </li>
             </ul>
           </div>

@@ -4,9 +4,9 @@ import { useMemo } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, CheckCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useForm, useWatch } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import {
   BillingConfig,
@@ -25,7 +25,6 @@ import {
   FormMessage,
 } from '@kit/ui/form';
 import { If } from '@kit/ui/if';
-import { Label } from '@kit/ui/label';
 import {
   RadioGroup,
   RadioGroupItem,
@@ -50,7 +49,7 @@ export function PlanPicker(
     };
   }>,
 ) {
-  const { t } = useTranslation(`billing`);
+  const t = useTranslations('billing');
 
   const intervals = useMemo(
     () => getPlanIntervals(props.config),
@@ -137,7 +136,7 @@ export function PlanPicker(
                 render={({ field }) => {
                   return (
                     <FormItem className={'flex flex-col gap-4'}>
-                      <FormControl id={'plan-picker-id'}>
+                      <FormControl>
                         <RadioGroup name={field.name} value={field.value}>
                           <div className={'flex space-x-1'}>
                             {intervals.map((interval) => {
@@ -147,6 +146,23 @@ export function PlanPicker(
                                 <label
                                   htmlFor={interval}
                                   key={interval}
+                                  onClick={() => {
+                                    form.setValue('interval', interval, {
+                                      shouldValidate: true,
+                                    });
+
+                                    if (selectedProduct) {
+                                      const plan = selectedProduct.plans.find(
+                                        (item) => item.interval === interval,
+                                      );
+
+                                      form.setValue('planId', plan?.id ?? '', {
+                                        shouldValidate: true,
+                                        shouldDirty: true,
+                                        shouldTouch: true,
+                                      });
+                                    }
+                                  }}
                                   className={cn(
                                     'focus-within:border-primary flex items-center gap-x-2.5 rounded-md px-2.5 py-2 transition-colors',
                                     {
@@ -158,27 +174,6 @@ export function PlanPicker(
                                   <RadioGroupItem
                                     id={interval}
                                     value={interval}
-                                    onClick={() => {
-                                      form.setValue('interval', interval, {
-                                        shouldValidate: true,
-                                      });
-
-                                      if (selectedProduct) {
-                                        const plan = selectedProduct.plans.find(
-                                          (item) => item.interval === interval,
-                                        );
-
-                                        form.setValue(
-                                          'planId',
-                                          plan?.id ?? '',
-                                          {
-                                            shouldValidate: true,
-                                            shouldDirty: true,
-                                            shouldTouch: true,
-                                          },
-                                        );
-                                      }
-                                    }}
                                   />
 
                                   <span
@@ -187,7 +182,7 @@ export function PlanPicker(
                                     })}
                                   >
                                     <Trans
-                                      i18nKey={`billing:billingInterval.${interval}`}
+                                      i18nKey={`billing.billingInterval.${interval}`}
                                     />
                                   </span>
                                 </label>
@@ -244,15 +239,28 @@ export function PlanPicker(
                         <RadioGroupItemLabel
                           selected={selected}
                           key={primaryLineItem.id}
+                          htmlFor={primaryLineItem.id}
                           className="rounded-md !border-transparent"
+                          onClick={() => {
+                            if (selected) {
+                              return;
+                            }
+
+                            form.setValue('planId', planId, {
+                              shouldValidate: true,
+                            });
+
+                            form.setValue('productId', product.id, {
+                              shouldValidate: true,
+                            });
+                          }}
                         >
                           <div
                             className={
                               'flex w-full flex-col content-center gap-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0'
                             }
                           >
-                            <Label
-                              htmlFor={plan.id}
+                            <div
                               className={
                                 'flex flex-col justify-center space-y-2.5'
                               }
@@ -263,24 +271,11 @@ export function PlanPicker(
                                   key={plan.id + selected}
                                   id={plan.id}
                                   value={plan.id}
-                                  onClick={() => {
-                                    if (selected) {
-                                      return;
-                                    }
-
-                                    form.setValue('planId', planId, {
-                                      shouldValidate: true,
-                                    });
-
-                                    form.setValue('productId', product.id, {
-                                      shouldValidate: true,
-                                    });
-                                  }}
                                 />
 
                                 <span className="font-semibold">
                                   <Trans
-                                    i18nKey={`billing:plans.${product.id}.name`}
+                                    i18nKey={`billing.plans.${product.id}.name`}
                                     defaults={product.name}
                                   />
                                 </span>
@@ -296,7 +291,7 @@ export function PlanPicker(
                                       variant={'success'}
                                     >
                                       <Trans
-                                        i18nKey={`billing:trialPeriod`}
+                                        i18nKey={`billing.trialPeriod`}
                                         values={{
                                           period: plan.trialDays,
                                         }}
@@ -308,11 +303,11 @@ export function PlanPicker(
 
                               <span className={'text-muted-foreground'}>
                                 <Trans
-                                  i18nKey={`billing:plans.${product.id}.description`}
+                                  i18nKey={`billing.plans.${product.id}.description`}
                                   defaults={product.description}
                                 />
                               </span>
-                            </Label>
+                            </div>
 
                             <div
                               className={
@@ -336,10 +331,10 @@ export function PlanPicker(
                                         plan.paymentType === 'recurring'
                                       }
                                       fallback={
-                                        <Trans i18nKey={`billing:lifetime`} />
+                                        <Trans i18nKey={`billing.lifetime`} />
                                       }
                                     >
-                                      <Trans i18nKey={`billing:perMonth`} />
+                                      <Trans i18nKey={`billing.perMonth`} />
                                     </If>
                                   </span>
                                 </div>
@@ -367,6 +362,7 @@ export function PlanPicker(
 
           <div>
             <Button
+              type="submit"
               data-test="checkout-submit-button"
               disabled={props.pending ?? !form.formState.isValid}
             >
@@ -408,7 +404,7 @@ function PlanDetails({
   selectedInterval: string;
 
   selectedPlan: {
-    lineItems: z.infer<typeof LineItemSchema>[];
+    lineItems: z.output<typeof LineItemSchema>[];
     paymentType: string;
   };
 }) {

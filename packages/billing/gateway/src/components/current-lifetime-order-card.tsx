@@ -44,11 +44,11 @@ export function CurrentLifetimeOrderCard({
     <Card>
       <CardHeader>
         <CardTitle>
-          <Trans i18nKey="billing:planCardTitle" />
+          <Trans i18nKey="billing.planCardTitle" />
         </CardTitle>
 
         <CardDescription>
-          <Trans i18nKey="billing:planCardDescription" />
+          <Trans i18nKey="billing.planCardDescription" />
         </CardDescription>
       </CardHeader>
 
@@ -70,7 +70,7 @@ export function CurrentLifetimeOrderCard({
         <div>
           <div className="flex flex-col gap-y-1">
             <span className="font-semibold">
-              <Trans i18nKey="billing:detailsLabel" />
+              <Trans i18nKey="billing.detailsLabel" />
             </span>
 
             <LineItemDetails

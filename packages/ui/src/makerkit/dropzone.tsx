@@ -8,7 +8,7 @@ import {
 } from 'react';
 
 import { CheckCircle, File, Loader2, Upload, X } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from 'next-intl';
 
 import { type UseSupabaseUploadReturn } from '../hooks/use-supabase-upload';
 import { cn } from '../lib/utils';
@@ -97,7 +97,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
     isSuccess,
   } = useDropzoneContext();
 
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   const exceedMaxFiles = files.length > maxFiles;
 
@@ -120,7 +120,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
 
         <p className="text-primary text-sm">
           <Trans
-            i18nKey="common:dropzone.success"
+            i18nKey="common.dropzone.success"
             values={{ count: files.length }}
           />
         </p>
@@ -165,7 +165,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
                   {file.errors
                     .map((e) =>
                       e.message.startsWith('File is larger than')
-                        ? t('common:dropzone.errorMessageFileSizeTooLarge', {
+                        ? t('common.dropzone.errorMessageFileSizeTooLarge', {
                             size: formatBytes(file.size, 2),
                             maxSize: formatBytes(maxFileSize, 2),
                           })
@@ -175,18 +175,18 @@ const DropzoneContent = ({ className }: { className?: string }) => {
                 </p>
               ) : loading && !isSuccessfullyUploaded ? (
                 <p className="text-muted-foreground text-xs">
-                  <Trans i18nKey="common:dropzone.uploading" />
+                  <Trans i18nKey="common.dropzone.uploading" />
                 </p>
               ) : fileError ? (
                 <p className="text-destructive text-xs">
                   <Trans
-                    i18nKey="common:dropzone.errorMessage"
+                    i18nKey="common.dropzone.errorMessage"
                     values={{ message: fileError.message }}
                   />
                 </p>
               ) : isSuccessfullyUploaded ? (
                 <p className="text-primary text-xs">
-                  <Trans i18nKey="common:dropzone.success" />
+                  <Trans i18nKey="common.dropzone.success" />
                 </p>
               ) : (
                 <p className="text-muted-foreground text-xs">
@@ -211,7 +211,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
       {exceedMaxFiles && (
         <p className="text-destructive mt-2 text-left text-sm">
           <Trans
-            i18nKey="common:dropzone.errorMaxFiles"
+            i18nKey="common.dropzone.errorMaxFiles"
             values={{ count: maxFiles, files: files.length - maxFiles }}
           />
         </p>
@@ -226,14 +226,14 @@ const DropzoneContent = ({ className }: { className?: string }) => {
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                <Trans i18nKey="common:dropzone.uploading" />
+                <Trans i18nKey="common.dropzone.uploading" />
               </>
             ) : (
               <span className="flex items-center">
                 <Upload size={20} className="mr-2 h-4 w-4" />
 
                 <Trans
-                  i18nKey="common:dropzone.uploadFiles"
+                  i18nKey="common.dropzone.uploadFiles"
                   values={{
                     count: files.length,
                   }}
@@ -260,30 +260,30 @@ const DropzoneEmptyState = ({ className }: { className?: string }) => {
 
       <p className="text-sm">
         <Trans
-          i18nKey="common:dropzone.uploadFiles"
+          i18nKey="common.dropzone.uploadFiles"
           values={{ count: maxFiles }}
         />
       </p>
 
       <div className="flex flex-col items-center gap-y-1">
         <p className="text-muted-foreground text-xs">
-          <Trans i18nKey="common:dropzone.dragAndDrop" />{' '}
+          <Trans i18nKey="common.dropzone.dragAndDrop" />{' '}
           <a
             onClick={() => inputRef.current?.click()}
             className="hover:text-foreground cursor-pointer underline transition"
           >
             <Trans
-              i18nKey="common:dropzone.select"
+              i18nKey="common.dropzone.select"
               values={{ count: maxFiles === 1 ? `file` : 'files' }}
             />
           </a>{' '}
-          <Trans i18nKey="common:dropzone.toUpload" />
+          <Trans i18nKey="common.dropzone.toUpload" />
         </p>
 
         {maxFileSize !== Number.POSITIVE_INFINITY && (
           <p className="text-muted-foreground text-xs">
             <Trans
-              i18nKey="common:dropzone.maxFileSize"
+              i18nKey="common.dropzone.maxFileSize"
               values={{ size: formatBytes(maxFileSize, 2) }}
             />
           </p>

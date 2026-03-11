@@ -36,13 +36,13 @@ export class TeamAccountsPageObject {
   }
 
   getTeamFromSelector(teamName: string) {
-    return this.page.locator(`[data-test="account-selector-team"]`, {
+    return this.page.locator('[data-test="workspace-team-item"]', {
       hasText: teamName,
     });
   }
 
   getTeams() {
-    return this.page.locator('[data-test="account-selector-team"]');
+    return this.page.locator('[data-test="workspace-team-item"]');
   }
 
   goToSettings() {
@@ -83,10 +83,11 @@ export class TeamAccountsPageObject {
 
   openAccountsSelector() {
     return expect(async () => {
-      await this.page.click('[data-test="account-selector-trigger"]');
+      await this.page.click('[data-test="workspace-dropdown-trigger"]');
+      await this.page.click('[data-test="workspace-switch-submenu"]');
 
       return expect(
-        this.page.locator('[data-test="account-selector-content"]'),
+        this.page.locator('[data-test="workspace-switch-content"]'),
       ).toBeVisible();
     }).toPass();
   }
@@ -115,7 +116,7 @@ export class TeamAccountsPageObject {
   async createTeam({ teamName, slug } = this.createTeamName()) {
     await this.openAccountsSelector();
 
-    await this.page.click('[data-test="create-team-account-trigger"]');
+    await this.page.click('[data-test="create-team-trigger"]');
 
     await this.page.fill(
       '[data-test="create-team-form"] [data-test="team-name-input"]',
@@ -140,14 +141,15 @@ export class TeamAccountsPageObject {
     await this.openAccountsSelector();
     await expect(this.getTeamFromSelector(teamName)).toBeVisible();
 
-    // Close the selector
+    // Close the selector (Escape closes submenu, then parent dropdown)
+    await this.page.keyboard.press('Escape');
     await this.page.keyboard.press('Escape');
   }
 
   async createTeamWithNonLatinName(teamName: string, slug: string) {
     await this.openAccountsSelector();
 
-    await this.page.click('[data-test="create-team-account-trigger"]');
+    await this.page.click('[data-test="create-team-trigger"]');
 
     await this.page.fill(
       '[data-test="create-team-form"] [data-test="team-name-input"]',
@@ -177,7 +179,8 @@ export class TeamAccountsPageObject {
     await this.openAccountsSelector();
     await expect(this.getTeamFromSelector(teamName)).toBeVisible();
 
-    // Close the selector
+    // Close the selector (Escape closes submenu, then parent dropdown)
+    await this.page.keyboard.press('Escape');
     await this.page.keyboard.press('Escape');
   }
 
@@ -207,11 +210,10 @@ export class TeamAccountsPageObject {
   }
 
   async deleteAccount(email: string) {
+    await this.page.click('[data-test="delete-team-trigger"]');
+    await this.otp.completeOtpVerification(email);
+
     await expect(async () => {
-      await this.page.click('[data-test="delete-team-trigger"]');
-
-      await this.otp.completeOtpVerification(email);
-
       const click = this.page.click(
         '[data-test="delete-team-form-confirm-button"]',
       );

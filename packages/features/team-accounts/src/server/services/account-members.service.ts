@@ -2,7 +2,7 @@ import 'server-only';
 
 import { SupabaseClient } from '@supabase/supabase-js';
 
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { getLogger } from '@kit/shared/logger';
 import { Database } from '@kit/supabase/database';
@@ -26,7 +26,7 @@ class AccountMembersService {
    * @description Removes a member from an account.
    * @param params
    */
-  async removeMemberFromAccount(params: z.infer<typeof RemoveMemberSchema>) {
+  async removeMemberFromAccount(params: z.output<typeof RemoveMemberSchema>) {
     const logger = await getLogger();
 
     const ctx = {
@@ -75,7 +75,7 @@ class AccountMembersService {
    * @param adminClient
    */
   async updateMemberRole(
-    params: z.infer<typeof UpdateMemberRoleSchema>,
+    params: z.output<typeof UpdateMemberRoleSchema>,
     adminClient: SupabaseClient<Database>,
   ) {
     const logger = await getLogger();
@@ -145,7 +145,7 @@ class AccountMembersService {
    * @param adminClient
    */
   async transferOwnership(
-    params: z.infer<typeof TransferOwnershipConfirmationSchema>,
+    params: z.output<typeof TransferOwnershipConfirmationSchema>,
     adminClient: SupabaseClient<Database>,
   ) {
     const logger = await getLogger();

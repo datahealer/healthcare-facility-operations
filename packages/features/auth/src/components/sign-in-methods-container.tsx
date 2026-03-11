@@ -86,7 +86,7 @@ export function SignInMethodsContainer(props: {
 
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background text-muted-foreground px-2">
-                <Trans i18nKey="auth:orContinueWith" />
+                <Trans i18nKey="auth.orContinueWith" />
               </span>
             </div>
           </div>

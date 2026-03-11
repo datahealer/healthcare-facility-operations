@@ -408,7 +408,7 @@ export class KitTranslationsService {
   }
 
   private getLocalesRoot() {
-    return path.resolve(this.deps.rootPath, 'apps', 'web', 'public', 'locales');
+    return path.resolve(this.deps.rootPath, 'apps', 'web', 'i18n', 'messages');
   }
 }
 

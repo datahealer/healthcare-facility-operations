@@ -1,6 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { getLogger } from '@kit/shared/logger';
 import { Database, Tables } from '@kit/supabase/database';
@@ -18,22 +18,22 @@ const env = z
   .object({
     invitePath: z
       .string({
-        required_error: 'The property invitePath is required',
+        error: 'The property invitePath is required',
       })
       .min(1),
     siteURL: z
       .string({
-        required_error: 'NEXT_PUBLIC_SITE_URL is required',
+        error: 'NEXT_PUBLIC_SITE_URL is required',
       })
       .min(1),
     productName: z
       .string({
-        required_error: 'NEXT_PUBLIC_PRODUCT_NAME is required',
+        error: 'NEXT_PUBLIC_PRODUCT_NAME is required',
       })
       .min(1),
     emailSender: z
       .string({
-        required_error: 'EMAIL_SENDER is required',
+        error: 'EMAIL_SENDER is required',
       })
       .min(1),
   })

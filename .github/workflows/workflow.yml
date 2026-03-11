@@ -3,7 +3,7 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, v3 ]
 jobs:
   typescript:
     name: ʦ TypeScript

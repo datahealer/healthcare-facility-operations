@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 
 export const TransferOwnershipConfirmationSchema = z.object({
   accountId: z.string().uuid(),
@@ -6,6 +6,6 @@ export const TransferOwnershipConfirmationSchema = z.object({
   otp: z.string().min(6),
 });
 
-export type TransferOwnershipConfirmationData = z.infer<
+export type TransferOwnershipConfirmationData = z.output<
   typeof TransferOwnershipConfirmationSchema
 >;

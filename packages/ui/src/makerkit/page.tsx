@@ -14,10 +14,6 @@ type PageProps = React.PropsWithChildren<{
   sticky?: boolean;
 }>;
 
-const ENABLE_SIDEBAR_TRIGGER = process.env.NEXT_PUBLIC_ENABLE_SIDEBAR_TRIGGER
-  ? process.env.NEXT_PUBLIC_ENABLE_SIDEBAR_TRIGGER === 'true'
-  : true;
-
 export function Page(props: PageProps) {
   switch (props.style) {
     case 'header':
@@ -32,7 +28,7 @@ export function Page(props: PageProps) {
 }
 
 function PageWithSidebar(props: PageProps) {
-  const { Navigation, Children, MobileNavigation } = getSlotsFromPage(props);
+  const { Navigation, Children } = getSlotsFromPage(props);
 
   return (
     <div
@@ -46,8 +42,6 @@ function PageWithSidebar(props: PageProps) {
           'mx-auto flex h-screen w-full min-w-0 flex-1 flex-col bg-inherit'
         }
       >
-        {MobileNavigation}
-
         <div
           className={'bg-background flex min-w-0 flex-1 flex-col px-4 lg:px-0'}
         >
@@ -153,33 +147,22 @@ export function PageHeader({
   title,
   description,
   className,
-  displaySidebarTrigger = ENABLE_SIDEBAR_TRIGGER,
 }: React.PropsWithChildren<{
   className?: string;
   title?: string | React.ReactNode;
   description?: string | React.ReactNode;
-  displaySidebarTrigger?: boolean;
 }>) {
   return (
-    <div
-      className={cn(
-        'flex items-center justify-between py-5 lg:px-4',
-        className,
-      )}
-    >
+    <div className={cn('flex items-center justify-between py-4', className)}>
       <div className={'flex flex-col gap-y-2'}>
         <div className="flex items-center gap-x-2.5">
-          {displaySidebarTrigger ? (
-            <SidebarTrigger className="text-muted-foreground hover:text-secondary-foreground hidden h-4.5 w-4.5 cursor-pointer lg:inline-flex" />
-          ) : null}
+          <SidebarTrigger className="text-muted-foreground hover:text-secondary-foreground h-4.5 w-4.5 cursor-pointer" />
 
           <If condition={description}>
-            <If condition={displaySidebarTrigger}>
-              <Separator
-                orientation="vertical"
-                className="hidden h-4 w-px lg:group-data-[minimized]:block"
-              />
-            </If>
+            <Separator
+              orientation="vertical"
+              className="hidden h-4 w-px lg:group-data-[collapsible=icon]:block"
+            />
 
             <PageDescription>{description}</PageDescription>
           </If>

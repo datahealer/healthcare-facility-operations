@@ -21,7 +21,7 @@ export function CurrentPlanAlert(
     status: Enums<'subscription_status'>;
   }>,
 ) {
-  const prefix = 'billing:status';
+  const prefix = 'billing.status';
 
   const text = `${prefix}.${props.status}.description`;
   const title = `${prefix}.${props.status}.heading`;

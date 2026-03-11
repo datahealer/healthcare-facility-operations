@@ -3,18 +3,18 @@
 import { useState } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { AbstractIntlMessages } from 'next-intl';
 
-import { I18nProvider } from '@kit/i18n/provider';
+import { I18nClientProvider } from '@kit/i18n/provider';
 import { Toaster } from '@kit/ui/sonner';
 
-import { i18nResolver } from '../lib/i18n/i18n.resolver';
-import { getI18nSettings } from '../lib/i18n/i18n.settings';
-
-export function RootProviders(props: React.PropsWithChildren) {
+export function RootProviders(
+  props: React.PropsWithChildren<{ messages: AbstractIntlMessages }>,
+) {
   return (
-    <I18nProvider settings={getI18nSettings('en')} resolver={i18nResolver}>
+    <I18nClientProvider locale="en" messages={props.messages}>
       <ReactQueryProvider>{props.children}</ReactQueryProvider>
-    </I18nProvider>
+    </I18nClientProvider>
   );
 }
 

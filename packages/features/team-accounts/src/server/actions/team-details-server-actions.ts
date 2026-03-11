@@ -2,14 +2,15 @@
 
 import { redirect } from 'next/navigation';
 
-import { enhanceAction } from '@kit/next/actions';
+import { authActionClient } from '@kit/next/safe-action';
 import { getLogger } from '@kit/shared/logger';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 
 import { UpdateTeamNameSchema } from '../../schema/update-team-name.schema';
 
-export const updateTeamAccountName = enhanceAction(
-  async (params) => {
+export const updateTeamAccountName = authActionClient
+  .schema(UpdateTeamNameSchema)
+  .action(async ({ parsedInput: params }) => {
     const client = getSupabaseServerClient();
     const logger = await getLogger();
     const { name, path, slug, newSlug } = params;
@@ -40,7 +41,7 @@ export const updateTeamAccountName = enhanceAction(
       if (error.code === '23505') {
         return {
           success: false,
-          error: 'teams:duplicateSlugError',
+          error: 'teams.duplicateSlugError',
         };
       }
 
@@ -60,8 +61,4 @@ export const updateTeamAccountName = enhanceAction(
     }
 
     return { success: true };
-  },
-  {
-    schema: UpdateTeamNameSchema,
-  },
-);
+  });

@@ -2,11 +2,9 @@
 
 import { useCallback, useMemo, useState } from 'react';
 
-import dynamic from 'next/dynamic';
-
-import { Dialog as DialogPrimitive } from 'radix-ui';
-
 import { Button } from '../shadcn/button';
+import { Dialog, DialogContent } from '../shadcn/dialog';
+import { Heading } from '../shadcn/heading';
 import { Trans } from './trans';
 
 // configure this as you wish
@@ -18,11 +16,7 @@ enum ConsentStatus {
   Unknown = 'unknown',
 }
 
-export const CookieBanner = dynamic(async () => CookieBannerComponent, {
-  ssr: false,
-});
-
-export function CookieBannerComponent() {
+export function CookieBanner() {
   const { status, accept, reject } = useCookieConsent();
 
   if (!isBrowser()) {
@@ -34,16 +28,17 @@ export function CookieBannerComponent() {
   }
 
   return (
-    <DialogPrimitive.Root open modal={false}>
-      <DialogPrimitive.Content
-        onOpenAutoFocus={(e) => e.preventDefault()}
-        className={`dark:shadow-primary-500/40 bg-background animate-in fade-in zoom-in-95 slide-in-from-bottom-16 fill-mode-both fixed bottom-0 z-50 w-full max-w-lg border p-6 shadow-2xl delay-1000 duration-1000 lg:bottom-[2rem] lg:left-[2rem] lg:h-48 lg:rounded-lg`}
+    <Dialog open modal={false}>
+      <DialogContent
+        className={`dark:shadow-primary-500/40 bg-background animate-in fade-in zoom-in-95 slide-in-from-bottom-16 fill-mode-both fixed bottom-0 w-full max-w-lg border p-6 shadow-2xl delay-1000 duration-1000 lg:bottom-[2rem] lg:left-[2rem] lg:h-48 lg:rounded-lg`}
       >
-        <DialogPrimitive.Title className="text-lg font-semibold">
-          <Trans i18nKey={'cookieBanner.title'} />
-        </DialogPrimitive.Title>
-
         <div className={'flex flex-col space-y-4'}>
+          <div>
+            <Heading level={3}>
+              <Trans i18nKey={'cookieBanner.title'} />
+            </Heading>
+          </div>
+
           <div className={'text-gray-500 dark:text-gray-400'}>
             <Trans i18nKey={'cookieBanner.description'} />
           </div>
@@ -58,8 +53,8 @@ export function CookieBannerComponent() {
             </Button>
           </div>
         </div>
-      </DialogPrimitive.Content>
-    </DialogPrimitive.Root>
+      </DialogContent>
+    </Dialog>
   );
 }
 

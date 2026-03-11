@@ -295,7 +295,7 @@ export function DataTable<RecordData extends DataItem>({
   return (
     <div className="flex h-full flex-1 flex-col">
       <Table
-        data-testid="data-table"
+        data-testidid="data-table"
         {...tableProps}
         className={cn(
           'bg-background border-collapse border-spacing-0',
@@ -493,7 +493,7 @@ export function DataTable<RecordData extends DataItem>({
       <If condition={rows.length === 0}>
         <div className={'flex flex-1 flex-col items-center p-8'}>
           <span className="text-muted-foreground text-center text-sm">
-            {noResultsMessage || <Trans i18nKey={'common:noData'} />}
+            {noResultsMessage || <Trans i18nKey={'common.noData'} />}
           </span>
         </div>
       </If>
@@ -544,7 +544,7 @@ function Pagination<T>({
     <div className="flex items-center space-x-4">
       <span className="text-muted-foreground flex items-center text-xs">
         <Trans
-          i18nKey={'common:pageOfPages'}
+          i18nKey={'common.pageOfPages'}
           values={{
             page: currentPageIndex + 1,
             total: table.getPageCount(),

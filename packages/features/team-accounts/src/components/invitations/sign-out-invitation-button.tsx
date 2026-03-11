@@ -24,7 +24,7 @@ export function SignOutInvitationButton(
         window.location.assign(safePath);
       }}
     >
-      <Trans i18nKey={'teams:signInWithDifferentAccount'} />
+      <Trans i18nKey={'teams.signInWithDifferentAccount'} />
     </Button>
   );
 }

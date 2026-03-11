@@ -32,22 +32,22 @@ export async function renderOtpEmail(props: Props) {
     namespace,
   });
 
-  const subject = t(`${namespace}:subject`, {
+  const subject = t(`subject`, {
     productName: props.productName,
   });
 
   const previewText = subject;
 
-  const heading = t(`${namespace}:heading`, {
+  const heading = t(`heading`, {
     productName: props.productName,
   });
 
-  const otpText = t(`${namespace}:otpText`, {
+  const otpText = t(`otpText`, {
     otp: props.otp,
   });
 
-  const mainText = t(`${namespace}:mainText`);
-  const footerText = t(`${namespace}:footerText`);
+  const mainText = t(`mainText`);
+  const footerText = t(`footerText`);
 
   const html = await render(
     <Html>

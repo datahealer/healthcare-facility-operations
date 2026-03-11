@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 
 import { ColumnDef } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from 'next-intl';
 
 import { Database } from '@kit/supabase/database';
 import { Badge } from '@kit/ui/badge';
@@ -43,7 +43,7 @@ export function AccountInvitationsTable({
   invitations,
   permissions,
 }: AccountInvitationsTableProps) {
-  const { t } = useTranslation('teams');
+  const t = useTranslations('teams');
   const [search, setSearch] = useState('');
   const columns = useGetColumns(permissions);
 
@@ -82,7 +82,7 @@ function useGetColumns(permissions: {
   canRemoveInvitation: boolean;
   currentUserRoleHierarchy: number;
 }): ColumnDef<Invitations[0]>[] {
-  const { t } = useTranslation('teams');
+  const t = useTranslations('teams');
 
   return useMemo(
     () => [
@@ -96,7 +96,7 @@ function useGetColumns(permissions: {
           return (
             <span
               data-test={'invitation-email'}
-              className={'flex items-center space-x-4 text-left'}
+              className={'flex items-center gap-x-2 text-left'}
             >
               <span>
                 <ProfileAvatar text={email} />
@@ -172,19 +172,21 @@ function ActionsDropdown({
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant={'ghost'} size={'icon'}>
-            <Ellipsis className={'h-5 w-5'} />
-          </Button>
-        </DropdownMenuTrigger>
+        <DropdownMenuTrigger
+          render={
+            <Button variant={'ghost'} size={'icon'}>
+              <Ellipsis className={'h-5 w-5'} />
+            </Button>
+          }
+        />
 
-        <DropdownMenuContent>
+        <DropdownMenuContent className="min-w-52">
           <If condition={permissions.canUpdateInvitation}>
             <DropdownMenuItem
               data-test={'update-invitation-trigger'}
               onClick={() => setIsUpdatingRole(true)}
             >
-              <Trans i18nKey={'teams:updateInvitation'} />
+              <Trans i18nKey={'teams.updateInvitation'} />
             </DropdownMenuItem>
 
             <If condition={getIsInviteExpired(invitation.expires_at)}>
@@ -192,7 +194,7 @@ function ActionsDropdown({
                 data-test={'renew-invitation-trigger'}
                 onClick={() => setIsRenewingInvite(true)}
               >
-                <Trans i18nKey={'teams:renewInvitation'} />
+                <Trans i18nKey={'teams.renewInvitation'} />
               </DropdownMenuItem>
             </If>
           </If>
@@ -202,7 +204,7 @@ function ActionsDropdown({
               data-test={'remove-invitation-trigger'}
               onClick={() => setIsDeletingInvite(true)}
             >
-              <Trans i18nKey={'teams:removeInvitation'} />
+              <Trans i18nKey={'teams.removeInvitation'} />
             </DropdownMenuItem>
           </If>
         </DropdownMenuContent>

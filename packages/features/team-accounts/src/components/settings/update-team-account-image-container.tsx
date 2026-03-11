@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from 'next-intl';
 
 import { useSupabase } from '@kit/supabase/hooks/use-supabase';
 import { ImageUploader } from '@kit/ui/image-uploader';
@@ -21,7 +21,7 @@ export function UpdateTeamAccountImage(props: {
   };
 }) {
   const client = useSupabase();
-  const { t } = useTranslation('teams');
+  const t = useTranslations('teams');
 
   const createToaster = useCallback(
     (promise: () => Promise<unknown>) => {
@@ -89,11 +89,11 @@ export function UpdateTeamAccountImage(props: {
     >
       <div className={'flex flex-col space-y-1'}>
         <span className={'text-sm'}>
-          <Trans i18nKey={'account:profilePictureHeading'} />
+          <Trans i18nKey={'account.profilePictureHeading'} />
         </span>
 
         <span className={'text-xs'}>
-          <Trans i18nKey={'account:profilePictureSubheading'} />
+          <Trans i18nKey={'account.profilePictureSubheading'} />
         </span>
       </div>
     </ImageUploader>

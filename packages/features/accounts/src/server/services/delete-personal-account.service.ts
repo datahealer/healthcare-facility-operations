@@ -2,7 +2,7 @@ import 'server-only';
 
 import { SupabaseClient } from '@supabase/supabase-js';
 
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { getLogger } from '@kit/shared/logger';
 import { Database } from '@kit/supabase/database';
@@ -133,12 +133,12 @@ class DeletePersonalAccountService {
       .object({
         productName: z
           .string({
-            required_error: 'NEXT_PUBLIC_PRODUCT_NAME is required',
+            error: 'NEXT_PUBLIC_PRODUCT_NAME is required',
           })
           .min(1),
         fromEmail: z
           .string({
-            required_error: 'EMAIL_SENDER is required',
+            error: 'EMAIL_SENDER is required',
           })
           .min(1),
       })

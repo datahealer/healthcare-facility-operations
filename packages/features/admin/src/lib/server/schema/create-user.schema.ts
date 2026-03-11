@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 
 export const CreateUserSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -8,4 +8,4 @@ export const CreateUserSchema = z.object({
   emailConfirm: z.boolean().default(false).optional(),
 });
 
-export type CreateUserSchemaType = z.infer<typeof CreateUserSchema>;
+export type CreateUserSchemaType = z.output<typeof CreateUserSchema>;

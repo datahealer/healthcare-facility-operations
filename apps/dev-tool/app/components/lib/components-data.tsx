@@ -492,7 +492,7 @@ export const COMPONENTS_REGISTRY: ComponentInfo[] = [
     status: 'stable',
     component: CardButtonStory,
     sourceFile: '@kit/ui/card-button',
-    props: ['asChild', 'className', 'children', 'onClick', 'disabled'],
+    props: ['className', 'children', 'onClick', 'disabled'],
     icon: MousePointer,
   },
 
@@ -950,7 +950,7 @@ export const COMPONENTS_REGISTRY: ComponentInfo[] = [
     status: 'stable',
     component: ItemStory,
     sourceFile: '@kit/ui/item',
-    props: ['variant', 'size', 'asChild', 'className'],
+    props: ['variant', 'size', 'className'],
     icon: Layers,
   },
 
@@ -1004,7 +1004,7 @@ export const COMPONENTS_REGISTRY: ComponentInfo[] = [
     status: 'stable',
     component: BreadcrumbStory,
     sourceFile: '@kit/ui/breadcrumb',
-    props: ['separator', 'asChild', 'href', 'className'],
+    props: ['separator', 'href', 'className'],
     icon: ChevronRight,
   },
 

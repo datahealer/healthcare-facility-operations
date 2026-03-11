@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 
 /**
  * @name RESERVED_NAMES_ARRAY
@@ -40,20 +40,18 @@ export function containsNonLatinCharacters(value: string): boolean {
  * @description Schema for validating URL-friendly slugs
  */
 export const SlugSchema = z
-  .string({
-    description: 'URL-friendly identifier for the team',
-  })
+  .string()
   .min(2)
   .max(50)
   .regex(SLUG_REGEX, {
-    message: 'teams:invalidSlugError',
+    message: 'teams.invalidSlugError',
   })
   .refine(
     (slug) => {
       return !RESERVED_NAMES_ARRAY.includes(slug.toLowerCase());
     },
     {
-      message: 'teams:reservedNameError',
+      message: 'teams.reservedNameError',
     },
   );
 
@@ -62,9 +60,7 @@ export const SlugSchema = z
  * @description Schema for team name - allows non-Latin characters
  */
 export const TeamNameSchema = z
-  .string({
-    description: 'The name of the team account',
-  })
+  .string()
   .min(2)
   .max(50)
   .refine(
@@ -72,7 +68,7 @@ export const TeamNameSchema = z
       return !SPECIAL_CHARACTERS_REGEX.test(name);
     },
     {
-      message: 'teams:specialCharactersError',
+      message: 'teams.specialCharactersError',
     },
   )
   .refine(
@@ -80,7 +76,7 @@ export const TeamNameSchema = z
       return !RESERVED_NAMES_ARRAY.includes(name.toLowerCase());
     },
     {
-      message: 'teams:reservedNameError',
+      message: 'teams.reservedNameError',
     },
   );
 
@@ -93,10 +89,11 @@ export const CreateTeamSchema = z
   .object({
     name: TeamNameSchema,
     // Transform empty strings to undefined before validation
-    slug: z.preprocess(
-      (val) => (val === '' ? undefined : val),
-      SlugSchema.optional(),
-    ),
+    slug: z
+      .string()
+      .optional()
+      .transform((val) => (val === '' ? undefined : val))
+      .pipe(SlugSchema.optional()),
   })
   .refine(
     (data) => {
@@ -107,7 +104,7 @@ export const CreateTeamSchema = z
       return true;
     },
     {
-      message: 'teams:slugRequiredForNonLatinName',
+      message: 'teams.slugRequiredForNonLatinName',
       path: ['slug'],
     },
   );

@@ -1,9 +1,9 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { useRequestResetPassword } from '@kit/supabase/hooks/use-request-reset-password';
 import { Alert, AlertDescription } from '@kit/ui/alert';
@@ -31,7 +31,7 @@ export function PasswordResetRequestContainer(params: {
   redirectPath: string;
   captchaSiteKey?: string;
 }) {
-  const { t } = useTranslation('auth');
+  const t = useTranslations('auth');
   const resetPasswordMutation = useRequestResetPassword();
   const captcha = useCaptcha({ siteKey: params.captchaSiteKey });
   const captchaLoading = !captcha.isReady;
@@ -51,7 +51,7 @@ export function PasswordResetRequestContainer(params: {
       <If condition={success}>
         <Alert variant={'success'}>
           <AlertDescription>
-            <Trans i18nKey={'auth:passwordResetSuccessMessage'} />
+            <Trans i18nKey={'auth.passwordResetSuccessMessage'} />
           </AlertDescription>
         </Alert>
       </If>
@@ -85,7 +85,7 @@ export function PasswordResetRequestContainer(params: {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      <Trans i18nKey={'common:emailAddress'} />
+                      <Trans i18nKey={'common.emailAddress'} />
                     </FormLabel>
 
                     <FormControl>
@@ -111,15 +111,15 @@ export function PasswordResetRequestContainer(params: {
                     !resetPasswordMutation.isPending && !captchaLoading
                   }
                 >
-                  <Trans i18nKey={'auth:passwordResetLabel'} />
+                  <Trans i18nKey={'auth.passwordResetLabel'} />
                 </If>
 
                 <If condition={resetPasswordMutation.isPending}>
-                  <Trans i18nKey={'auth:passwordResetLabel'} />
+                  <Trans i18nKey={'auth.passwordResetLabel'} />
                 </If>
 
                 <If condition={captchaLoading}>
-                  <Trans i18nKey={'auth:verifyingCaptcha'} />
+                  <Trans i18nKey={'auth.verifyingCaptcha'} />
                 </If>
               </Button>
             </div>

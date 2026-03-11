@@ -337,7 +337,7 @@ Configs are automatically loaded but you can validate:
 
 ```typescript
 // lib/config/validate-config.ts
-import { z } from 'zod';
+import * as z from 'zod';
 
 const ConfigSchema = z.object({
   apiUrl: z.string().url(),

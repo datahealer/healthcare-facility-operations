@@ -11,6 +11,6 @@
       "~/ui/*": ["./src/shadcn/*"]
     }
   },
-  "include": ["*.ts", "src"],
+  "include": ["src"],
   "exclude": ["node_modules"]
 }

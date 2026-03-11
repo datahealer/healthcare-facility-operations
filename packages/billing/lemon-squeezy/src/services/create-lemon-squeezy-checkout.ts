@@ -3,7 +3,7 @@ import {
   createCheckout,
   getCustomer,
 } from '@lemonsqueezy/lemonsqueezy.js';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import type { CreateBillingCheckoutSchema } from '@kit/billing/schema';
 
@@ -14,7 +14,7 @@ import { initializeLemonSqueezyClient } from './lemon-squeezy-sdk';
  * Creates a checkout for a Lemon Squeezy product.
  */
 export async function createLemonSqueezyCheckout(
-  params: z.infer<typeof CreateBillingCheckoutSchema>,
+  params: z.output<typeof CreateBillingCheckoutSchema>,
 ) {
   await initializeLemonSqueezyClient();
 

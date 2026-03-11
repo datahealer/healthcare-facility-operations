@@ -33,7 +33,7 @@ interface ServiceCardProps {
 export const ServiceCard = ({ name, status }: ServiceCardProps) => {
   return (
     <Card className="w-full max-w-2xl">
-      <CardContent className="p-4">
+      <CardContent>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">

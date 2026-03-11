@@ -39,13 +39,13 @@ pnpm format:fix                   # Format code
 
 ## Key Patterns (Quick Reference)
 
-| Pattern | Import | Details |
-|---------|--------|---------|
-| Server Actions | `enhanceAction` from `@kit/next/actions` | `packages/next/AGENTS.md` |
-| Route Handlers | `enhanceRouteHandler` from `@kit/next/routes` | `packages/next/AGENTS.md` |
-| Server Client | `getSupabaseServerClient` from `@kit/supabase/server-client` | `packages/supabase/AGENTS.md` |
-| UI Components | `@kit/ui/{component}` | `packages/ui/AGENTS.md` |
-| Translations | `Trans` from `@kit/ui/trans` | `packages/ui/AGENTS.md` |
+| Pattern        | Import                                                       | Details                       |
+|----------------|--------------------------------------------------------------|-------------------------------|
+| Server Actions | `authActionClient` from `@kit/next/safe-action`              | `packages/next/AGENTS.md`     |
+| Route Handlers | `enhanceRouteHandler` from `@kit/next/routes`                | `packages/next/AGENTS.md`     |
+| Server Client  | `getSupabaseServerClient` from `@kit/supabase/server-client` | `packages/supabase/AGENTS.md` |
+| UI Components  | `@kit/ui/{component}`                                        | `packages/ui/AGENTS.md`       |
+| Translations   | `Trans` from `@kit/ui/trans`                                 | `packages/ui/AGENTS.md`       |
 
 ## Authorization
 

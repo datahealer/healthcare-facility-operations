@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { useSupabase } from '@kit/supabase/hooks/use-supabase';
 import { Alert, AlertDescription, AlertTitle } from '@kit/ui/alert';
@@ -40,12 +40,12 @@ export function ResendAuthLinkForm(props: {
     return (
       <Alert variant={'success'}>
         <AlertTitle>
-          <Trans i18nKey={'auth:resendLinkSuccess'} />
+          <Trans i18nKey={'auth.resendLinkSuccess'} />
         </AlertTitle>
 
         <AlertDescription>
           <Trans
-            i18nKey={'auth:resendLinkSuccessDescription'}
+            i18nKey={'auth.resendLinkSuccessDescription'}
             defaults={'Success!'}
           />
         </AlertDescription>
@@ -85,17 +85,17 @@ export function ResendAuthLinkForm(props: {
           }}
         />
 
-        <Button disabled={resendLink.isPending || captchaLoading}>
+        <Button type="submit" disabled={resendLink.isPending || captchaLoading}>
           <If condition={captchaLoading}>
-            <Trans i18nKey={'auth:verifyingCaptcha'} />
+            <Trans i18nKey={'auth.verifyingCaptcha'} />
           </If>
 
           <If condition={resendLink.isPending && !captchaLoading}>
-            <Trans i18nKey={'auth:resendingLink'} />
+            <Trans i18nKey={'auth.resendingLink'} />
           </If>
 
           <If condition={!resendLink.isPending && !captchaLoading}>
-            <Trans i18nKey={'auth:resendLink'} defaults={'Resend Link'} />
+            <Trans i18nKey={'auth.resendLink'} defaults={'Resend Link'} />
           </If>
         </Button>
       </form>

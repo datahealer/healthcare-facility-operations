@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { renderOtpEmail } from '@kit/email-templates';
 import { getMailer } from '@kit/mailers';
@@ -6,14 +6,14 @@ import { getLogger } from '@kit/shared/logger';
 
 const EMAIL_SENDER = z
   .string({
-    required_error: 'EMAIL_SENDER is required',
+    error: 'EMAIL_SENDER is required',
   })
   .min(1)
   .parse(process.env.EMAIL_SENDER);
 
 const PRODUCT_NAME = z
   .string({
-    required_error: 'PRODUCT_NAME is required',
+    error: 'PRODUCT_NAME is required',
   })
   .min(1)
   .parse(process.env.NEXT_PUBLIC_PRODUCT_NAME);

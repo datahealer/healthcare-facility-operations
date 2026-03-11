@@ -3,7 +3,7 @@ import 'server-only';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 import { addDays, formatISO } from 'date-fns';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { getLogger } from '@kit/shared/logger';
 import { Database } from '@kit/supabase/database';
@@ -37,7 +37,7 @@ class AccountInvitationsService {
    * @description Removes an invitation from the database.
    * @param params
    */
-  async deleteInvitation(params: z.infer<typeof DeleteInvitationSchema>) {
+  async deleteInvitation(params: z.output<typeof DeleteInvitationSchema>) {
     const logger = await getLogger();
 
     const ctx = {
@@ -70,7 +70,7 @@ class AccountInvitationsService {
    * @param params
    * @description Updates an invitation in the database.
    */
-  async updateInvitation(params: z.infer<typeof UpdateInvitationSchema>) {
+  async updateInvitation(params: z.output<typeof UpdateInvitationSchema>) {
     const logger = await getLogger();
 
     const ctx = {
@@ -107,7 +107,7 @@ class AccountInvitationsService {
   }
 
   async validateInvitation(
-    invitation: z.infer<typeof InviteMembersSchema>['invitations'][number],
+    invitation: z.output<typeof InviteMembersSchema>['invitations'][number],
     accountSlug: string,
   ) {
     const { data: members, error } = await this.client.rpc(
@@ -141,7 +141,7 @@ class AccountInvitationsService {
     invitations,
     invitedBy,
   }: {
-    invitations: z.infer<typeof InviteMembersSchema>['invitations'];
+    invitations: z.output<typeof InviteMembersSchema>['invitations'];
     accountSlug: string;
     invitedBy: string;
   }) {

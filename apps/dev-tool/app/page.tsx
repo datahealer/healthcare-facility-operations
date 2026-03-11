@@ -37,7 +37,6 @@ export default async function DashboardPage() {
   return (
     <Page style={'custom'}>
       <PageHeader
-        displaySidebarTrigger={false}
         title={'Dev Tool'}
         description={'Kit MCP status for this workspace'}
       />

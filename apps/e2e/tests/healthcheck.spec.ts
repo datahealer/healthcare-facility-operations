@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Healthcheck endpoint', () => {
   test('returns healthy status', async ({ request }) => {
-    const response = await request.get('/healthcheck');
+    const response = await request.get('/api/healthcheck');
 
     expect(response.status()).toBe(200);
 

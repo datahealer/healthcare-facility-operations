@@ -1,7 +1,5 @@
 import { CloudConfig, GitHubConfig, LocalConfig } from '@keystatic/core';
-import { z } from 'zod';
-
-type ZodOutputFor<T> = z.ZodType<T, z.ZodTypeDef, unknown>;
+import * as z from 'zod';
 
 /**
  * @name STORAGE_KIND
@@ -37,7 +35,7 @@ const PROJECT = process.env.KEYSTATIC_STORAGE_PROJECT;
  */
 const local = z.object({
   kind: z.literal('local'),
-}) satisfies ZodOutputFor<LocalConfig['storage']>;
+}) satisfies z.ZodType<LocalConfig['storage']>;
 
 /**
  * @name cloud
@@ -47,12 +45,12 @@ const cloud = z.object({
   kind: z.literal('cloud'),
   project: z
     .string({
-      description: `The Keystatic Cloud project. Please provide the value through the "KEYSTATIC_STORAGE_PROJECT" environment variable.`,
+      error: `The Keystatic Cloud project. Please provide the value through the "KEYSTATIC_STORAGE_PROJECT" environment variable.`,
     })
     .min(1),
   branchPrefix: z.string().optional(),
   pathPrefix: z.string().optional(),
-}) satisfies ZodOutputFor<CloudConfig['storage']>;
+}) satisfies z.ZodType<CloudConfig['storage']>;
 
 /**
  * @name github
@@ -63,7 +61,7 @@ const github = z.object({
   repo: z.custom<`${string}/${string}`>(),
   branchPrefix: z.string().optional(),
   pathPrefix: z.string().optional(),
-}) satisfies ZodOutputFor<GitHubConfig['storage']>;
+}) satisfies z.ZodType<GitHubConfig['storage']>;
 
 /**
  * @name KeystaticStorage

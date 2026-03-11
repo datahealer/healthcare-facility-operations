@@ -1,5 +1,5 @@
 import { getCustomer } from '@lemonsqueezy/lemonsqueezy.js';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import type { CreateBillingPortalSessionSchema } from '@kit/billing/schema';
 
@@ -11,7 +11,7 @@ import { initializeLemonSqueezyClient } from './lemon-squeezy-sdk';
  * @param {object} params - The parameters required to create the billing portal session.
  */
 export async function createLemonSqueezyBillingPortalSession(
-  params: z.infer<typeof CreateBillingPortalSessionSchema>,
+  params: z.output<typeof CreateBillingPortalSessionSchema>,
 ) {
   await initializeLemonSqueezyClient();
 

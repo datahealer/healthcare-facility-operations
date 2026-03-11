@@ -1,58 +1,45 @@
-import { z } from 'zod';
+import * as z from 'zod';
 
 type LanguagePriority = 'user' | 'application';
 
 const FeatureFlagsSchema = z.object({
   enableThemeToggle: z.boolean({
-    description: 'Enable theme toggle in the user interface.',
-    required_error: 'Provide the variable NEXT_PUBLIC_ENABLE_THEME_TOGGLE',
+    error: 'Provide the variable NEXT_PUBLIC_ENABLE_THEME_TOGGLE',
   }),
   enableAccountDeletion: z.boolean({
-    description: 'Enable personal account deletion.',
-    required_error:
-      'Provide the variable NEXT_PUBLIC_ENABLE_PERSONAL_ACCOUNT_DELETION',
+    error: 'Provide the variable NEXT_PUBLIC_ENABLE_PERSONAL_ACCOUNT_DELETION',
   }),
   enableTeamDeletion: z.boolean({
-    description: 'Enable team deletion.',
-    required_error:
-      'Provide the variable NEXT_PUBLIC_ENABLE_TEAM_ACCOUNTS_DELETION',
+    error: 'Provide the variable NEXT_PUBLIC_ENABLE_TEAM_ACCOUNTS_DELETION',
   }),
   enableTeamAccounts: z.boolean({
-    description: 'Enable team accounts.',
-    required_error: 'Provide the variable NEXT_PUBLIC_ENABLE_TEAM_ACCOUNTS',
+    error: 'Provide the variable NEXT_PUBLIC_ENABLE_TEAM_ACCOUNTS',
   }),
   enableTeamCreation: z.boolean({
-    description: 'Enable team creation.',
-    required_error:
-      'Provide the variable NEXT_PUBLIC_ENABLE_TEAM_ACCOUNTS_CREATION',
+    error: 'Provide the variable NEXT_PUBLIC_ENABLE_TEAM_ACCOUNTS_CREATION',
   }),
   enablePersonalAccountBilling: z.boolean({
-    description: 'Enable personal account billing.',
-    required_error:
-      'Provide the variable NEXT_PUBLIC_ENABLE_PERSONAL_ACCOUNT_BILLING',
+    error: 'Provide the variable NEXT_PUBLIC_ENABLE_PERSONAL_ACCOUNT_BILLING',
   }),
   enableTeamAccountBilling: z.boolean({
-    description: 'Enable team account billing.',
-    required_error:
-      'Provide the variable NEXT_PUBLIC_ENABLE_TEAM_ACCOUNTS_BILLING',
+    error: 'Provide the variable NEXT_PUBLIC_ENABLE_TEAM_ACCOUNTS_BILLING',
   }),
   languagePriority: z
     .enum(['user', 'application'], {
-      required_error: 'Provide the variable NEXT_PUBLIC_LANGUAGE_PRIORITY',
-      description: `If set to user, use the user's preferred language. If set to application, use the application's default language.`,
+      error: 'Provide the variable NEXT_PUBLIC_LANGUAGE_PRIORITY',
     })
     .default('application'),
   enableNotifications: z.boolean({
-    description: 'Enable notifications functionality',
-    required_error: 'Provide the variable NEXT_PUBLIC_ENABLE_NOTIFICATIONS',
+    error: 'Provide the variable NEXT_PUBLIC_ENABLE_NOTIFICATIONS',
   }),
   realtimeNotifications: z.boolean({
-    description: 'Enable realtime for the notifications functionality',
-    required_error: 'Provide the variable NEXT_PUBLIC_REALTIME_NOTIFICATIONS',
+    error: 'Provide the variable NEXT_PUBLIC_REALTIME_NOTIFICATIONS',
   }),
   enableVersionUpdater: z.boolean({
-    description: 'Enable version updater',
-    required_error: 'Provide the variable NEXT_PUBLIC_ENABLE_VERSION_UPDATER',
+    error: 'Provide the variable NEXT_PUBLIC_ENABLE_VERSION_UPDATER',
+  }),
+  enableTeamsOnly: z.boolean({
+    error: 'Provide the variable NEXT_PUBLIC_ENABLE_TEAM_ACCOUNTS_ONLY',
   }),
 });
 
@@ -99,7 +86,11 @@ const featuresFlagConfig = FeatureFlagsSchema.parse({
     process.env.NEXT_PUBLIC_ENABLE_VERSION_UPDATER,
     false,
   ),
-} satisfies z.infer<typeof FeatureFlagsSchema>);
+  enableTeamsOnly: getBoolean(
+    process.env.NEXT_PUBLIC_ENABLE_TEAM_ACCOUNTS_ONLY,
+    false,
+  ),
+} satisfies z.output<typeof FeatureFlagsSchema>);
 
 export default featuresFlagConfig;
 

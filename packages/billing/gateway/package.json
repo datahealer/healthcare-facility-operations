@@ -31,9 +31,9 @@
     "date-fns": "^4.1.0",
     "lucide-react": "catalog:",
     "next": "catalog:",
+    "next-intl": "catalog:",
     "react": "catalog:",
     "react-hook-form": "catalog:",
-    "react-i18next": "catalog:",
     "zod": "catalog:"
   },
   "typesVersions": {

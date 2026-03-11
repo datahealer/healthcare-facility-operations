@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { User } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 
 import { Database } from '@kit/supabase/database';
 import { Button } from '@kit/ui/button';
@@ -35,7 +35,7 @@ export function UpdateAccountDetailsForm({
   onUpdate: (user: Partial<UpdateUserDataParams>) => void;
 }) {
   const updateAccountMutation = useUpdateAccountData(userId);
-  const { t } = useTranslation('account');
+  const t = useTranslations('account');
 
   const form = useForm({
     resolver: zodResolver(AccountDetailsSchema),
@@ -79,7 +79,7 @@ export function UpdateAccountDetailsForm({
                     <InputGroupInput
                       data-test={'account-display-name'}
                       minLength={2}
-                      placeholder={t('account:name')}
+                      placeholder={t('name')}
                       maxLength={100}
                       {...field}
                     />
@@ -92,8 +92,8 @@ export function UpdateAccountDetailsForm({
           />
 
           <div>
-            <Button disabled={updateAccountMutation.isPending}>
-              <Trans i18nKey={'account:updateProfileSubmitLabel'} />
+            <Button type="submit" disabled={updateAccountMutation.isPending}>
+              <Trans i18nKey={'account.updateProfileSubmitLabel'} />
             </Button>
           </div>
         </form>

@@ -10,6 +10,7 @@ import {
   LogOut,
   MessageCircleQuestion,
   Shield,
+  User,
 } from 'lucide-react';
 
 import { JWTUserData } from '@kit/supabase/types';
@@ -49,6 +50,7 @@ export function PersonalAccountDropdown({
 
   paths: {
     home: string;
+    profileSettings: string;
   };
 
   features: {
@@ -87,11 +89,10 @@ export function PersonalAccountDropdown({
         aria-label="Open your profile menu"
         data-test={'account-dropdown-trigger'}
         className={cn(
-          'group/trigger fade-in focus:outline-primary flex cursor-pointer items-center group-data-[minimized=true]/sidebar:px-0',
+          'group/trigger fade-in focus:outline-primary flex cursor-pointer items-center group-data-[collapsible=icon]:px-0',
           className ?? '',
           {
-            ['active:bg-secondary/50 items-center gap-4 rounded-md' +
-            ' hover:bg-secondary border border-dashed p-2 transition-colors']:
+            ['active:bg-secondary/50 group-data-[collapsible=none]:hover:bg-secondary items-center gap-4 rounded-md border-dashed p-2 transition-colors group-data-[collapsible=none]:border']:
               showProfileName,
           },
         )}
@@ -108,7 +109,7 @@ export function PersonalAccountDropdown({
         <If condition={showProfileName}>
           <div
             className={
-              'fade-in flex w-full flex-col truncate text-left group-data-[minimized=true]/sidebar:hidden'
+              'fade-in flex w-full flex-col truncate text-left group-data-[collapsible=icon]:hidden'
             }
           >
             <span
@@ -128,7 +129,7 @@ export function PersonalAccountDropdown({
 
           <ChevronsUpDown
             className={
-              'text-muted-foreground mr-1 h-8 group-data-[minimized=true]/sidebar:hidden'
+              'text-muted-foreground mr-1 h-8 group-data-[collapsible=icon]:hidden'
             }
           />
         </If>
@@ -140,7 +141,7 @@ export function PersonalAccountDropdown({
             className={'flex flex-col justify-start truncate text-left text-xs'}
           >
             <div className={'text-muted-foreground'}>
-              <Trans i18nKey={'common:signedInAs'} />
+              <Trans i18nKey={'common.signedInAs'} />
             </div>
 
             <div>
@@ -151,48 +152,69 @@ export function PersonalAccountDropdown({
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem asChild>
-          <Link
-            className={'s-full flex cursor-pointer items-center space-x-2'}
-            href={paths.home}
-          >
-            <Home className={'h-5'} />
+        <DropdownMenuItem
+          render={
+            <Link
+              className={'s-full flex cursor-pointer items-center space-x-2'}
+              href={paths.home}
+            />
+          }
+        >
+          <Home className={'h-5'} />
 
-            <span>
-              <Trans i18nKey={'common:routes.home'} />
-            </span>
-          </Link>
+          <span>
+            <Trans i18nKey={'common.routes.home'} />
+          </span>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          render={
+            <Link
+              className={'s-full flex cursor-pointer items-center space-x-2'}
+              href={paths.profileSettings}
+            />
+          }
+        >
+          <User className={'h-5'} />
+
+          <span>
+            <Trans i18nKey={'common.routes.profile'} />
+          </span>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem asChild>
-          <Link
-            className={'s-full flex cursor-pointer items-center space-x-2'}
-            href={'/docs'}
-          >
-            <MessageCircleQuestion className={'h-5'} />
+        <DropdownMenuItem
+          render={
+            <Link
+              className={'s-full flex cursor-pointer items-center space-x-2'}
+              href={'/docs'}
+            />
+          }
+        >
+          <MessageCircleQuestion className={'h-5'} />
 
-            <span>
-              <Trans i18nKey={'common:documentation'} />
-            </span>
-          </Link>
+          <span>
+            <Trans i18nKey={'common.documentation'} />
+          </span>
         </DropdownMenuItem>
 
         <If condition={isSuperAdmin}>
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem asChild>
-            <Link
-              className={
-                's-full flex cursor-pointer items-center space-x-2 text-yellow-700 dark:text-yellow-500'
-              }
-              href={'/admin'}
-            >
-              <Shield className={'h-5'} />
+          <DropdownMenuItem
+            render={
+              <Link
+                className={
+                  's-full flex cursor-pointer items-center space-x-2 text-yellow-700 dark:text-yellow-500'
+                }
+                href={'/admin'}
+              />
+            }
+          >
+            <Shield className={'h-5'} />
 
-              <span>Super Admin</span>
-            </Link>
+            <span>Super Admin</span>
           </DropdownMenuItem>
         </If>
 
@@ -214,7 +236,7 @@ export function PersonalAccountDropdown({
             <LogOut className={'h-5'} />
 
             <span>
-              <Trans i18nKey={'auth:signOut'} />
+              <Trans i18nKey={'auth.signOut'} />
             </span>
           </span>
         </DropdownMenuItem>

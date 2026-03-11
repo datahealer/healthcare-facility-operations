@@ -2,7 +2,7 @@ import 'server-only';
 
 import { SupabaseClient } from '@supabase/supabase-js';
 
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { getLogger } from '@kit/shared/logger';
 import { Database } from '@kit/supabase/database';
@@ -32,7 +32,7 @@ class LeaveTeamAccountService {
    * @description Leave a team account
    * @param params
    */
-  async leaveTeamAccount(params: z.infer<typeof Schema>) {
+  async leaveTeamAccount(params: z.output<typeof Schema>) {
     const logger = await getLogger();
 
     const ctx = {

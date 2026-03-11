@@ -276,11 +276,11 @@ export default function CalendarStory() {
         <Card>
           <CardContent className="flex justify-center pt-6">
             <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="justify-start">
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  Pick a date
-                </Button>
+              <PopoverTrigger
+                render={<Button variant="outline" className="justify-start" />}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                Pick a date
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar

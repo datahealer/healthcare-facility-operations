@@ -3,9 +3,9 @@
 import { useRouter } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { TriangleAlert } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { useUpdateUser } from '@kit/supabase/hooks/use-update-user-mutation';
@@ -31,7 +31,7 @@ export function UpdatePasswordForm(params: {
 }) {
   const updateUser = useUpdateUser();
   const router = useRouter();
-  const { t } = useTranslation();
+  const t = useTranslations();
 
   const form = useForm({
     resolver: zodResolver(PasswordResetSchema),
@@ -68,7 +68,7 @@ export function UpdatePasswordForm(params: {
 
             router.replace(params.redirectTo);
 
-            toast.success(t('account:updatePasswordSuccessMessage'));
+            toast.success(t('account.updatePasswordSuccessMessage'));
           })}
         >
           <div className={'flex-col space-y-2.5'}>
@@ -94,7 +94,7 @@ export function UpdatePasswordForm(params: {
                   </FormControl>
 
                   <FormDescription>
-                    <Trans i18nKey={'common:repeatPassword'} />
+                    <Trans i18nKey={'common.repeatPassword'} />
                   </FormDescription>
 
                   <FormMessage />
@@ -107,7 +107,7 @@ export function UpdatePasswordForm(params: {
               type="submit"
               className={'w-full'}
             >
-              <Trans i18nKey={'auth:passwordResetLabel'} />
+              <Trans i18nKey={'auth.passwordResetLabel'} />
             </Button>
           </div>
         </form>
@@ -122,7 +122,7 @@ function ErrorState(props: {
     code: string;
   };
 }) {
-  const { t } = useTranslation('auth');
+  const t = useTranslations('auth');
 
   const errorMessage = t(`errors.${props.error.code}`, {
     defaultValue: t('errors.resetPasswordError'),
@@ -131,17 +131,17 @@ function ErrorState(props: {
   return (
     <div className={'flex flex-col space-y-4'}>
       <Alert variant={'destructive'}>
-        <ExclamationTriangleIcon className={'s-6'} />
+        <TriangleAlert className={'s-6'} />
 
         <AlertTitle>
-          <Trans i18nKey={'common:genericError'} />
+          <Trans i18nKey={'common.genericError'} />
         </AlertTitle>
 
         <AlertDescription>{errorMessage}</AlertDescription>
       </Alert>
 
       <Button onClick={props.onRetry} variant={'outline'}>
-        <Trans i18nKey={'common:retry'} />
+        <Trans i18nKey={'common.retry'} />
       </Button>
     </div>
   );

@@ -9,7 +9,9 @@ You are an expert at building pure, testable services that are decoupled from th
 
 ## North Star
 
-**Every service is decoupled from its interface (I/O).** A service takes plain data in, does work, and returns plain data out. It has no knowledge of whether it was called from an MCP tool, a server action, a CLI command, a route handler, or a test. The caller is a thin adapter that resolves dependencies and delegates.
+**Every service is decoupled from its interface (I/O).** A service takes plain data in, does work, and returns plain
+data out. It has no knowledge of whether it was called from an MCP tool, a server action, a CLI command, a route
+handler, or a test. The caller is a thin adapter that resolves dependencies and delegates.
 
 ## Workflow
 
@@ -21,7 +23,7 @@ Start with the input/output types. These are plain TypeScript — no framework t
 
 ```typescript
 // _lib/schemas/project.schema.ts
-import { z } from 'zod';
+import * as z from 'zod';
 
 export const CreateProjectSchema = z.object({
   name: z.string().min(1),
@@ -40,7 +42,8 @@ export interface Project {
 
 ### Step 2: Build the Service
 
-The service receives all dependencies through its constructor. It never imports framework-specific modules (`getSupabaseServerClient`, `getLogger`, `revalidatePath`, etc.).
+The service receives all dependencies through its constructor. It never imports framework-specific modules (
+`getSupabaseServerClient`, `getLogger`, `revalidatePath`, etc.).
 
 ```typescript
 // _lib/server/project.service.ts
@@ -95,7 +98,8 @@ class ProjectService {
 
 ### Step 3: Write Thin Adapters
 
-Each interface is a thin adapter — it resolves dependencies, calls the service, and handles interface-specific concerns (revalidation, redirects, MCP formatting, CLI output).
+Each interface is a thin adapter — it resolves dependencies, calls the service, and handles interface-specific
+concerns (revalidation, redirects, MCP formatting, CLI output).
 
 **Server Action adapter:**
 
@@ -234,27 +238,32 @@ describe('ProjectService', () => {
 
 ## Rules
 
-1. **Services are pure functions over data.** Plain objects/primitives in, plain objects/primitives out. No `Request`/`Response`, no MCP context, no `FormData`.
+1. **Services are pure functions over data.** Plain objects/primitives in, plain objects/primitives out. No `Request`/
+   `Response`, no MCP context, no `FormData`.
 
-2. **Inject dependencies, never import them.** The service receives its database client, storage client, or any I/O capability as a constructor argument. Never call `getSupabaseServerClient()` inside a service.
+2. **Inject dependencies, never import them.** The service receives its database client, storage client, or any I/O
+   capability as a constructor argument. Never call `getSupabaseServerClient()` inside a service.
 
-3. **Adapters are trivial glue.** A server action resolves the client, calls the service, and handles `revalidatePath`. An MCP tool resolves the client, calls the service, and formats the response. No business logic in adapters.
+3. **Adapters are trivial glue.** A server action resolves the client, calls the service, and handles `revalidatePath`.
+   An MCP tool resolves the client, calls the service, and formats the response. No business logic in adapters.
 
-4. **One service, many callers.** If two interfaces do the same thing, they call the same service function. Duplicating logic is a violation.
+4. **One service, many callers.** If two interfaces do the same thing, they call the same service function. Duplicating
+   logic is a violation.
 
-5. **Testable in isolation.** Pass a mock client, assert the output. If you need a running database to test a service, refactor until you don't.
+5. **Testable in isolation.** Pass a mock client, assert the output. If you need a running database to test a service,
+   refactor until you don't.
 
 ## What Goes Where
 
-| Concern | Location | Example |
-|---------|----------|---------|
-| Input validation (Zod) | `_lib/schemas/` | `CreateProjectSchema` |
-| Business logic | `_lib/server/*.service.ts` | `ProjectService.create()` |
-| Auth check | Adapter (`enhanceAction({ auth: true })`) | Server action wrapper |
-| Logging | Adapter | `logger.info()` before/after service call |
-| Cache revalidation | Adapter | `revalidatePath()` after mutation |
-| Redirect | Adapter | `redirect()` after creation |
-| MCP response format | Adapter | Return service result as MCP content |
+| Concern                | Location                                  | Example                                   |
+|------------------------|-------------------------------------------|-------------------------------------------|
+| Input validation (Zod) | `_lib/schemas/`                           | `CreateProjectSchema`                     |
+| Business logic         | `_lib/server/*.service.ts`                | `ProjectService.create()`                 |
+| Auth check             | Adapter (`enhanceAction({ auth: true })`) | Server action wrapper                     |
+| Logging                | Adapter                                   | `logger.info()` before/after service call |
+| Cache revalidation     | Adapter                                   | `revalidatePath()` after mutation         |
+| Redirect               | Adapter                                   | `redirect()` after creation               |
+| MCP response format    | Adapter                                   | Return service result as MCP content      |
 
 ## File Structure
 
@@ -305,4 +314,5 @@ const result = await client.from('projects').insert(...).select().single();
 
 ## Reference
 
-See `[Examples](examples.md)` for more patterns including services with multiple dependencies, services that compose other services, and testing strategies.
+See `[Examples](examples.md)` for more patterns including services with multiple dependencies, services that compose
+other services, and testing strategies.

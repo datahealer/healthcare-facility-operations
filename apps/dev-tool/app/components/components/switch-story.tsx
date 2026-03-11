@@ -100,7 +100,7 @@ export function SwitchStory() {
       className: cn(
         controls.size === 'sm' && 'h-4 w-7',
         controls.size === 'lg' && 'h-6 w-11',
-        controls.error && 'data-[state=checked]:bg-destructive',
+        controls.error && 'data-checked:bg-destructive',
       ),
     };
 
@@ -200,7 +200,7 @@ export function SwitchStory() {
         className={cn(
           controls.size === 'sm' && 'h-4 w-7',
           controls.size === 'lg' && 'h-6 w-11',
-          controls.error && 'data-[state=checked]:bg-destructive',
+          controls.error && 'data-checked:bg-destructive',
         )}
       />
     );
@@ -616,7 +616,7 @@ export function SwitchStory() {
                 </Label>
                 <Switch
                   id="error-switch"
-                  className="data-[state=checked]:bg-destructive"
+                  className="data-checked:bg-destructive"
                 />
               </div>
               <p className="text-destructive text-sm">
@@ -642,7 +642,7 @@ export function SwitchStory() {
           <div>
             <h4 className="mb-3 text-lg font-semibold">Switch</h4>
             <p className="text-muted-foreground mb-3 text-sm">
-              A toggle switch component for boolean states. Built on Radix UI
+              A toggle switch component for boolean states. Built on Base UI
               Switch primitive.
             </p>
             <div className="overflow-x-auto">

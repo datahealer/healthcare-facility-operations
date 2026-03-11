@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 
 const ConfirmationSchema = z.object({
   confirmation: z.custom<string>((value) => value === 'CONFIRM'),

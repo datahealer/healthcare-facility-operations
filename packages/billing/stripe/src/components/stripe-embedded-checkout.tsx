@@ -50,6 +50,7 @@ function EmbeddedCheckoutPopup({
     <Dialog
       defaultOpen
       open={open}
+      disablePointerDismissal
       onOpenChange={(open) => {
         if (!open && onClose) {
           onClose();
@@ -63,9 +64,6 @@ function EmbeddedCheckoutPopup({
           maxHeight: '98vh',
         }}
         className={className}
-        onOpenAutoFocus={(e) => e.preventDefault()}
-        onInteractOutside={(e) => e.preventDefault()}
-        onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DialogTitle className={'hidden'}>Checkout</DialogTitle>
         <div>{children}</div>

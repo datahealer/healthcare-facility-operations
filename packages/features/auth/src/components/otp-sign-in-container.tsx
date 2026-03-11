@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useWatch } from 'react-hook-form';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { useSignInWithOtp } from '@kit/supabase/hooks/use-sign-in-with-otp';
 import { useVerifyOtp } from '@kit/supabase/hooks/use-verify-otp';
@@ -132,7 +132,7 @@ export function OtpSignInContainer(props: OtpSignInContainerProps) {
               </FormControl>
 
               <FormDescription>
-                <Trans i18nKey="common:otp.enterCodeFromEmail" />
+                <Trans i18nKey="common.otp.enterCodeFromEmail" />
               </FormDescription>
 
               <FormMessage />
@@ -149,10 +149,10 @@ export function OtpSignInContainer(props: OtpSignInContainerProps) {
             {verifyMutation.isPending ? (
               <>
                 <Spinner className="mr-2 h-4 w-4" />
-                <Trans i18nKey="common:otp.verifying" />
+                <Trans i18nKey="common.otp.verifying" />
               </>
             ) : (
-              <Trans i18nKey="common:otp.verifyCode" />
+              <Trans i18nKey="common.otp.verifyCode" />
             )}
           </Button>
 
@@ -166,7 +166,7 @@ export function OtpSignInContainer(props: OtpSignInContainerProps) {
               });
             }}
           >
-            <Trans i18nKey="common:otp.requestNewCode" />
+            <Trans i18nKey="common.otp.requestNewCode" />
           </Button>
         </div>
       </form>
@@ -191,7 +191,7 @@ function OtpEmailForm({
     defaultValues: { email: '' },
   });
 
-  const handleSendOtp = async ({ email }: z.infer<typeof EmailSchema>) => {
+  const handleSendOtp = async ({ email }: z.output<typeof EmailSchema>) => {
     await signInMutation.mutateAsync({
       email,
       options: { captchaToken: captcha.token, shouldCreateUser },
@@ -230,10 +230,10 @@ function OtpEmailForm({
           {signInMutation.isPending ? (
             <>
               <Spinner className="mr-2 h-4 w-4" />
-              <Trans i18nKey="common:otp.sendingCode" />
+              <Trans i18nKey="common.otp.sendingCode" />
             </>
           ) : (
-            <Trans i18nKey="common:otp.sendVerificationCode" />
+            <Trans i18nKey="common.otp.sendVerificationCode" />
           )}
         </Button>
       </form>

@@ -5,4 +5,5 @@ export * from './invitations/account-invitations-table';
 export * from './settings/team-account-settings-container';
 export * from './invitations/accept-invitation-container';
 export * from './create-team-account-dialog';
+export * from './create-team-account-form';
 export * from './team-account-workspace-context';

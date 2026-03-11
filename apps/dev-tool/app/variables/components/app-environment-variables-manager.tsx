@@ -731,13 +731,15 @@ function FilterSwitcher(props: {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="font-normal">
-          {buttonLabel()}
+      <DropdownMenuTrigger
+        render={
+          <Button variant="outline" className="font-normal">
+            {buttonLabel()}
 
-          <ChevronsUpDownIcon className="text-muted-foreground ml-1 h-3 w-3" />
-        </Button>
-      </DropdownMenuTrigger>
+            <ChevronsUpDownIcon className="text-muted-foreground ml-1 h-3 w-3" />
+          </Button>
+        }
+      />
 
       <DropdownMenuContent>
         <DropdownMenuCheckboxItem
@@ -886,38 +888,41 @@ function Summary({ appState }: { appState: AppEnvState }) {
 
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size={'sm'}
-                onClick={() => {
-                  let data = '';
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="outline"
+                  size={'sm'}
+                  onClick={() => {
+                    let data = '';
 
-                  const groups = getGroups(appState, () => true);
+                    const groups = getGroups(appState, () => true);
 
-                  groups.forEach((group) => {
-                    data += `# ${group.category}\n`;
+                    groups.forEach((group) => {
+                      data += `# ${group.category}\n`;
 
-                    group.variables.forEach((variable) => {
-                      data += `${variable.key}=${variable.effectiveValue}\n`;
+                      group.variables.forEach((variable) => {
+                        data += `${variable.key}=${variable.effectiveValue}\n`;
+                      });
+
+                      data += '\n';
                     });
 
-                    data += '\n';
-                  });
+                    const promise = copyToClipboard(data);
 
-                  const promise = copyToClipboard(data);
-
-                  toast.promise(promise, {
-                    loading: 'Copying environment variables...',
-                    success: 'Environment variables copied to clipboard.',
-                    error: 'Failed to copy environment variables to clipboard',
-                  });
-                }}
-              >
-                <CopyIcon className={'mr-2 h-4 w-4'} />
-                <span>Copy env file to clipboard</span>
-              </Button>
-            </TooltipTrigger>
+                    toast.promise(promise, {
+                      loading: 'Copying environment variables...',
+                      success: 'Environment variables copied to clipboard.',
+                      error:
+                        'Failed to copy environment variables to clipboard',
+                    });
+                  }}
+                >
+                  <CopyIcon className={'mr-2 h-4 w-4'} />
+                  <span>Copy env file to clipboard</span>
+                </Button>
+              }
+            />
 
             <TooltipContent>
               Copy environment variables to clipboard. You can place it in your

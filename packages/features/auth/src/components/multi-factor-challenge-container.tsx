@@ -5,10 +5,10 @@ import { useEffect, useEffectEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { useMutation } from '@tanstack/react-query';
+import { TriangleAlert } from 'lucide-react';
 import { useForm, useWatch } from 'react-hook-form';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { useFetchAuthFactors } from '@kit/supabase/hooks/use-fetch-mfa-factors';
 import { useSignOut } from '@kit/supabase/hooks/use-sign-out';
@@ -94,7 +94,7 @@ export function MultiFactorChallengeContainer({
         <div className={'flex flex-col items-center gap-y-6'}>
           <div className="flex flex-col items-center gap-y-4">
             <Heading level={5}>
-              <Trans i18nKey={'auth:verifyCodeHeading'} />
+              <Trans i18nKey={'auth.verifyCodeHeading'} />
             </Heading>
           </div>
 
@@ -102,15 +102,15 @@ export function MultiFactorChallengeContainer({
             <div className={'flex flex-col gap-y-4'}>
               <If condition={verifyMFAChallenge.error}>
                 <Alert variant={'destructive'}>
-                  <ExclamationTriangleIcon className={'h-5'} />
+                  <TriangleAlert className={'h-5'} />
 
                   <AlertTitle>
-                    <Trans i18nKey={'account:invalidVerificationCodeHeading'} />
+                    <Trans i18nKey={'account.invalidVerificationCodeHeading'} />
                   </AlertTitle>
 
                   <AlertDescription>
                     <Trans
-                      i18nKey={'account:invalidVerificationCodeDescription'}
+                      i18nKey={'account.invalidVerificationCodeDescription'}
                     />
                   </AlertDescription>
                 </Alert>
@@ -143,7 +143,7 @@ export function MultiFactorChallengeContainer({
 
                       <FormDescription className="text-center">
                         <Trans
-                          i18nKey={'account:verifyActivationCodeDescription'}
+                          i18nKey={'account.verifyActivationCodeDescription'}
                         />
                       </FormDescription>
 
@@ -156,6 +156,7 @@ export function MultiFactorChallengeContainer({
           </div>
 
           <Button
+            type="submit"
             className="w-full"
             data-test={'submit-mfa-button'}
             disabled={
@@ -166,13 +167,13 @@ export function MultiFactorChallengeContainer({
           >
             <If condition={verifyMFAChallenge.isPending}>
               <span className={'animate-in fade-in slide-in-from-bottom-24'}>
-                <Trans i18nKey={'account:verifyingCode'} />
+                <Trans i18nKey={'account.verifyingCode'} />
               </span>
             </If>
 
             <If condition={verifyMFAChallenge.isSuccess}>
               <span className={'animate-in fade-in slide-in-from-bottom-24'}>
-                <Trans i18nKey={'auth:redirecting'} />
+                <Trans i18nKey={'auth.redirecting'} />
               </span>
             </If>
 
@@ -181,7 +182,7 @@ export function MultiFactorChallengeContainer({
                 !verifyMFAChallenge.isPending && !verifyMFAChallenge.isSuccess
               }
             >
-              <Trans i18nKey={'account:submitVerificationCode'} />
+              <Trans i18nKey={'account.submitVerificationCode'} />
             </If>
           </Button>
         </div>
@@ -255,7 +256,7 @@ function FactorsListContainer({
         <Spinner />
 
         <div className={'text-sm'}>
-          <Trans i18nKey={'account:loadingFactors'} />
+          <Trans i18nKey={'account.loadingFactors'} />
         </div>
       </div>
     );
@@ -265,14 +266,14 @@ function FactorsListContainer({
     return (
       <div className={'w-full'}>
         <Alert variant={'destructive'}>
-          <ExclamationTriangleIcon className={'h-4'} />
+          <TriangleAlert className={'h-4'} />
 
           <AlertTitle>
-            <Trans i18nKey={'account:factorsListError'} />
+            <Trans i18nKey={'account.factorsListError'} />
           </AlertTitle>
 
           <AlertDescription>
-            <Trans i18nKey={'account:factorsListErrorDescription'} />
+            <Trans i18nKey={'account.factorsListErrorDescription'} />
           </AlertDescription>
         </Alert>
       </div>
@@ -285,7 +286,7 @@ function FactorsListContainer({
     <div className={'animate-in fade-in flex flex-col space-y-4 duration-500'}>
       <div>
         <span className={'font-medium'}>
-          <Trans i18nKey={'account:selectFactor'} />
+          <Trans i18nKey={'account.selectFactor'} />
         </span>
       </div>
 

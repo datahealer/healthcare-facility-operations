@@ -11,7 +11,11 @@
   "prettier": "@kit/prettier-config",
   "exports": {
     "./actions": "./src/actions/index.ts",
+    "./safe-action": "./src/actions/safe-action-client.ts",
     "./routes": "./src/routes/index.ts"
+  },
+  "dependencies": {
+    "next-safe-action": "catalog:"
   },
   "devDependencies": {
     "@kit/auth": "workspace:*",

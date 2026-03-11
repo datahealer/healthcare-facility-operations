@@ -101,13 +101,18 @@ const examples = [
       return (
         <div className="flex min-h-32 items-center justify-center">
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="/avatars/01.png" alt="@username" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-              </Button>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  className="relative h-8 w-8 rounded-full"
+                />
+              }
+            >
+              <Avatar className="h-8 w-8">
+                <AvatarImage src="/avatars/01.png" alt="@username" />
+                <AvatarFallback>JD</AvatarFallback>
+              </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
@@ -185,11 +190,11 @@ const examples = [
               </div>
 
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-8 w-8 p-0">
-                    <span className="sr-only">Open menu</span>
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
+                <DropdownMenuTrigger
+                  render={<Button variant="ghost" className="h-8 w-8 p-0" />}
+                >
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem onClick={() => setSelectedAction('open')}>
@@ -275,11 +280,9 @@ const examples = [
       return (
         <div className="flex min-h-48 items-center justify-center">
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                <Plus className="mr-2 h-4 w-4" />
-                Create New
-              </Button>
+            <DropdownMenuTrigger render={<Button variant="outline" />}>
+              <Plus className="mr-2 h-4 w-4" />
+              Create New
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuLabel>Create Content</DropdownMenuLabel>
@@ -393,11 +396,11 @@ const examples = [
               <span className="text-sm">Appearance & Layout</span>
 
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Configure
-                  </Button>
+                <DropdownMenuTrigger
+                  render={<Button variant="outline" size="sm" />}
+                >
+                  <Settings className="mr-2 h-4 w-4" />
+                  Configure
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-64" align="end">
                   <DropdownMenuLabel>View Options</DropdownMenuLabel>
@@ -547,10 +550,10 @@ const examples = [
                 </div>
 
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
+                  <DropdownMenuTrigger
+                    render={<Button variant="ghost" className="h-8 w-8 p-0" />}
+                  >
+                    <MoreHorizontal className="h-4 w-4" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
                     <DropdownMenuItem
@@ -863,7 +866,7 @@ export default function DropdownMenuStory() {
       modal: controls.modal ? true : undefined,
     });
 
-    const dropdownStructure = `<DropdownMenu${rootProps}>\n  <DropdownMenuTrigger asChild>\n    <Button variant="outline">Open Menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent${contentProps}>\n    <DropdownMenuItem>\n      <User className="mr-2 h-4 w-4" />\n      <span>Profile</span>\n    </DropdownMenuItem>\n    <DropdownMenuItem>\n      <Settings className="mr-2 h-4 w-4" />\n      <span>Settings</span>\n    </DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem>\n      <LogOut className="mr-2 h-4 w-4" />\n      <span>Log out</span>\n    </DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>`;
+    const dropdownStructure = `<DropdownMenu${rootProps}>\n  <DropdownMenuTrigger render={<Button variant="outline" />}>\n    Open Menu\n  </DropdownMenuTrigger>\n  <DropdownMenuContent${contentProps}>\n    <DropdownMenuItem>\n      <User className="mr-2 h-4 w-4" />\n      <span>Profile</span>\n    </DropdownMenuItem>\n    <DropdownMenuItem>\n      <Settings className="mr-2 h-4 w-4" />\n      <span>Settings</span>\n    </DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem>\n      <LogOut className="mr-2 h-4 w-4" />\n      <span>Log out</span>\n    </DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>`;
 
     return `${importStatement}\n${buttonImport}\n${iconImport}\n\n${dropdownStructure}`;
   };
@@ -971,8 +974,8 @@ export default function DropdownMenuStory() {
   const previewContent = (
     <div className="flex justify-center p-6">
       <DropdownMenu modal={controls.modal}>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline">Open Menu</Button>
+        <DropdownMenuTrigger render={<Button variant="outline" />}>
+          Open Menu
         </DropdownMenuTrigger>
         <DropdownMenuContent
           side={controls.side}

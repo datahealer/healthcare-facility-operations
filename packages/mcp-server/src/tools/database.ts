@@ -2,7 +2,7 @@ import { type McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import postgres from 'postgres';
-import { z } from 'zod/v3';
+import * as z from 'zod/v3';
 
 const DATABASE_URL =
   process.env.DATABASE_URL ||

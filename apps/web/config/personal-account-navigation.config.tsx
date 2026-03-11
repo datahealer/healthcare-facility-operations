@@ -1,5 +1,5 @@
 import { CreditCard, Home, User } from 'lucide-react';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { NavigationConfigSchema } from '@kit/ui/navigation-schema';
 
@@ -10,34 +10,34 @@ const iconClasses = 'w-4';
 
 const routes = [
   {
-    label: 'common:routes.application',
+    label: 'common.routes.application',
     children: [
       {
-        label: 'common:routes.home',
+        label: 'common.routes.home',
         path: pathsConfig.app.home,
         Icon: <Home className={iconClasses} />,
-        end: true,
+        highlightMatch: `${pathsConfig.app.home}$`,
       },
     ],
   },
   {
-    label: 'common:routes.settings',
+    label: 'common.routes.settings',
     children: [
       {
-        label: 'common:routes.profile',
+        label: 'common.routes.profile',
         path: pathsConfig.app.personalAccountSettings,
         Icon: <User className={iconClasses} />,
       },
       featureFlagsConfig.enablePersonalAccountBilling
         ? {
-            label: 'common:routes.billing',
+            label: 'common.routes.billing',
             path: pathsConfig.app.personalAccountBilling,
             Icon: <CreditCard className={iconClasses} />,
           }
         : undefined,
     ].filter((route) => !!route),
   },
-] satisfies z.infer<typeof NavigationConfigSchema>['routes'];
+] satisfies z.output<typeof NavigationConfigSchema>['routes'];
 
 export const personalAccountNavigationConfig = NavigationConfigSchema.parse({
   routes,

@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
@@ -119,7 +119,7 @@ export default function FormStory() {
     const formImport = generateImportStatement(formComponents, '@kit/ui/form');
     const inputImport = generateImportStatement(['Input'], '@kit/ui/input');
     const buttonImport = generateImportStatement(['Button'], '@kit/ui/button');
-    const hookFormImports = `import { useForm } from 'react-hook-form';\nimport { zodResolver } from '@hookform/resolvers/zod';\nimport { z } from 'zod';`;
+    const hookFormImports = `import { useForm } from 'react-hook-form';\nimport { zodResolver } from '@hookform/resolvers/zod';\nimport * as z from 'zod';`;
 
     let schemaCode = '';
     let formFieldsCode = '';
@@ -130,19 +130,19 @@ export default function FormStory() {
 
       formFieldsCode = `        <FormField\n          control={form.control}\n          name="username"\n          render={({ field }) => (\n            <FormItem>\n              <FormLabel>Username</FormLabel>\n              <FormControl>\n                <Input ${controls.disabled ? 'disabled ' : ''}placeholder="Enter username" {...field} />\n              </FormControl>${controls.showDescriptions ? '\n              <FormDescription>\n                Your public display name.\n              </FormDescription>' : ''}${controls.showValidation ? '\n              <FormMessage />' : ''}\n            </FormItem>\n          )}\n        />\n        <FormField\n          control={form.control}\n          name="email"\n          render={({ field }) => (\n            <FormItem>\n              <FormLabel>Email</FormLabel>\n              <FormControl>\n                <Input ${controls.disabled ? 'disabled ' : ''}type="email" placeholder="Enter email" {...field} />\n              </FormControl>${controls.showDescriptions ? "\n              <FormDescription>\n                We'll never share your email.\n              </FormDescription>" : ''}${controls.showValidation ? '\n              <FormMessage />' : ''}\n            </FormItem>\n          )}\n        />`;
 
-      onSubmitCode = `  function onSubmit(values: z.infer<typeof formSchema>) {\n    console.log('Form submitted:', values);\n  }`;
+      onSubmitCode = `  function onSubmit(values: z.output<typeof formSchema>) {\n    console.log('Form submitted:', values);\n  }`;
     } else if (controls.formType === 'advanced') {
       schemaCode = `const formSchema = z.object({\n  firstName: z.string().min(1, 'First name is required.'),\n  lastName: z.string().min(1, 'Last name is required.'),\n  email: z.string().email('Please enter a valid email address.'),\n});`;
 
       formFieldsCode = `        <FormField\n          control={form.control}\n          name="firstName"\n          render={({ field }) => (\n            <FormItem>\n              <FormLabel>First Name</FormLabel>\n              <FormControl>\n                <Input ${controls.disabled ? 'disabled ' : ''}placeholder="John" {...field} />\n              </FormControl>${controls.showValidation ? '\n              <FormMessage />' : ''}\n            </FormItem>\n          )}\n        />\n        <FormField\n          control={form.control}\n          name="lastName"\n          render={({ field }) => (\n            <FormItem>\n              <FormLabel>Last Name</FormLabel>\n              <FormControl>\n                <Input ${controls.disabled ? 'disabled ' : ''}placeholder="Doe" {...field} />\n              </FormControl>${controls.showValidation ? '\n              <FormMessage />' : ''}\n            </FormItem>\n          )}\n        />`;
 
-      onSubmitCode = `  function onSubmit(values: z.infer<typeof formSchema>) {\n    console.log('Advanced form submitted:', values);\n  }`;
+      onSubmitCode = `  function onSubmit(values: z.output<typeof formSchema>) {\n    console.log('Advanced form submitted:', values);\n  }`;
     } else {
       schemaCode = `const formSchema = z.object({\n  password: z.string().min(8, 'Password must be at least 8 characters.'),\n  confirmPassword: z.string(),\n}).refine((data) => data.password === data.confirmPassword, {\n  message: 'Passwords do not match.',\n  path: ['confirmPassword'],\n});`;
 
       formFieldsCode = `        <FormField\n          control={form.control}\n          name="password"\n          render={({ field }) => (\n            <FormItem>\n              <FormLabel>Password</FormLabel>\n              <FormControl>\n                <Input ${controls.disabled ? 'disabled ' : ''}type="password" {...field} />\n              </FormControl>${controls.showValidation ? '\n              <FormMessage />' : ''}\n            </FormItem>\n          )}\n        />\n        <FormField\n          control={form.control}\n          name="confirmPassword"\n          render={({ field }) => (\n            <FormItem>\n              <FormLabel>Confirm Password</FormLabel>\n              <FormControl>\n                <Input ${controls.disabled ? 'disabled ' : ''}type="password" {...field} />\n              </FormControl>${controls.showValidation ? '\n              <FormMessage />' : ''}\n            </FormItem>\n          )}\n        />`;
 
-      onSubmitCode = `  function onSubmit(values: z.infer<typeof formSchema>) {\n    console.log('Validation form submitted:', values);\n  }`;
+      onSubmitCode = `  function onSubmit(values: z.output<typeof formSchema>) {\n    console.log('Validation form submitted:', values);\n  }`;
     }
 
     const defaultValuesCode =
@@ -152,13 +152,13 @@ export default function FormStory() {
           ? `    defaultValues: {\n      firstName: '',\n      lastName: '',\n      email: '',\n    },`
           : `    defaultValues: {\n      password: '',\n      confirmPassword: '',\n    },`;
 
-    const fullFormCode = `${hookFormImports}\n${formImport}\n${inputImport}\n${buttonImport}\n\n${schemaCode}\n\nfunction MyForm() {\n  const form = useForm<z.infer<typeof formSchema>>({\n    resolver: zodResolver(formSchema),\n${defaultValuesCode}\n  });\n\n${onSubmitCode}\n\n  return (\n    <Form {...form}>\n      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">\n${formFieldsCode}\n        <Button type="submit"${controls.disabled ? ' disabled' : ''}>Submit</Button>\n      </form>\n    </Form>\n  );\n}`;
+    const fullFormCode = `${hookFormImports}\n${formImport}\n${inputImport}\n${buttonImport}\n\n${schemaCode}\n\nfunction MyForm() {\n  const form = useForm<z.output<typeof formSchema>>({\n    resolver: zodResolver(formSchema),\n${defaultValuesCode}\n  });\n\n${onSubmitCode}\n\n  return (\n    <Form {...form}>\n      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">\n${formFieldsCode}\n        <Button type="submit"${controls.disabled ? ' disabled' : ''}>Submit</Button>\n      </form>\n    </Form>\n  );\n}`;
 
     return fullFormCode;
   };
 
   // Basic form
-  const basicForm = useForm<z.infer<typeof basicFormSchema>>({
+  const basicForm = useForm<z.output<typeof basicFormSchema>>({
     resolver: zodResolver(basicFormSchema),
     defaultValues: {
       username: '',
@@ -169,7 +169,7 @@ export default function FormStory() {
   });
 
   // Advanced form
-  const advancedForm = useForm<z.infer<typeof advancedFormSchema>>({
+  const advancedForm = useForm<z.output<typeof advancedFormSchema>>({
     resolver: zodResolver(advancedFormSchema),
     defaultValues: {
       firstName: '',
@@ -183,7 +183,7 @@ export default function FormStory() {
   });
 
   // Validation form
-  const validationForm = useForm<z.infer<typeof validationFormSchema>>({
+  const validationForm = useForm<z.output<typeof validationFormSchema>>({
     resolver: zodResolver(validationFormSchema),
     defaultValues: {
       password: '',
@@ -1056,7 +1056,7 @@ export default function FormStory() {
               <pre className="overflow-x-auto text-sm">
                 {`import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import * as z from 'zod';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@kit/ui/form';
 
 const formSchema = z.object({
@@ -1065,7 +1065,7 @@ const formSchema = z.object({
 });
 
 function MyForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<z.output<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: '',
@@ -1073,7 +1073,7 @@ function MyForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.output<typeof formSchema>) {
     console.log(values);
   }
 

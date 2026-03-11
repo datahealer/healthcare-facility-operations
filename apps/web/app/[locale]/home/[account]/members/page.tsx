@@ -1,0 +1,131 @@
+import { PlusCircle } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+
+import { getSupabaseServerClient } from '@kit/supabase/server-client';
+import {
+  AccountInvitationsTable,
+  AccountMembersTable,
+  InviteMembersDialogContainer,
+} from '@kit/team-accounts/components';
+import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
+import { Button } from '@kit/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@kit/ui/card';
+import { If } from '@kit/ui/if';
+import { PageBody } from '@kit/ui/page';
+import { Trans } from '@kit/ui/trans';
+
+// local imports
+import { TeamAccountLayoutPageHeader } from '../_components/team-account-layout-page-header';
+import { loadMembersPageData } from './_lib/server/members-page.loader';
+
+interface TeamAccountMembersPageProps {
+  params: Promise<{ account: string }>;
+}
+
+export const generateMetadata = async () => {
+  const t = await getTranslations('teams');
+  const title = t('members.pageTitle');
+
+  return {
+    title,
+  };
+};
+
+async function TeamAccountMembersPage({ params }: TeamAccountMembersPageProps) {
+  const client = getSupabaseServerClient();
+  const slug = (await params).account;
+
+  const [members, invitations, canAddMember, { user, account }] =
+    await loadMembersPageData(client, slug);
+
+  const canManageRoles = account.permissions.includes('roles.manage');
+  const canManageInvitations = account.permissions.includes('invites.manage');
+
+  const isPrimaryOwner = account.primary_owner_user_id === user.id;
+  const currentUserRoleHierarchy = account.role_hierarchy_level;
+
+  return (
+    <PageBody>
+      <TeamAccountLayoutPageHeader
+        title={<Trans i18nKey={'common.routes.members'} />}
+        description={<AppBreadcrumbs />}
+        account={account.slug}
+      />
+
+      <div className={'flex w-full max-w-4xl flex-col space-y-4 pb-32'}>
+        <Card>
+          <CardHeader className={'flex flex-row justify-between'}>
+            <div className={'flex flex-col space-y-1.5'}>
+              <CardTitle>
+                <Trans i18nKey={'common.accountMembers'} />
+              </CardTitle>
+
+              <CardDescription>
+                <Trans i18nKey={'common.membersTabDescription'} />
+              </CardDescription>
+            </div>
+
+            <If condition={canManageInvitations && canAddMember}>
+              <InviteMembersDialogContainer
+                userRoleHierarchy={currentUserRoleHierarchy}
+                accountSlug={account.slug}
+              >
+                <Button size={'sm'} data-test={'invite-members-form-trigger'}>
+                  <PlusCircle className={'w-4'} />
+
+                  <span>
+                    <Trans i18nKey={'teams.inviteMembersButton'} />
+                  </span>
+                </Button>
+              </InviteMembersDialogContainer>
+            </If>
+          </CardHeader>
+
+          <CardContent>
+            <AccountMembersTable
+              userRoleHierarchy={currentUserRoleHierarchy}
+              currentUserId={user.id}
+              currentAccountId={account.id}
+              members={members}
+              isPrimaryOwner={isPrimaryOwner}
+              canManageRoles={canManageRoles}
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className={'flex flex-row justify-between'}>
+            <div className={'flex flex-col space-y-1.5'}>
+              <CardTitle>
+                <Trans i18nKey={'teams.pendingInvitesHeading'} />
+              </CardTitle>
+
+              <CardDescription>
+                <Trans i18nKey={'teams.pendingInvitesDescription'} />
+              </CardDescription>
+            </div>
+          </CardHeader>
+
+          <CardContent>
+            <AccountInvitationsTable
+              permissions={{
+                canUpdateInvitation: canManageRoles,
+                canRemoveInvitation: canManageRoles,
+                currentUserRoleHierarchy,
+              }}
+              invitations={invitations}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    </PageBody>
+  );
+}
+
+export default TeamAccountMembersPage;

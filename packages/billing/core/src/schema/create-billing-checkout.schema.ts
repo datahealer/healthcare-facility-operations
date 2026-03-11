@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { PlanSchema } from '../create-billing-schema';
 
@@ -15,5 +15,5 @@ export const CreateBillingCheckoutSchema = z.object({
       quantity: z.number(),
     }),
   ),
-  metadata: z.record(z.string()).optional(),
+  metadata: z.record(z.string(), z.string()).optional(),
 });

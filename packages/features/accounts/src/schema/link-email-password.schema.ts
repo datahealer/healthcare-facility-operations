@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 
 export const LinkEmailPasswordSchema = z
   .object({
@@ -8,5 +8,5 @@ export const LinkEmailPasswordSchema = z
   })
   .refine((values) => values.password === values.repeatPassword, {
     path: ['repeatPassword'],
-    message: `account:passwordNotMatching`,
+    message: `account.passwordNotMatching`,
   });

@@ -13,8 +13,8 @@ export function ErrorPageContent({
   subtitle,
   reset,
   backLink = '/',
-  backLabel = 'common:backToHomePage',
-  contactLabel = 'common:contactUs',
+  backLabel = 'common.backToHomePage',
+  contactLabel = 'common.contactUs',
 }: {
   statusCode: string;
   heading: string;
@@ -67,20 +67,27 @@ export function ErrorPageContent({
               <Trans i18nKey={backLabel} />
             </Button>
           ) : (
-            <Button asChild>
-              <Link href={backLink}>
-                <ArrowLeft className={'mr-1 h-4 w-4'} />
-                <Trans i18nKey={backLabel} />
-              </Link>
-            </Button>
+            <Button
+              nativeButton={false}
+              render={
+                <Link href={backLink}>
+                  <ArrowLeft className={'mr-1 h-4 w-4'} />
+                  <Trans i18nKey={backLabel} />
+                </Link>
+              }
+            />
           )}
 
-          <Button asChild variant={'ghost'}>
-            <Link href={'/contact'}>
-              <MessageCircleQuestion className={'mr-1 h-4 w-4'} />
-              <Trans i18nKey={contactLabel} />
-            </Link>
-          </Button>
+          <Button
+            nativeButton={false}
+            render={
+              <Link href={'/contact'}>
+                <MessageCircleQuestion className={'mr-1 h-4 w-4'} />
+                <Trans i18nKey={contactLabel} />
+              </Link>
+            }
+            variant={'ghost'}
+          />
         </div>
       </div>
     </div>

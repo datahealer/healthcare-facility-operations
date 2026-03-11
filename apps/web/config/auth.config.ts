@@ -1,36 +1,17 @@
 import type { Provider } from '@supabase/supabase-js';
 
-import { z } from 'zod';
+import * as z from 'zod';
 
 const providers: z.ZodType<Provider> = getProviders();
 
 const AuthConfigSchema = z.object({
-  captchaTokenSiteKey: z
-    .string({
-      description: 'The reCAPTCHA site key.',
-    })
-    .optional(),
-  displayTermsCheckbox: z
-    .boolean({
-      description: 'Whether to display the terms checkbox during sign-up.',
-    })
-    .optional(),
-  enableIdentityLinking: z
-    .boolean({
-      description: 'Allow linking and unlinking of auth identities.',
-    })
-    .optional()
-    .default(false),
+  captchaTokenSiteKey: z.string().optional(),
+  displayTermsCheckbox: z.boolean().optional(),
+  enableIdentityLinking: z.boolean().optional().default(false),
   providers: z.object({
-    password: z.boolean({
-      description: 'Enable password authentication.',
-    }),
-    magicLink: z.boolean({
-      description: 'Enable magic link authentication.',
-    }),
-    otp: z.boolean({
-      description: 'Enable one-time password authentication.',
-    }),
+    password: z.boolean(),
+    magicLink: z.boolean(),
+    otp: z.boolean(),
     oAuth: providers.array(),
   }),
 });
@@ -57,7 +38,7 @@ const authConfig = AuthConfigSchema.parse({
     otp: process.env.NEXT_PUBLIC_AUTH_OTP === 'true',
     oAuth: ['google'],
   },
-} satisfies z.infer<typeof AuthConfigSchema>);
+} satisfies z.output<typeof AuthConfigSchema>);
 
 export default authConfig;
 

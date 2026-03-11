@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 
 export const CreatePRDSchema = z.object({
   title: z
@@ -32,4 +32,4 @@ export const CreatePRDSchema = z.object({
     .min(1, 'At least one success metric is required'),
 });
 
-export type CreatePRDData = z.infer<typeof CreatePRDSchema>;
+export type CreatePRDData = z.output<typeof CreatePRDSchema>;

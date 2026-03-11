@@ -1,15 +1,14 @@
 import 'server-only';
 
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { Mailer, MailerSchema } from '@kit/mailers-shared';
 
-type Config = z.infer<typeof MailerSchema>;
+type Config = z.output<typeof MailerSchema>;
 
 const RESEND_API_KEY = z
   .string({
-    description: 'The API key for the Resend API',
-    required_error: 'Please provide the API key for the Resend API',
+    error: 'Please provide the API key for the Resend API',
   })
   .parse(process.env.RESEND_API_KEY);
 

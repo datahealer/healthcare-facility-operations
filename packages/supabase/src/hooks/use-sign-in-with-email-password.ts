@@ -12,7 +12,7 @@ export function useSignInWithEmailPassword() {
     const response = await client.auth.signInWithPassword(credentials);
 
     if (response.error) {
-      throw response.error.message;
+      throw response.error;
     }
 
     const user = response.data?.user;

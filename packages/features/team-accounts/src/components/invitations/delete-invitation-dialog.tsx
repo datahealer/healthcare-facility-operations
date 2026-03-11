@@ -1,4 +1,6 @@
-import { useState, useTransition } from 'react';
+'use client';
+
+import { useAction } from 'next-safe-action/hooks';
 
 import { Alert, AlertDescription, AlertTitle } from '@kit/ui/alert';
 import {
@@ -30,11 +32,11 @@ export function DeleteInvitationDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            <Trans i18nKey="team:deleteInvitation" />
+            <Trans i18nKey="teams.deleteInvitation" />
           </AlertDialogTitle>
 
           <AlertDialogDescription>
-            <Trans i18nKey="team:deleteInvitationDialogDescription" />
+            <Trans i18nKey="teams.deleteInvitationDialogDescription" />
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -54,43 +56,34 @@ function DeleteInvitationForm({
   invitationId: number;
   setIsOpen: (isOpen: boolean) => void;
 }) {
-  const [isSubmitting, startTransition] = useTransition();
-  const [error, setError] = useState<boolean>();
-
-  const onInvitationRemoved = () => {
-    startTransition(async () => {
-      try {
-        await deleteInvitationAction({ invitationId });
-
-        setIsOpen(false);
-      } catch {
-        setError(true);
-      }
-    });
-  };
+  const { execute, isPending, hasErrored } = useAction(deleteInvitationAction, {
+    onSuccess: () => setIsOpen(false),
+  });
 
   return (
-    <form data-test={'delete-invitation-form'} action={onInvitationRemoved}>
+    <form
+      data-test={'delete-invitation-form'}
+      onSubmit={(e) => {
+        e.preventDefault();
+        execute({ invitationId });
+      }}
+    >
       <div className={'flex flex-col space-y-6'}>
         <p className={'text-muted-foreground text-sm'}>
-          <Trans i18nKey={'common:modalConfirmationQuestion'} />
+          <Trans i18nKey={'common.modalConfirmationQuestion'} />
         </p>
 
-        <If condition={error}>
+        <If condition={hasErrored}>
           <RemoveInvitationErrorAlert />
         </If>
 
         <AlertDialogFooter>
           <AlertDialogCancel>
-            <Trans i18nKey={'common:cancel'} />
+            <Trans i18nKey={'common.cancel'} />
           </AlertDialogCancel>
 
-          <Button
-            type={'submit'}
-            variant={'destructive'}
-            disabled={isSubmitting}
-          >
-            <Trans i18nKey={'teams:deleteInvitation'} />
+          <Button type={'submit'} variant={'destructive'} disabled={isPending}>
+            <Trans i18nKey={'teams.deleteInvitation'} />
           </Button>
         </AlertDialogFooter>
       </div>
@@ -102,11 +95,11 @@ function RemoveInvitationErrorAlert() {
   return (
     <Alert variant={'destructive'}>
       <AlertTitle>
-        <Trans i18nKey={'teams:deleteInvitationErrorTitle'} />
+        <Trans i18nKey={'teams.deleteInvitationErrorTitle'} />
       </AlertTitle>
 
       <AlertDescription>
-        <Trans i18nKey={'teams:deleteInvitationErrorMessage'} />
+        <Trans i18nKey={'teams.deleteInvitationErrorMessage'} />
       </AlertDescription>
     </Alert>
   );

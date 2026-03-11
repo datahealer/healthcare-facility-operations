@@ -23,9 +23,9 @@
     "@tanstack/react-query": "catalog:",
     "@types/react": "catalog:",
     "lucide-react": "catalog:",
+    "next-intl": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:",
-    "react-i18next": "catalog:"
+    "react-dom": "catalog:"
   },
   "prettier": "@kit/prettier-config",
   "typesVersions": {

@@ -139,8 +139,8 @@ export function DialogStory() {
     });
 
     let code = `<Dialog>\n`;
-    code += `  <DialogTrigger asChild>\n`;
-    code += `    <Button variant="${controls.triggerVariant}">${controls.triggerText}</Button>\n`;
+    code += `  <DialogTrigger render={<Button variant="${controls.triggerVariant}" />}>\n`;
+    code += `    ${controls.triggerText}\n`;
     code += `  </DialogTrigger>\n`;
     code += `  <DialogContent${contentPropsString}>\n`;
     code += `    <DialogHeader>\n`;
@@ -182,8 +182,8 @@ export function DialogStory() {
 
     if (controls.withFooter) {
       code += `    <DialogFooter>\n`;
-      code += `      <DialogClose asChild>\n`;
-      code += `        <Button variant="outline">Cancel</Button>\n`;
+      code += `      <DialogClose render={<Button variant="outline" />}>\n`;
+      code += `        Cancel\n`;
       code += `      </DialogClose>\n`;
       code += `      <Button>Save Changes</Button>\n`;
       code += `    </DialogFooter>\n`;
@@ -198,10 +198,8 @@ export function DialogStory() {
   const renderPreview = () => {
     return (
       <Dialog>
-        <DialogTrigger asChild>
-          <Button variant={controls.triggerVariant}>
-            {controls.triggerText}
-          </Button>
+        <DialogTrigger render={<Button variant={controls.triggerVariant} />}>
+          {controls.triggerText}
         </DialogTrigger>
         <DialogContent
           className={cn(
@@ -271,8 +269,8 @@ export function DialogStory() {
 
           {controls.withFooter && (
             <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
+              <DialogClose render={<Button variant="outline" />}>
+                Cancel
               </DialogClose>
               <Button>Save Changes</Button>
             </DialogFooter>
@@ -391,11 +389,9 @@ export function DialogStory() {
         <CardContent className="space-y-4">
           <div className="flex flex-wrap gap-3">
             <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline">
-                  <Info className="mr-2 h-4 w-4" />
-                  Info Dialog
-                </Button>
+              <DialogTrigger render={<Button variant="outline" />}>
+                <Info className="mr-2 h-4 w-4" />
+                Info Dialog
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -412,19 +408,15 @@ export function DialogStory() {
                   </p>
                 </div>
                 <DialogFooter>
-                  <DialogClose asChild>
-                    <Button>Got it</Button>
-                  </DialogClose>
+                  <DialogClose render={<Button />}>Got it</DialogClose>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
 
             <Dialog>
-              <DialogTrigger asChild>
-                <Button>
-                  <Edit className="mr-2 h-4 w-4" />
-                  Edit Profile
-                </Button>
+              <DialogTrigger render={<Button />}>
+                <Edit className="mr-2 h-4 w-4" />
+                Edit Profile
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -456,8 +448,8 @@ export function DialogStory() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
+                  <DialogClose render={<Button variant="outline" />}>
+                    Cancel
                   </DialogClose>
                   <Button>Save Changes</Button>
                 </DialogFooter>
@@ -465,11 +457,9 @@ export function DialogStory() {
             </Dialog>
 
             <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="secondary">
-                  <Settings className="mr-2 h-4 w-4" />
-                  Settings
-                </Button>
+              <DialogTrigger render={<Button variant="secondary" />}>
+                <Settings className="mr-2 h-4 w-4" />
+                Settings
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -499,8 +489,8 @@ export function DialogStory() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
+                  <DialogClose render={<Button variant="outline" />}>
+                    Cancel
                   </DialogClose>
                   <Button>Save</Button>
                 </DialogFooter>
@@ -518,10 +508,8 @@ export function DialogStory() {
         <CardContent className="space-y-4">
           <div className="flex flex-wrap gap-3">
             <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                  Small Dialog
-                </Button>
+              <DialogTrigger render={<Button variant="outline" size="sm" />}>
+                Small Dialog
               </DialogTrigger>
               <DialogContent className="max-w-md">
                 <DialogHeader>
@@ -536,16 +524,14 @@ export function DialogStory() {
                   </p>
                 </div>
                 <DialogFooter>
-                  <DialogClose asChild>
-                    <Button>Close</Button>
-                  </DialogClose>
+                  <DialogClose render={<Button />}>Close</DialogClose>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
 
             <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline">Large Dialog</Button>
+              <DialogTrigger render={<Button variant="outline" />}>
+                Large Dialog
               </DialogTrigger>
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
@@ -571,8 +557,8 @@ export function DialogStory() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
+                  <DialogClose render={<Button variant="outline" />}>
+                    Cancel
                   </DialogClose>
                   <Button>Save</Button>
                 </DialogFooter>
@@ -590,11 +576,9 @@ export function DialogStory() {
         <CardContent className="space-y-4">
           <div className="flex flex-wrap gap-3">
             <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline">
-                  <Image className="mr-2 h-4 w-4" />
-                  Image Gallery
-                </Button>
+              <DialogTrigger render={<Button variant="outline" />}>
+                <Image className="mr-2 h-4 w-4" />
+                Image Gallery
               </DialogTrigger>
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
@@ -627,11 +611,9 @@ export function DialogStory() {
             </Dialog>
 
             <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline">
-                  <MessageSquare className="mr-2 h-4 w-4" />
-                  Feedback
-                </Button>
+              <DialogTrigger render={<Button variant="outline" />}>
+                <MessageSquare className="mr-2 h-4 w-4" />
+                Feedback
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -668,8 +650,8 @@ export function DialogStory() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
+                  <DialogClose render={<Button variant="outline" />}>
+                    Cancel
                   </DialogClose>
                   <Button>
                     <MessageSquare className="mr-2 h-4 w-4" />
@@ -736,8 +718,8 @@ export function DialogStory() {
           <div>
             <h4 className="mb-3 text-lg font-semibold">DialogTrigger</h4>
             <p className="text-muted-foreground mb-3 text-sm">
-              The element that opens the dialog. Use asChild prop to render as
-              child element.
+              The element that opens the dialog. Use the render prop to compose
+              with a custom element.
             </p>
           </div>
 

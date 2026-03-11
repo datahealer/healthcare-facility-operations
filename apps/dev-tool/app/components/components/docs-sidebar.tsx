@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Code2, FileText, Search } from 'lucide-react';
 
@@ -35,6 +35,7 @@ export function DocsSidebar({
   selectedCategory,
 }: DocsSidebarProps) {
   const [searchQuery, setSearchQuery] = useState('');
+  const searchParams = useSearchParams();
   const router = useRouter();
 
   const filteredComponents = COMPONENTS_REGISTRY.filter((c) =>
@@ -50,21 +51,21 @@ export function DocsSidebar({
     .sort((a, b) => a.name.localeCompare(b.name));
 
   const onCategorySelect = (category: string | null) => {
-    const searchParams = new URLSearchParams(window.location.search);
-    searchParams.set('category', category || '');
-    router.push(`/components?${searchParams.toString()}`);
+    const sp = new URLSearchParams(searchParams);
+    sp.set('category', category || '');
+    router.push(`/components?${sp.toString()}`);
   };
 
   const onComponentSelect = (component: ComponentInfo) => {
-    const searchParams = new URLSearchParams(window.location.search);
-    searchParams.set('component', component.name);
-    router.push(`/components?${searchParams.toString()}`);
+    const sp = new URLSearchParams(searchParams);
+    sp.set('component', component.name);
+    router.push(`/components?${sp.toString()}`);
   };
 
   return (
     <div className="bg-muted/30 flex h-screen w-80 flex-col overflow-hidden border-r">
       {/* Header */}
-      <div className="flex-shrink-0 border-b p-4">
+      <div className="shrink-0 border-b p-4">
         <div className="mb-2 flex items-center gap-2">
           <Code2 className="text-primary h-6 w-6" />
 
@@ -77,13 +78,14 @@ export function DocsSidebar({
       </div>
 
       {/* Controls */}
-      <div className="flex-shrink-0 space-y-2 border-b p-4">
+      <div className="shrink-0 space-y-2 border-b p-4">
         {/* Category Select */}
         <div className="space-y-2">
           <Select
-            value={selectedCategory || 'all'}
+            defaultValue={selectedCategory || 'all'}
             onValueChange={(value) => {
               const category = value === 'all' ? null : value;
+
               onCategorySelect(category);
 
               // Select first component in the filtered results
@@ -96,8 +98,12 @@ export function DocsSidebar({
               }
             }}
           >
-            <SelectTrigger>
-              <SelectValue placeholder={'Select a category'} />
+            <SelectTrigger className="w-full">
+              <SelectValue>
+                {(category) => {
+                  return category === 'all' ? 'All Categories' : category;
+                }}
+              </SelectValue>
             </SelectTrigger>
 
             <SelectContent>
@@ -154,7 +160,7 @@ export function DocsSidebar({
 
       {/* Components List - Scrollable */}
       <div className="flex flex-1 flex-col overflow-y-auto">
-        <div className="flex-shrink-0 p-4 pb-2">
+        <div className="shrink-0 p-4 pb-2">
           <h3 className="flex items-center gap-2 text-sm font-semibold">
             <FileText className="h-4 w-4" />
             Components

@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
 
 import { Alert, AlertDescription, AlertTitle } from '@kit/ui/alert';
@@ -38,8 +39,6 @@ import {
 } from '../lib/server/schema/create-user.schema';
 
 export function AdminCreateUserDialog(props: React.PropsWithChildren) {
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
 
   const form = useForm({
@@ -52,28 +51,19 @@ export function AdminCreateUserDialog(props: React.PropsWithChildren) {
     mode: 'onChange',
   });
 
-  const onSubmit = (data: CreateUserSchemaType) => {
-    startTransition(async () => {
-      try {
-        const result = await createUserAction(data);
+  const { execute, isPending, result } = useAction(createUserAction, {
+    onSuccess: () => {
+      toast.success('User created successfully');
+      form.reset();
+      setOpen(false);
+    },
+  });
 
-        if (result.success) {
-          toast.success('User creates successfully');
-          form.reset();
-
-          setOpen(false);
-        }
-
-        setError(null);
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'Error');
-      }
-    });
-  };
+  const error = result.serverError;
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild>{props.children}</AlertDialogTrigger>
+      <AlertDialogTrigger render={props.children as React.ReactElement} />
 
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -88,7 +78,9 @@ export function AdminCreateUserDialog(props: React.PropsWithChildren) {
           <form
             data-test={'admin-create-user-form'}
             className={'flex flex-col space-y-4'}
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit((data: CreateUserSchemaType) =>
+              execute(data),
+            )}
           >
             <If condition={!!error}>
               <Alert variant={'destructive'}>
@@ -166,8 +158,8 @@ export function AdminCreateUserDialog(props: React.PropsWithChildren) {
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
 
-              <Button disabled={pending} type={'submit'}>
-                {pending ? 'Creating...' : 'Create User'}
+              <Button disabled={isPending} type={'submit'}>
+                {isPending ? 'Creating...' : 'Create User'}
               </Button>
             </AlertDialogFooter>
           </form>

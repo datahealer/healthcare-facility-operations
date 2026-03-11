@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { findWorkspaceRoot } from '@kit/mcp-server/env';
 import {

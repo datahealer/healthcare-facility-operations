@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { TriangleAlert } from 'lucide-react';
+import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { Alert, AlertDescription, AlertTitle } from '@kit/ui/alert';
 import { Button } from '@kit/ui/button';
@@ -61,17 +62,28 @@ export function VerifyOtpForm({
 }: VerifyOtpFormProps) {
   // Track the current step (email entry or OTP verification)
   const [step, setStep] = useState<'email' | 'otp'>('email');
-  const [isPending, startTransition] = useTransition();
 
   // Track errors
   const [error, setError] = useState<string | null>(null);
-  // Track verification success
-  const [, setVerificationSuccess] = useState(false);
+
+  const { execute: executeSendOtp, isPending } = useAction(sendOtpEmailAction, {
+    onSuccess: ({ data }) => {
+      if (data?.success) {
+        setStep('otp');
+        setError(null);
+      } else {
+        setError(data?.error || 'Failed to send OTP. Please try again.');
+      }
+    },
+    onError: () => {
+      setError('An unexpected error occurred. Please try again.');
+    },
+  });
 
   // Email form
   const emailForm = useForm({
     resolver: zodResolver(SendOtpSchema),
-    defaultValues: {
+    values: {
       email,
     },
   });
@@ -88,28 +100,14 @@ export function VerifyOtpForm({
   const handleSendOtp = () => {
     setError(null);
 
-    startTransition(async () => {
-      try {
-        const result = await sendOtpEmailAction({
-          purpose,
-          email,
-        });
-
-        if (result.success) {
-          setStep('otp');
-        } else {
-          setError(result.error || 'Failed to send OTP. Please try again.');
-        }
-      } catch (err) {
-        setError('An unexpected error occurred. Please try again.');
-        console.error('Error sending OTP:', err);
-      }
+    executeSendOtp({
+      purpose,
+      email,
     });
   };
 
   // Handle OTP verification
-  const handleVerifyOtp = (data: z.infer<typeof VerifyOtpSchema>) => {
-    setVerificationSuccess(true);
+  const handleVerifyOtp = (data: z.output<typeof VerifyOtpSchema>) => {
     onSuccess(data.otp);
   };
 
@@ -124,7 +122,7 @@ export function VerifyOtpForm({
             <div className="flex flex-col gap-y-2">
               <p className="text-muted-foreground text-sm">
                 <Trans
-                  i18nKey="common:otp.requestVerificationCodeDescription"
+                  i18nKey="common.otp.requestVerificationCodeDescription"
                   values={{ email }}
                 />
               </p>
@@ -132,10 +130,10 @@ export function VerifyOtpForm({
 
             <If condition={Boolean(error)}>
               <Alert variant="destructive">
-                <ExclamationTriangleIcon className="h-4 w-4" />
+                <TriangleAlert className="h-4 w-4" />
 
                 <AlertTitle>
-                  <Trans i18nKey="common:otp.errorSendingCode" />
+                  <Trans i18nKey="common.otp.errorSendingCode" />
                 </AlertTitle>
 
                 <AlertDescription>{error}</AlertDescription>
@@ -153,10 +151,10 @@ export function VerifyOtpForm({
                 {isPending ? (
                   <>
                     <Spinner className="mr-2 h-4 w-4" />
-                    <Trans i18nKey="common:otp.sendingCode" />
+                    <Trans i18nKey="common.otp.sendingCode" />
                   </>
                 ) : (
-                  <Trans i18nKey="common:otp.sendVerificationCode" />
+                  <Trans i18nKey="common.otp.sendVerificationCode" />
                 )}
               </Button>
             </div>
@@ -166,7 +164,7 @@ export function VerifyOtpForm({
         <Form {...otpForm}>
           <div className="flex w-full flex-col items-center gap-y-8">
             <div className="text-muted-foreground text-sm">
-              <Trans i18nKey="common:otp.codeSentToEmail" values={{ email }} />
+              <Trans i18nKey="common.otp.codeSentToEmail" values={{ email }} />
             </div>
 
             <form
@@ -175,10 +173,10 @@ export function VerifyOtpForm({
             >
               <If condition={Boolean(error)}>
                 <Alert variant="destructive">
-                  <ExclamationTriangleIcon className="h-4 w-4" />
+                  <TriangleAlert className="h-4 w-4" />
 
                   <AlertTitle>
-                    <Trans i18nKey="common:error" />
+                    <Trans i18nKey="common.error" />
                   </AlertTitle>
 
                   <AlertDescription>{error}</AlertDescription>
@@ -212,7 +210,7 @@ export function VerifyOtpForm({
                     </FormControl>
 
                     <FormDescription>
-                      <Trans i18nKey="common:otp.enterCodeFromEmail" />
+                      <Trans i18nKey="common.otp.enterCodeFromEmail" />
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -229,7 +227,7 @@ export function VerifyOtpForm({
                     disabled={isPending}
                     onClick={() => setStep('email')}
                   >
-                    <Trans i18nKey="common:otp.requestNewCode" />
+                    <Trans i18nKey="common.otp.requestNewCode" />
                   </Button>
 
                   <Button
@@ -240,10 +238,10 @@ export function VerifyOtpForm({
                     {isPending ? (
                       <>
                         <Spinner className="mr-2 h-4 w-4" />
-                        <Trans i18nKey="common:otp.verifying" />
+                        <Trans i18nKey="common.otp.verifying" />
                       </>
                     ) : (
-                      <Trans i18nKey="common:otp.verifyCode" />
+                      <Trans i18nKey="common.otp.verifyCode" />
                     )}
                   </Button>
                 </div>

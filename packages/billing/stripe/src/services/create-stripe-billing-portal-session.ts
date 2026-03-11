@@ -1,5 +1,5 @@
 import type { Stripe } from 'stripe';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import type { CreateBillingPortalSessionSchema } from '@kit/billing/schema';
 
@@ -9,7 +9,7 @@ import type { CreateBillingPortalSessionSchema } from '@kit/billing/schema';
  */
 export async function createStripeBillingPortalSession(
   stripe: Stripe,
-  params: z.infer<typeof CreateBillingPortalSessionSchema>,
+  params: z.output<typeof CreateBillingPortalSessionSchema>,
 ) {
   return stripe.billingPortal.sessions.create({
     customer: params.customerId,

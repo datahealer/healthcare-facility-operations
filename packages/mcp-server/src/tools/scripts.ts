@@ -1,7 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { z } from 'zod/v3';
+import * as z from 'zod/v3';
 
 interface ScriptInfo {
   name: string;

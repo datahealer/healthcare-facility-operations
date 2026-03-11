@@ -99,7 +99,7 @@ export function KbdStory() {
     let snippet = groupLines.join('\n');
 
     if (controls.showTooltip) {
-      snippet = `<TooltipProvider>\n  <Tooltip>\n    <TooltipTrigger asChild>\n      <Button variant="outline">Command palette</Button>\n    </TooltipTrigger>\n    <TooltipContent className="flex items-center gap-2">\n      <span>Press</span>\n      ${groupLines.join('\n      ')}\n    </TooltipContent>\n  </Tooltip>\n</TooltipProvider>`;
+      snippet = `<TooltipProvider>\n  <Tooltip>\n    <TooltipTrigger render={<Button variant="outline" />}>\n      Command palette\n    </TooltipTrigger>\n    <TooltipContent className="flex items-center gap-2">\n      <span>Press</span>\n      ${groupLines.join('\n      ')}\n    </TooltipContent>\n  </Tooltip>\n</TooltipProvider>`;
     }
 
     return formatCodeBlock(snippet, [
@@ -115,11 +115,11 @@ export function KbdStory() {
         {controls.showTooltip ? (
           <TooltipProvider delayDuration={200}>
             <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" className="gap-2">
-                  <Command className="h-4 w-4" />
-                  Command palette
-                </Button>
+              <TooltipTrigger
+                render={<Button variant="outline" className="gap-2" />}
+              >
+                <Command className="h-4 w-4" />
+                Command palette
               </TooltipTrigger>
               <TooltipContent className="flex items-center gap-2">
                 <span>Press</span>

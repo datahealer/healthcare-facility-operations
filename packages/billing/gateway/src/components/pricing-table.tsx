@@ -5,8 +5,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 import { ArrowRight, CheckCircle } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
+import { useTranslations } from 'next-intl';
+import * as z from 'zod';
 
 import {
   BillingConfig,
@@ -122,14 +122,14 @@ function PricingItem(
 
     selectable: boolean;
 
-    primaryLineItem: z.infer<typeof LineItemSchema> | undefined;
+    primaryLineItem: z.output<typeof LineItemSchema> | undefined;
 
     redirectToCheckout?: boolean;
     alwaysDisplayMonthlyPrice?: boolean;
 
     plan: {
       id: string;
-      lineItems: z.infer<typeof LineItemSchema>[];
+      lineItems: z.output<typeof LineItemSchema>[];
       interval?: Interval;
       name?: string;
       href?: string;
@@ -154,19 +154,19 @@ function PricingItem(
     };
   }>,
 ) {
-  const { t, i18n } = useTranslation();
+  const t = useTranslations();
   const highlighted = props.product.highlighted ?? false;
   const lineItem = props.primaryLineItem!;
   const isCustom = props.plan.custom ?? false;
 
-  const i18nKey = `billing:units.${lineItem.unit}`;
+  const i18nKey = `billing.units.${lineItem.unit}` as never;
 
   const unitLabel = lineItem?.unit
-    ? i18n.exists(i18nKey)
+    ? t.has(i18nKey)
       ? t(i18nKey, {
           count: 1,
           defaultValue: lineItem.unit,
-        })
+        } as never)
       : lineItem.unit
     : '';
 
@@ -260,10 +260,10 @@ function PricingItem(
               <span>
                 <If
                   condition={props.plan.interval}
-                  fallback={<Trans i18nKey={'billing:lifetime'} />}
+                  fallback={<Trans i18nKey={'billing.lifetime'} />}
                 >
                   {(interval) => (
-                    <Trans i18nKey={`billing:billingInterval.${interval}`} />
+                    <Trans i18nKey={`billing.billingInterval.${interval}`} />
                   )}
                 </If>
               </span>
@@ -279,10 +279,10 @@ function PricingItem(
                   <If condition={lineItem?.type === 'per_seat'}>
                     <If
                       condition={Boolean(lineItem?.unit) && !isDefaultSeatUnit}
-                      fallback={<Trans i18nKey={'billing:perTeamMember'} />}
+                      fallback={<Trans i18nKey={'billing.perTeamMember'} />}
                     >
                       <Trans
-                        i18nKey={'billing:perUnitShort'}
+                        i18nKey={'billing.perUnitShort'}
                         values={{
                           unit: unitLabel,
                         }}
@@ -294,7 +294,7 @@ function PricingItem(
                     condition={lineItem?.type !== 'per_seat' && lineItem?.unit}
                   >
                     <Trans
-                      i18nKey={'billing:perUnit'}
+                      i18nKey={'billing.perUnit'}
                       values={{
                         unit: lineItem?.unit,
                       }}
@@ -343,7 +343,7 @@ function PricingItem(
 
           <div className={'flex flex-col space-y-2'}>
             <h6 className={'text-sm font-semibold'}>
-              <Trans i18nKey={'billing:detailsLabel'} />
+              <Trans i18nKey={'billing.detailsLabel'} />
             </h6>
 
             <LineItemDetails
@@ -402,7 +402,7 @@ function Price({
         <span className={'text-muted-foreground text-sm leading-loose'}>
           <span>/</span>
 
-          <Trans i18nKey={'billing:perMonth'} />
+          <Trans i18nKey={'billing.perMonth'} />
         </span>
       </If>
     </div>
@@ -446,41 +446,41 @@ function PlanIntervalSwitcher(
   return (
     <div
       className={
-        'hover:border-border flex gap-x-1 rounded-full border border-transparent transition-colors'
+        'hover:border-border border-border/50 flex gap-x-0 rounded-full border'
       }
     >
       {props.intervals.map((plan, index) => {
         const selected = plan === props.interval;
 
         const className = cn(
-          'animate-in fade-in rounded-full !outline-hidden transition-all focus:!ring-0',
+          'animate-in fade-in rounded-full transition-all focus:!ring-0',
           {
             'border-r-transparent': index === 0,
             ['hover:text-primary text-muted-foreground']: !selected,
-            ['cursor-default font-semibold']: selected,
-            ['hover:bg-initial']: !selected,
+            ['cursor-default']: selected,
           },
         );
 
         return (
           <Button
-            key={plan}
             size={'sm'}
-            variant={selected ? 'secondary' : 'ghost'}
+            key={plan}
+            variant={selected ? 'secondary' : 'custom'}
             className={className}
             onClick={() => props.setInterval(plan)}
           >
             <span className={'flex items-center'}>
               <CheckCircle
-                className={cn('animate-in fade-in zoom-in-95 h-3', {
-                  hidden: !selected,
-                  'slide-in-from-left-4': index === 0,
-                  'slide-in-from-right-4': index === props.intervals.length - 1,
-                })}
+                className={cn(
+                  'animate-in fade-in zoom-in-50 mr-1 size-3 duration-200',
+                  {
+                    hidden: !selected,
+                  },
+                )}
               />
 
-              <span className={'capitalize'}>
-                <Trans i18nKey={`common:billingInterval.${plan}`} />
+              <span className={'text-xs capitalize'}>
+                <Trans i18nKey={`billing.billingInterval.${plan}`} />
               </span>
             </span>
           </Button>
@@ -509,7 +509,7 @@ function DefaultCheckoutButton(
     highlighted?: boolean;
   }>,
 ) {
-  const { t } = useTranslation('billing');
+  const t = useTranslations('billing');
 
   const signUpPath = props.paths.signUp;
 
@@ -522,7 +522,7 @@ function DefaultCheckoutButton(
   const linkHref =
     props.plan.href ?? `${signUpPath}?${searchParams.toString()}`;
 
-  const label = props.plan.buttonLabel ?? 'common:getStartedWithPlan';
+  const label = props.plan.buttonLabel ?? 'common.getStartedWithPlan';
 
   return (
     <Link className={'w-full'} href={linkHref}>
@@ -536,9 +536,9 @@ function DefaultCheckoutButton(
             i18nKey={label}
             defaults={label}
             values={{
-              plan: t(props.product.name, {
-                defaultValue: props.product.name,
-              }),
+              plan: t.has(props.product.name as never)
+                ? t(props.product.name as never)
+                : props.product.name,
             }}
           />
         </span>

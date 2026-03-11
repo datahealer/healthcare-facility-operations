@@ -3,7 +3,7 @@ import 'server-only';
 import { redirect } from 'next/navigation';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { verifyCaptchaToken } from '@kit/auth/captcha/server';
 import { requireUser } from '@kit/supabase/require-user';
@@ -22,7 +22,7 @@ interface HandlerParams<
 > {
   request: NextRequest;
   user: RequireAuth extends false ? undefined : JWTUserData;
-  body: Schema extends z.ZodType ? z.infer<Schema> : undefined;
+  body: Schema extends z.ZodType ? z.output<Schema> : undefined;
   params: Record<string, string>;
 }
 
@@ -48,7 +48,7 @@ interface HandlerParams<
  */
 export const enhanceRouteHandler = <
   Body,
-  Params extends Config<z.ZodType<Body, z.ZodTypeDef>>,
+  Params extends Config<z.ZodType<Body>>,
 >(
   // Route handler function
   handler:

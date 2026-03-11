@@ -27,7 +27,7 @@ export function PasswordSignInContainer({
   const captchaLoading = !captcha.isReady;
 
   const onSubmit = useCallback(
-    async (credentials: z.infer<typeof PasswordSignInSchema>) => {
+    async (credentials: z.output<typeof PasswordSignInSchema>) => {
       try {
         const data = await signInMutation.mutateAsync({
           ...credentials,

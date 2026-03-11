@@ -1,7 +1,7 @@
 import 'server-only';
 
 import type { Stripe } from 'stripe';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { BillingStrategyProviderService } from '@kit/billing';
 import type {
@@ -35,7 +35,7 @@ export class StripeBillingStrategyService implements BillingStrategyProviderServ
    * @param params
    */
   async createCheckoutSession(
-    params: z.infer<typeof CreateBillingCheckoutSchema>,
+    params: z.output<typeof CreateBillingCheckoutSchema>,
   ) {
     const stripe = await this.stripeProvider();
     const logger = await getLogger();
@@ -67,7 +67,7 @@ export class StripeBillingStrategyService implements BillingStrategyProviderServ
    * @param params
    */
   async createBillingPortalSession(
-    params: z.infer<typeof CreateBillingPortalSessionSchema>,
+    params: z.output<typeof CreateBillingPortalSessionSchema>,
   ) {
     const stripe = await this.stripeProvider();
     const logger = await getLogger();
@@ -96,7 +96,7 @@ export class StripeBillingStrategyService implements BillingStrategyProviderServ
    * @param params
    */
   async cancelSubscription(
-    params: z.infer<typeof CancelSubscriptionParamsSchema>,
+    params: z.output<typeof CancelSubscriptionParamsSchema>,
   ) {
     const stripe = await this.stripeProvider();
     const logger = await getLogger();
@@ -139,7 +139,7 @@ export class StripeBillingStrategyService implements BillingStrategyProviderServ
    * @param params
    */
   async retrieveCheckoutSession(
-    params: z.infer<typeof RetrieveCheckoutSessionSchema>,
+    params: z.output<typeof RetrieveCheckoutSessionSchema>,
   ) {
     const stripe = await this.stripeProvider();
     const logger = await getLogger();
@@ -183,7 +183,7 @@ export class StripeBillingStrategyService implements BillingStrategyProviderServ
    * @description Reports usage for a subscription with the Metrics API
    * @param params
    */
-  async reportUsage(params: z.infer<typeof ReportBillingUsageSchema>) {
+  async reportUsage(params: z.output<typeof ReportBillingUsageSchema>) {
     const stripe = await this.stripeProvider();
     const logger = await getLogger();
 
@@ -230,7 +230,7 @@ export class StripeBillingStrategyService implements BillingStrategyProviderServ
    * @name queryUsage
    * @description Reports the total usage for a subscription with the Metrics API
    */
-  async queryUsage(params: z.infer<typeof QueryBillingUsageSchema>) {
+  async queryUsage(params: z.output<typeof QueryBillingUsageSchema>) {
     const stripe = await this.stripeProvider();
     const logger = await getLogger();
 
@@ -287,7 +287,7 @@ export class StripeBillingStrategyService implements BillingStrategyProviderServ
    * @param params
    */
   async updateSubscriptionItem(
-    params: z.infer<typeof UpdateSubscriptionParamsSchema>,
+    params: z.output<typeof UpdateSubscriptionParamsSchema>,
   ) {
     const stripe = await this.stripeProvider();
     const logger = await getLogger();

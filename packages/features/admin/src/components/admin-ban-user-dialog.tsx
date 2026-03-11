@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
 
 import { Alert, AlertDescription, AlertTitle } from '@kit/ui/alert';
@@ -41,7 +42,7 @@ export function AdminBanUserDialog(
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild>{props.children}</AlertDialogTrigger>
+      <AlertDialogTrigger render={props.children as React.ReactElement} />
 
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -60,8 +61,9 @@ export function AdminBanUserDialog(
 }
 
 function BanUserForm(props: { userId: string; onSuccess: () => void }) {
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<boolean>(false);
+  const { execute, isPending, hasErrored } = useAction(banUserAction, {
+    onSuccess: () => props.onSuccess(),
+  });
 
   const form = useForm({
     resolver: zodResolver(BanUserSchema),
@@ -76,18 +78,9 @@ function BanUserForm(props: { userId: string; onSuccess: () => void }) {
       <form
         data-test={'admin-ban-user-form'}
         className={'flex flex-col space-y-8'}
-        onSubmit={form.handleSubmit((data) => {
-          startTransition(async () => {
-            try {
-              await banUserAction(data);
-              props.onSuccess();
-            } catch {
-              setError(true);
-            }
-          });
-        })}
+        onSubmit={form.handleSubmit((data) => execute(data))}
       >
-        <If condition={error}>
+        <If condition={hasErrored}>
           <Alert variant={'destructive'}>
             <AlertTitle>Error</AlertTitle>
 
@@ -125,10 +118,10 @@ function BanUserForm(props: { userId: string; onSuccess: () => void }) {
         />
 
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={pending}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
 
-          <Button disabled={pending} type={'submit'} variant={'destructive'}>
-            {pending ? 'Banning...' : 'Ban User'}
+          <Button disabled={isPending} type={'submit'} variant={'destructive'}>
+            {isPending ? 'Banning...' : 'Ban User'}
           </Button>
         </AlertDialogFooter>
       </form>

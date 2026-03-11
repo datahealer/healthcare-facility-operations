@@ -2,27 +2,32 @@
   "name": "@kit/ui",
   "private": true,
   "version": "0.1.0",
+  "type": "module",
   "scripts": {
     "clean": "git clean -xdf .turbo node_modules",
     "format": "prettier --check \"**/*.{ts,tsx}\"",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:unit": "vitest run"
   },
   "dependencies": {
+    "@base-ui/react": "^1.2.0",
     "@hookform/resolvers": "^5.2.2",
-    "@radix-ui/react-icons": "^1.3.2",
+    "@kit/shared": "workspace:*",
     "clsx": "^2.1.1",
-    "cmdk": "1.1.1",
-    "input-otp": "1.4.2",
+    "cmdk": "^1.1.1",
+    "embla-carousel-react": "^8.6.0",
+    "input-otp": "^1.4.2",
     "lucide-react": "catalog:",
-    "radix-ui": "1.4.3",
     "react-dropzone": "^15.0.0",
-    "react-top-loading-bar": "3.0.2",
-    "recharts": "2.15.3",
+    "react-resizable-panels": "^4.7.1",
+    "react-top-loading-bar": "^3.0.2",
+    "recharts": "3.7.0",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
     "@kit/eslint-config": "workspace:*",
+    "@kit/i18n": "workspace:*",
     "@kit/prettier-config": "workspace:*",
     "@kit/tsconfig": "workspace:*",
     "@supabase/supabase-js": "catalog:",
@@ -33,21 +38,31 @@
     "@types/react-dom": "catalog:",
     "class-variance-authority": "^0.7.1",
     "date-fns": "^4.1.0",
+    "eslint": "catalog:",
     "next": "catalog:",
+    "next-intl": "^4.8.3",
+    "next-safe-action": "catalog:",
     "next-themes": "0.4.6",
     "prettier": "^3.8.1",
-    "react-day-picker": "^9.13.2",
+    "react-day-picker": "^9.14.0",
     "react-hook-form": "catalog:",
-    "react-i18next": "catalog:",
+    "shadcn": "4.0.0",
     "sonner": "^2.0.7",
     "tailwindcss": "catalog:",
-    "typescript": "^5.9.3",
+    "vaul": "^1.1.2",
+    "vitest": "^4.0.18",
     "zod": "catalog:"
   },
   "prettier": "@kit/prettier-config",
   "imports": {
     "#utils": [
       "./src/lib/utils/index.ts"
+    ],
+    "#lib/utils": [
+      "./src/lib/utils/index.ts"
+    ],
+    "#components/*": [
+      "./src/shadcn/*"
     ]
   },
   "exports": {
@@ -59,6 +74,8 @@
     "./card": "./src/shadcn/card.tsx",
     "./checkbox": "./src/shadcn/checkbox.tsx",
     "./command": "./src/shadcn/command.tsx",
+    "./context-menu": "./src/shadcn/context-menu.tsx",
+    "./empty": "./src/shadcn/empty.tsx",
     "./data-table": "./src/shadcn/data-table.tsx",
     "./dialog": "./src/shadcn/dialog.tsx",
     "./dropdown-menu": "./src/shadcn/dropdown-menu.tsx",
@@ -73,10 +90,15 @@
     "./sheet": "./src/shadcn/sheet.tsx",
     "./slider": "./src/shadcn/slider.tsx",
     "./table": "./src/shadcn/table.tsx",
+    "./pagination": "./src/shadcn/pagination.tsx",
+    "./native-select": "./src/shadcn/native-select.tsx",
+    "./toggle": "./src/shadcn/toggle.tsx",
     "./tabs": "./src/shadcn/tabs.tsx",
     "./tooltip": "./src/shadcn/tooltip.tsx",
+    "./menu-bar": "./src/shadcn/menu-bar.tsx",
     "./sonner": "./src/shadcn/sonner.tsx",
     "./heading": "./src/shadcn/heading.tsx",
+    "./aspect-ratio": "./src/shadcn/aspect-ratio.tsx",
     "./alert": "./src/shadcn/alert.tsx",
     "./badge": "./src/shadcn/badge.tsx",
     "./radio-group": "./src/shadcn/radio-group.tsx",
@@ -87,24 +109,24 @@
     "./breadcrumb": "./src/shadcn/breadcrumb.tsx",
     "./chart": "./src/shadcn/chart.tsx",
     "./skeleton": "./src/shadcn/skeleton.tsx",
-    "./shadcn-sidebar": "./src/shadcn/sidebar.tsx",
+    "./sidebar": "./src/shadcn/sidebar.tsx",
     "./collapsible": "./src/shadcn/collapsible.tsx",
     "./kbd": "./src/shadcn/kbd.tsx",
     "./button-group": "./src/shadcn/button-group.tsx",
     "./input-group": "./src/shadcn/input-group.tsx",
     "./item": "./src/shadcn/item.tsx",
     "./field": "./src/shadcn/field.tsx",
+    "./drawer": "./src/shadcn/drawer.tsx",
     "./utils": "./src/lib/utils/index.ts",
     "./if": "./src/makerkit/if.tsx",
     "./trans": "./src/makerkit/trans.tsx",
-    "./sidebar": "./src/makerkit/sidebar.tsx",
     "./navigation-schema": "./src/makerkit/navigation-config.schema.ts",
+    "./navigation-utils": "./src/makerkit/navigation-utils.ts",
     "./bordered-navigation-menu": "./src/makerkit/bordered-navigation-menu.tsx",
     "./spinner": "./src/makerkit/spinner.tsx",
     "./page": "./src/makerkit/page.tsx",
     "./image-uploader": "./src/makerkit/image-uploader.tsx",
     "./global-loader": "./src/makerkit/global-loader.tsx",
-    "./auth-change-listener": "./src/makerkit/auth-change-listener.tsx",
     "./loading-overlay": "./src/makerkit/loading-overlay.tsx",
     "./profile-avatar": "./src/makerkit/profile-avatar.tsx",
     "./mode-toggle": "./src/makerkit/mode-toggle.tsx",
@@ -112,21 +134,20 @@
     "./enhanced-data-table": "./src/makerkit/data-table.tsx",
     "./language-selector": "./src/makerkit/language-selector.tsx",
     "./stepper": "./src/makerkit/stepper.tsx",
+    "./lazy-render": "./src/makerkit/lazy-render.tsx",
     "./cookie-banner": "./src/makerkit/cookie-banner.tsx",
     "./card-button": "./src/makerkit/card-button.tsx",
     "./version-updater": "./src/makerkit/version-updater.tsx",
-    "./multi-step-form": "./src/makerkit/multi-step-form.tsx",
     "./app-breadcrumbs": "./src/makerkit/app-breadcrumbs.tsx",
     "./empty-state": "./src/makerkit/empty-state.tsx",
     "./marketing": "./src/makerkit/marketing/index.tsx",
     "./oauth-provider-logo-image": "./src/makerkit/oauth-provider-logo-image.tsx",
-    "./file-uploader": "./src/makerkit/file-uploader.tsx"
-  },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "src/*"
-      ]
-    }
+    "./copy-to-clipboard": "./src/makerkit/copy-to-clipboard.tsx",
+    "./error-boundary": "./src/makerkit/error-boundary.tsx",
+    "./hooks/use-async-dialog": "./src/hooks/use-async-dialog.ts",
+    "./hooks/use-mobile": "./src/hooks/use-mobile.ts",
+    "./sidebar-navigation": "./src/makerkit/sidebar-navigation.tsx",
+    "./file-uploader": "./src/makerkit/file-uploader.tsx",
+    "./use-supabase-upload": "./src/hooks/use-supabase-upload.ts"
   }
 }

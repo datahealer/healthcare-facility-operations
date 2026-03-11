@@ -3,12 +3,11 @@
 import { useCallback, useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeftIcon } from 'lucide-react';
+import { ArrowLeftIcon, TriangleAlert } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useForm, useWatch } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { useSupabase } from '@kit/supabase/hooks/use-supabase';
 import { useFactorsMutationKey } from '@kit/supabase/hooks/use-user-factors-mutation-key';
@@ -45,34 +44,33 @@ import { Trans } from '@kit/ui/trans';
 import { refreshAuthSession } from '../../../server/personal-accounts-server-actions';
 
 export function MultiFactorAuthSetupDialog(props: { userId: string }) {
-  const { t } = useTranslation();
+  const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
 
   const onEnrollSuccess = useCallback(() => {
     setIsOpen(false);
 
-    return toast.success(t(`account:multiFactorSetupSuccess`));
+    return toast.success(t(`account.multiFactorSetupSuccess` as never));
   }, [t]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button>
-          <Trans i18nKey={'account:setupMfaButtonLabel'} />
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen} disablePointerDismissal>
+      <DialogTrigger
+        render={
+          <Button>
+            <Trans i18nKey={'account.setupMfaButtonLabel'} />
+          </Button>
+        }
+      />
 
-      <DialogContent
-        onInteractOutside={(e) => e.preventDefault()}
-        onEscapeKeyDown={(e) => e.preventDefault()}
-      >
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            <Trans i18nKey={'account:setupMfaButtonLabel'} />
+            <Trans i18nKey={'account.setupMfaButtonLabel'} />
           </DialogTitle>
 
           <DialogDescription>
-            <Trans i18nKey={'account:multiFactorAuthDescription'} />
+            <Trans i18nKey={'account.multiFactorAuthDescription'} />
           </DialogDescription>
         </DialogHeader>
 
@@ -210,7 +208,7 @@ function MultiFactorAuthSetupForm({
 
                       <FormDescription>
                         <Trans
-                          i18nKey={'account:verifyActivationCodeDescription'}
+                          i18nKey={'account.verifyActivationCodeDescription'}
                         />
                       </FormDescription>
 
@@ -223,7 +221,7 @@ function MultiFactorAuthSetupForm({
 
               <div className={'flex justify-end space-x-2'}>
                 <Button type={'button'} variant={'ghost'} onClick={onCancel}>
-                  <Trans i18nKey={'common:cancel'} />
+                  <Trans i18nKey={'common.cancel'} />
                 </Button>
 
                 <Button
@@ -233,9 +231,9 @@ function MultiFactorAuthSetupForm({
                   type={'submit'}
                 >
                   {state.loading ? (
-                    <Trans i18nKey={'account:verifyingCode'} />
+                    <Trans i18nKey={'account.verifyingCode'} />
                   ) : (
-                    <Trans i18nKey={'account:enableMfaFactor'} />
+                    <Trans i18nKey={'account.enableMfaFactor'} />
                   )}
                 </Button>
               </div>
@@ -257,7 +255,7 @@ function FactorQrCode({
   onSetFactorId: (factorId: string) => void;
 }>) {
   const enrollFactorMutation = useEnrollFactor(userId);
-  const { t } = useTranslation();
+  const t = useTranslations();
   const [error, setError] = useState<string>('');
 
   const form = useForm({
@@ -279,16 +277,16 @@ function FactorQrCode({
     return (
       <div className={'flex w-full flex-col space-y-2'}>
         <Alert variant={'destructive'}>
-          <ExclamationTriangleIcon className={'h-4'} />
+          <TriangleAlert className={'h-4'} />
 
           <AlertTitle>
-            <Trans i18nKey={'account:qrCodeErrorHeading'} />
+            <Trans i18nKey={'account.qrCodeErrorHeading'} />
           </AlertTitle>
 
           <AlertDescription>
             <Trans
-              i18nKey={`auth:errors.${error}`}
-              defaults={t('account:qrCodeErrorDescription')}
+              i18nKey={`auth.errors.${error}`}
+              defaults={t('account.qrCodeErrorDescription')}
             />
           </AlertDescription>
         </Alert>
@@ -296,7 +294,7 @@ function FactorQrCode({
         <div>
           <Button variant={'outline'} onClick={onCancel}>
             <ArrowLeftIcon className={'h-4'} />
-            <Trans i18nKey={`common:retry`} />
+            <Trans i18nKey={`common.retry`} />
           </Button>
         </div>
       </div>
@@ -336,7 +334,7 @@ function FactorQrCode({
     >
       <p>
         <span className={'text-muted-foreground text-sm'}>
-          <Trans i18nKey={'account:multiFactorModalHeading'} />
+          <Trans i18nKey={'account.multiFactorModalHeading'} />
         </span>
       </p>
 
@@ -379,7 +377,7 @@ function FactorNameForm(
               return (
                 <FormItem>
                   <FormLabel>
-                    <Trans i18nKey={'account:factorNameLabel'} />
+                    <Trans i18nKey={'account.factorNameLabel'} />
                   </FormLabel>
 
                   <FormControl>
@@ -387,7 +385,7 @@ function FactorNameForm(
                   </FormControl>
 
                   <FormDescription>
-                    <Trans i18nKey={'account:factorNameHint'} />
+                    <Trans i18nKey={'account.factorNameHint'} />
                   </FormDescription>
 
                   <FormMessage />
@@ -398,11 +396,11 @@ function FactorNameForm(
 
           <div className={'flex justify-end space-x-2'}>
             <Button type={'button'} variant={'ghost'} onClick={props.onCancel}>
-              <Trans i18nKey={'common:cancel'} />
+              <Trans i18nKey={'common.cancel'} />
             </Button>
 
             <Button type={'submit'}>
-              <Trans i18nKey={'account:factorNameSubmitLabel'} />
+              <Trans i18nKey={'account.factorNameSubmitLabel'} />
             </Button>
           </div>
         </div>
@@ -501,14 +499,14 @@ function useVerifyCodeMutation(userId: string) {
 function ErrorAlert() {
   return (
     <Alert variant={'destructive'}>
-      <ExclamationTriangleIcon className={'h-4'} />
+      <TriangleAlert className={'h-4'} />
 
       <AlertTitle>
-        <Trans i18nKey={'account:multiFactorSetupErrorHeading'} />
+        <Trans i18nKey={'account.multiFactorSetupErrorHeading'} />
       </AlertTitle>
 
       <AlertDescription>
-        <Trans i18nKey={'account:multiFactorSetupErrorDescription'} />
+        <Trans i18nKey={'account.multiFactorSetupErrorDescription'} />
       </AlertDescription>
     </Alert>
   );

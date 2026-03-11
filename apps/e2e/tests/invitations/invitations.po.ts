@@ -46,7 +46,7 @@ export class InvitationsPageObject {
         `[data-test="invite-member-form-item"]:nth-child(${nth}) [data-test="role-selector-trigger"]`,
       );
 
-      await this.page.click(`[data-test="role-option-${invite.role}"]`);
+      await this.page.getByRole('option', { name: invite.role }).click();
 
       if (index < invites.length - 1) {
         await form.locator('[data-test="add-new-invite-button"]').click();

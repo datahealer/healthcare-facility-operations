@@ -320,10 +320,12 @@ export function CardButtonStory() {
                 </thead>
                 <tbody>
                   <tr className="border-b">
-                    <td className="p-3 font-mono text-sm">asChild</td>
-                    <td className="p-3 font-mono text-sm">boolean</td>
-                    <td className="p-3 font-mono text-sm">false</td>
-                    <td className="p-3">Render as child element</td>
+                    <td className="p-3 font-mono text-sm">render</td>
+                    <td className="p-3 font-mono text-sm">
+                      React.ReactElement
+                    </td>
+                    <td className="p-3 font-mono text-sm">-</td>
+                    <td className="p-3">Compose with a custom element</td>
                   </tr>
                   <tr className="border-b">
                     <td className="p-3 font-mono text-sm">className</td>

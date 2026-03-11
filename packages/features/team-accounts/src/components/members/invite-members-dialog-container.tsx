@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from '@tanstack/react-query';
 import { Mail, Plus, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useAction } from 'next-safe-action/hooks';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 
 import { Alert, AlertDescription } from '@kit/ui/alert';
 import { Button } from '@kit/ui/button';
@@ -64,9 +65,24 @@ export function InviteMembersDialogContainer({
   accountSlug: string;
   userRoleHierarchy: number;
 }>) {
-  const [pending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
-  const { t } = useTranslation('teams');
+  const t = useTranslations('teams');
+
+  const { execute, isPending } = useAction(createInvitationsAction, {
+    onSuccess: ({ data }) => {
+      if (data?.success) {
+        toast.success(t('inviteMembersSuccessMessage'));
+      } else {
+        toast.error(t('inviteMembersErrorMessage'));
+      }
+
+      setIsOpen(false);
+    },
+    onError: () => {
+      toast.error(t('inviteMembersErrorMessage'));
+      setIsOpen(false);
+    },
+  });
 
   // Evaluate policies when dialog is open
   const {
@@ -76,17 +92,17 @@ export function InviteMembersDialogContainer({
   } = useFetchInvitationsPolicies({ accountSlug, isOpen });
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen} modal>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen} disablePointerDismissal>
+      <DialogTrigger render={children as React.ReactElement} />
 
-      <DialogContent onInteractOutside={(e) => e.preventDefault()}>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            <Trans i18nKey={'teams:inviteMembersHeading'} />
+            <Trans i18nKey={'teams.inviteMembersHeading'} />
           </DialogTitle>
 
           <DialogDescription>
-            <Trans i18nKey={'teams:inviteMembersDescription'} />
+            <Trans i18nKey={'teams.inviteMembersDescription'} />
           </DialogDescription>
         </DialogHeader>
 
@@ -95,7 +111,7 @@ export function InviteMembersDialogContainer({
             <Spinner className="h-6 w-6" />
 
             <span className="text-muted-foreground text-sm">
-              <Trans i18nKey="teams:checkingPolicies" />
+              <Trans i18nKey="teams.checkingPolicies" />
             </span>
           </div>
         </If>
@@ -104,7 +120,7 @@ export function InviteMembersDialogContainer({
           <Alert variant="destructive">
             <AlertDescription>
               <Trans
-                i18nKey="teams:policyCheckError"
+                i18nKey="teams.policyCheckError"
                 values={{ error: policiesError?.message }}
               />
             </AlertDescription>
@@ -126,28 +142,12 @@ export function InviteMembersDialogContainer({
           <RolesDataProvider maxRoleHierarchy={userRoleHierarchy}>
             {(roles) => (
               <InviteMembersForm
-                pending={pending}
+                pending={isPending}
                 roles={roles}
                 onSubmit={(data) => {
-                  startTransition(async () => {
-                    const toastId = toast.loading(t('invitingMembers'));
-
-                    const result = await createInvitationsAction({
-                      accountSlug,
-                      invitations: data.invitations,
-                    });
-
-                    if (result.success) {
-                      toast.success(t('inviteMembersSuccessMessage'), {
-                        id: toastId,
-                      });
-                    } else {
-                      toast.error(t('inviteMembersErrorMessage'), {
-                        id: toastId,
-                      });
-                    }
-
-                    setIsOpen(false);
+                  execute({
+                    accountSlug,
+                    invitations: data.invitations,
                   });
                 }}
               />
@@ -168,7 +168,7 @@ function InviteMembersForm({
   pending: boolean;
   roles: string[];
 }) {
-  const { t } = useTranslation('teams');
+  const t = useTranslations('teams');
 
   const form = useForm({
     resolver: zodResolver(InviteMembersSchema),
@@ -237,7 +237,9 @@ function InviteMembersForm({
                               roles={roles}
                               value={field.value}
                               onChange={(role) => {
-                                form.setValue(field.name, role);
+                                if (role) {
+                                  form.setValue(field.name, role);
+                                }
                               }}
                             />
                           </FormControl>
@@ -251,22 +253,24 @@ function InviteMembersForm({
                   <div className={'flex items-end justify-end'}>
                     <TooltipProvider>
                       <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant={'ghost'}
-                            size={'icon'}
-                            type={'button'}
-                            disabled={fieldArray.fields.length <= 1}
-                            data-test={'remove-invite-button'}
-                            aria-label={t('removeInviteButtonLabel')}
-                            onClick={() => {
-                              fieldArray.remove(index);
-                              form.clearErrors(emailInputName);
-                            }}
-                          >
-                            <X className={'h-4'} />
-                          </Button>
-                        </TooltipTrigger>
+                        <TooltipTrigger
+                          render={
+                            <Button
+                              variant={'ghost'}
+                              size={'icon'}
+                              type={'button'}
+                              disabled={fieldArray.fields.length <= 1}
+                              data-test={'remove-invite-button'}
+                              aria-label={t('removeInviteButtonLabel')}
+                              onClick={() => {
+                                fieldArray.remove(index);
+                                form.clearErrors(emailInputName);
+                              }}
+                            >
+                              <X className={'h-4'} />
+                            </Button>
+                          }
+                        />
 
                         <TooltipContent>
                           {t('removeInviteButtonLabel')}
@@ -294,7 +298,7 @@ function InviteMembersForm({
                 <Plus className={'mr-1 h-3'} />
 
                 <span>
-                  <Trans i18nKey={'teams:addAnotherMemberButtonLabel'} />
+                  <Trans i18nKey={'teams.addAnotherMemberButtonLabel'} />
                 </span>
               </Button>
             </div>
@@ -305,8 +309,8 @@ function InviteMembersForm({
           <Trans
             i18nKey={
               pending
-                ? 'teams:invitingMembers'
-                : 'teams:inviteMembersButtonLabel'
+                ? 'teams.invitingMembers'
+                : 'teams.inviteMembersButtonLabel'
             }
           />
         </Button>

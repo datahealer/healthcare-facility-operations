@@ -88,7 +88,7 @@ test.describe('Team Accounts', () => {
     await teamAccounts.createTeam();
 
     await teamAccounts.openAccountsSelector();
-    await page.click('[data-test="create-team-account-trigger"]');
+    await page.click('[data-test="create-team-trigger"]');
 
     await teamAccounts.tryCreateTeam('billing');
 
@@ -202,7 +202,7 @@ test.describe('Team Accounts', () => {
 
     // Use non-Latin name to trigger the slug field visibility
     await teamAccounts.openAccountsSelector();
-    await page.click('[data-test="create-team-account-trigger"]');
+    await page.click('[data-test="create-team-trigger"]');
 
     await page.fill(
       '[data-test="create-team-form"] [data-test="team-name-input"]',

@@ -19,8 +19,8 @@ export class AuthPageObject {
   }
 
   async signOut() {
-    await this.page.click('[data-test="account-dropdown-trigger"]');
-    await this.page.click('[data-test="account-dropdown-sign-out"]');
+    await this.page.click('[data-test="workspace-dropdown-trigger"]');
+    await this.page.click('[data-test="workspace-sign-out"]');
   }
 
   async bootstrapUser(params: { email: string; password: string; name: string }) {
@@ -47,9 +47,19 @@ export class AuthPageObject {
 ## Common Selectors
 
 ```typescript
-// Account dropdown
-'[data-test="account-dropdown-trigger"]'
-'[data-test="account-dropdown-sign-out"]'
+// Workspace dropdown (sidebar header - combined account switcher + user menu)
+'[data-test="workspace-dropdown-trigger"]'  // Opens the dropdown
+'[data-test="workspace-switch-submenu"]'    // Sub-trigger for workspace switching
+'[data-test="workspace-switch-content"]'    // Sub-menu content with workspace list
+'[data-test="workspace-team-item"]'         // Individual team items in switcher
+'[data-test="create-team-trigger"]'         // Create team button in switcher
+'[data-test="workspace-sign-out"]'          // Sign out button
+'[data-test="workspace-settings-link"]'     // Settings link
+'[data-test="account-dropdown-display-name"]' // User display name (inside dropdown panel)
+
+// Opening the workspace switcher (two-step: open dropdown, then submenu)
+await page.click('[data-test="workspace-dropdown-trigger"]');
+await page.click('[data-test="workspace-switch-submenu"]');
 
 // Navigation
 '[data-test="sidebar-menu"]'

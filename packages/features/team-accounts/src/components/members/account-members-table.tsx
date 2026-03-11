@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 
 import { ColumnDef } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from 'next-intl';
 
 import { Database } from '@kit/supabase/database';
 import { Badge } from '@kit/ui/badge';
@@ -53,7 +53,7 @@ export function AccountMembersTable({
   canManageRoles,
 }: AccountMembersTableProps) {
   const [search, setSearch] = useState('');
-  const { t } = useTranslation('teams');
+  const t = useTranslations('teams');
 
   const permissions = {
     canUpdateRole: (targetRole: number) => {
@@ -123,7 +123,7 @@ function useGetColumns(
     currentRoleHierarchy: number;
   },
 ): ColumnDef<Members[0]>[] {
-  const { t } = useTranslation('teams');
+  const t = useTranslations('teams');
 
   return useMemo(
     () => [
@@ -136,7 +136,7 @@ function useGetColumns(
           const isSelf = member.user_id === params.currentUserId;
 
           return (
-            <span className={'flex items-center space-x-4 text-left'}>
+            <span className={'flex items-center gap-x-2 text-left'}>
               <span>
                 <ProfileAvatar
                   displayName={displayName}
@@ -144,11 +144,13 @@ function useGetColumns(
                 />
               </span>
 
-              <span>{displayName}</span>
+              <span className={'flex items-center gap-x-2'}>
+                <span>{displayName}</span>
 
-              <If condition={isSelf}>
-                <Badge variant={'outline'}>{t('youLabel')}</Badge>
-              </If>
+                <If condition={isSelf}>
+                  <Badge variant={'secondary'}>{t('youLabel')}</Badge>
+                </If>
+              </span>
             </span>
           );
         },
@@ -171,13 +173,7 @@ function useGetColumns(
               <RoleBadge role={role} />
 
               <If condition={isPrimaryOwner}>
-                <span
-                  className={
-                    'rounded-md bg-yellow-400 px-2.5 py-1 text-xs font-medium dark:text-black'
-                  }
-                >
-                  {t('primaryOwnerLabel')}
-                </span>
+                <Badge variant={'warning'}>{t('primaryOwnerLabel')}</Badge>
               </If>
             </span>
           );
@@ -223,6 +219,10 @@ function ActionsDropdown({
   const isCurrentUser = member.user_id === currentUserId;
   const isPrimaryOwner = member.primary_owner_user_id === member.user_id;
 
+  const [activeDialog, setActiveDialog] = useState<
+    'updateRole' | 'transferOwnership' | 'removeMember' | null
+  >(null);
+
   if (isCurrentUser || isPrimaryOwner) {
     return null;
   }
@@ -246,50 +246,66 @@ function ActionsDropdown({
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant={'ghost'} size={'icon'}>
-            <Ellipsis className={'h-5 w-5'} />
-          </Button>
-        </DropdownMenuTrigger>
+        <DropdownMenuTrigger
+          render={
+            <Button variant={'ghost'} size={'icon'}>
+              <Ellipsis className={'h-5 w-5'} />
+            </Button>
+          }
+        />
 
-        <DropdownMenuContent>
+        <DropdownMenuContent className={'min-w-52'}>
           <If condition={canUpdateRole}>
-            <UpdateMemberRoleDialog
-              userId={member.user_id}
-              userRole={member.role}
-              teamAccountId={currentTeamAccountId}
-              userRoleHierarchy={currentRoleHierarchy}
-            >
-              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Trans i18nKey={'teams:updateRole'} />
-              </DropdownMenuItem>
-            </UpdateMemberRoleDialog>
+            <DropdownMenuItem onClick={() => setActiveDialog('updateRole')}>
+              <Trans i18nKey={'teams.updateRole'} />
+            </DropdownMenuItem>
           </If>
 
           <If condition={permissions.canTransferOwnership}>
-            <TransferOwnershipDialog
-              targetDisplayName={member.name ?? member.email}
-              accountId={member.account_id}
-              userId={member.user_id}
+            <DropdownMenuItem
+              onClick={() => setActiveDialog('transferOwnership')}
             >
-              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Trans i18nKey={'teams:transferOwnership'} />
-              </DropdownMenuItem>
-            </TransferOwnershipDialog>
+              <Trans i18nKey={'teams.transferOwnership'} />
+            </DropdownMenuItem>
           </If>
 
           <If condition={canRemoveFromAccount}>
-            <RemoveMemberDialog
-              teamAccountId={currentTeamAccountId}
-              userId={member.user_id}
-            >
-              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Trans i18nKey={'teams:removeMember'} />
-              </DropdownMenuItem>
-            </RemoveMemberDialog>
+            <DropdownMenuItem onClick={() => setActiveDialog('removeMember')}>
+              <Trans i18nKey={'teams.removeMember'} />
+            </DropdownMenuItem>
           </If>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {activeDialog === 'updateRole' && (
+        <UpdateMemberRoleDialog
+          open
+          onOpenChange={(open) => !open && setActiveDialog(null)}
+          userId={member.user_id}
+          userRole={member.role}
+          teamAccountId={currentTeamAccountId}
+          userRoleHierarchy={currentRoleHierarchy}
+        />
+      )}
+
+      {activeDialog === 'transferOwnership' && (
+        <TransferOwnershipDialog
+          open
+          onOpenChange={(open) => !open && setActiveDialog(null)}
+          targetDisplayName={member.name ?? member.email}
+          accountId={member.account_id}
+          userId={member.user_id}
+        />
+      )}
+
+      {activeDialog === 'removeMember' && (
+        <RemoveMemberDialog
+          open
+          onOpenChange={(open) => !open && setActiveDialog(null)}
+          teamAccountId={currentTeamAccountId}
+          userId={member.user_id}
+        />
+      )}
     </>
   );
 }

@@ -18,11 +18,11 @@
   },
   "devDependencies": {
     "@kit/eslint-config": "workspace:*",
-    "@kit/i18n": "workspace:*",
     "@kit/prettier-config": "workspace:*",
     "@kit/tsconfig": "workspace:*",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
+    "next-intl": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ColumnDef } from '@tanstack/react-table';
 import { EllipsisVertical } from 'lucide-react';
 import { useForm, useWatch } from 'react-hook-form';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { Tables } from '@kit/supabase/database';
 import { Button } from '@kit/ui/button';
@@ -77,7 +77,7 @@ export function AdminAccountsTable(
 }
 
 function AccountsTableFilters(props: {
-  filters: z.infer<typeof FiltersSchema>;
+  filters: z.output<typeof FiltersSchema>;
 }) {
   const form = useForm({
     resolver: zodResolver(FiltersSchema),
@@ -92,7 +92,7 @@ function AccountsTableFilters(props: {
   const router = useRouter();
   const pathName = usePathname();
 
-  const onSubmit = ({ type, query }: z.infer<typeof FiltersSchema>) => {
+  const onSubmit = ({ type, query }: z.output<typeof FiltersSchema>) => {
     const params = new URLSearchParams({
       account_type: type,
       query: query ?? '',
@@ -105,6 +105,12 @@ function AccountsTableFilters(props: {
 
   const type = useWatch({ control: form.control, name: 'type' });
 
+  const options = {
+    all: 'All Accounts',
+    team: 'Team',
+    personal: 'Personal',
+  };
+
   return (
     <Form {...form}>
       <form
@@ -116,7 +122,7 @@ function AccountsTableFilters(props: {
           onValueChange={(value) => {
             form.setValue(
               'type',
-              value as z.infer<typeof FiltersSchema>['type'],
+              value as z.output<typeof FiltersSchema>['type'],
               {
                 shouldValidate: true,
                 shouldDirty: true,
@@ -128,16 +134,20 @@ function AccountsTableFilters(props: {
           }}
         >
           <SelectTrigger>
-            <SelectValue placeholder={'Account Type'} />
+            <SelectValue placeholder={'Account Type'}>
+              {(value: keyof typeof options) => options[value]}
+            </SelectValue>
           </SelectTrigger>
 
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Account Type</SelectLabel>
 
-              <SelectItem value={'all'}>All accounts</SelectItem>
-              <SelectItem value={'team'}>Team</SelectItem>
-              <SelectItem value={'personal'}>Personal</SelectItem>
+              {Object.entries(options).map(([key, value]) => (
+                <SelectItem key={key} value={key}>
+                  {value}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -157,6 +167,8 @@ function AccountsTableFilters(props: {
             </FormItem>
           )}
         />
+
+        <button type="submit" hidden />
       </form>
     </Form>
   );
@@ -211,11 +223,13 @@ function getColumns(): ColumnDef<Account>[] {
         return (
           <div className={'flex justify-end'}>
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant={'outline'} size={'icon'}>
-                  <EllipsisVertical className={'h-4'} />
-                </Button>
-              </DropdownMenuTrigger>
+              <DropdownMenuTrigger
+                render={
+                  <Button variant={'outline'} size={'icon'}>
+                    <EllipsisVertical className={'h-4'} />
+                  </Button>
+                }
+              />
 
               <DropdownMenuContent align={'end'}>
                 <DropdownMenuGroup>

@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import { z } from 'zod';
+import * as z from 'zod';
 
 import type { Database } from '@kit/supabase/database';
 import { JWTUserData } from '@kit/supabase/types';
@@ -29,7 +29,7 @@ class InvitationContextBuilder {
    * Build policy context for invitation evaluation with optimized parallel loading
    */
   async buildContext(
-    params: z.infer<typeof InviteMembersSchema> & { accountSlug: string },
+    params: z.output<typeof InviteMembersSchema> & { accountSlug: string },
     user: JWTUserData,
   ): Promise<FeaturePolicyInvitationContext> {
     // Fetch all data in parallel for optimal performance
@@ -43,7 +43,7 @@ class InvitationContextBuilder {
    * (avoids duplicate account lookup)
    */
   async buildContextWithAccountId(
-    params: z.infer<typeof InviteMembersSchema> & { accountSlug: string },
+    params: z.output<typeof InviteMembersSchema> & { accountSlug: string },
     user: JWTUserData,
     accountId: string,
   ): Promise<FeaturePolicyInvitationContext> {

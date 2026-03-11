@@ -20,8 +20,8 @@ export const subscriptionRequiredInvitationsPolicy =
       if (!subscription || !subscription.active) {
         return deny({
           code: 'SUBSCRIPTION_REQUIRED',
-          message: 'teams:policyErrors.subscriptionRequired',
-          remediation: 'teams:policyRemediation.subscriptionRequired',
+          message: 'teams.policyErrors.subscriptionRequired',
+          remediation: 'teams.policyRemediation.subscriptionRequired',
         });
       }
 
@@ -55,8 +55,8 @@ export const paddleBillingInvitationsPolicy =
         if (hasPerSeatItems) {
           return deny({
             code: 'PADDLE_TRIAL_RESTRICTION',
-            message: 'teams:policyErrors.paddleTrialRestriction',
-            remediation: 'teams:policyRemediation.paddleTrialRestriction',
+            message: 'teams.policyErrors.paddleTrialRestriction',
+            remediation: 'teams.policyRemediation.paddleTrialRestriction',
           });
         }
       }

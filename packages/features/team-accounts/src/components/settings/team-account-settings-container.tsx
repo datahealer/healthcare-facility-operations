@@ -35,11 +35,11 @@ export function TeamAccountSettingsContainer(props: {
       <Card>
         <CardHeader>
           <CardTitle>
-            <Trans i18nKey={'teams:settings.teamLogo'} />
+            <Trans i18nKey={'teams.settings.teamLogo'} />
           </CardTitle>
 
           <CardDescription>
-            <Trans i18nKey={'teams:settings.teamLogoDescription'} />
+            <Trans i18nKey={'teams.settings.teamLogoDescription'} />
           </CardDescription>
         </CardHeader>
 
@@ -51,11 +51,11 @@ export function TeamAccountSettingsContainer(props: {
       <Card>
         <CardHeader>
           <CardTitle>
-            <Trans i18nKey={'teams:settings.teamName'} />
+            <Trans i18nKey={'teams.settings.teamName'} />
           </CardTitle>
 
           <CardDescription>
-            <Trans i18nKey={'teams:settings.teamNameDescription'} />
+            <Trans i18nKey={'teams.settings.teamNameDescription'} />
           </CardDescription>
         </CardHeader>
 

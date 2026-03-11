@@ -102,7 +102,7 @@ export function PasswordSignUpForm({
                 </FormControl>
 
                 <FormDescription>
-                  <Trans i18nKey={'auth:repeatPasswordDescription'} />
+                  <Trans i18nKey={'auth.repeatPasswordDescription'} />
                 </FormDescription>
 
                 <FormMessage />
@@ -123,13 +123,13 @@ export function PasswordSignUpForm({
         >
           <If condition={captchaLoading}>
             <span className={'animate-in fade-in slide-in-from-bottom-24'}>
-              <Trans i18nKey={'auth:verifyingCaptcha'} />
+              <Trans i18nKey={'auth.verifyingCaptcha'} />
             </span>
           </If>
 
           <If condition={loading && !captchaLoading}>
             <span className={'animate-in fade-in slide-in-from-bottom-24'}>
-              <Trans i18nKey={'auth:signingUp'} />
+              <Trans i18nKey={'auth.signingUp'} />
             </span>
           </If>
 
@@ -139,7 +139,7 @@ export function PasswordSignUpForm({
                 'animate-in fade-in slide-in-from-bottom-24 flex items-center'
               }
             >
-              <Trans i18nKey={'auth:signUpWithEmail'} />
+              <Trans i18nKey={'auth.signUpWithEmail'} />
 
               <ArrowRight
                 className={

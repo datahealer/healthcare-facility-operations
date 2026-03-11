@@ -126,7 +126,7 @@ export function CreateEntityForm() {
     reValidateMode: 'onChange',
   });
 
-  const onSubmit = (data: z.infer<typeof CreateEntitySchema>) => {
+  const onSubmit = (data: z.output<typeof CreateEntitySchema>) => {
     setError(false);
 
     startTransition(async () => {
@@ -147,7 +147,7 @@ export function CreateEntityForm() {
         <If condition={error}>
           <Alert variant="destructive">
             <AlertDescription>
-              <Trans i18nKey="common:errors.generic" />
+              <Trans i18nKey="common.errors.generic" />
             </AlertDescription>
           </Alert>
         </If>
@@ -177,9 +177,9 @@ export function CreateEntityForm() {
           data-test="submit-entity-button"
         >
           {pending ? (
-            <Trans i18nKey="common:creating" />
+            <Trans i18nKey="common.creating" />
           ) : (
-            <Trans i18nKey="common:create" />
+            <Trans i18nKey="common.create" />
           )}
         </Button>
       </Form>

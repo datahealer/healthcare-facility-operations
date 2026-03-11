@@ -3,17 +3,15 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import { enhanceAction } from '@kit/next/actions';
+import { authActionClient } from '@kit/next/safe-action';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
 import { LeaveTeamAccountSchema } from '../../schema/leave-team-account.schema';
 import { createLeaveTeamAccountService } from '../services/leave-team-account.service';
 
-export const leaveTeamAccountAction = enhanceAction(
-  async (formData: FormData, user) => {
-    const body = Object.fromEntries(formData.entries());
-    const params = LeaveTeamAccountSchema.parse(body);
-
+export const leaveTeamAccountAction = authActionClient
+  .schema(LeaveTeamAccountSchema)
+  .action(async ({ parsedInput: params, ctx: { user } }) => {
     const service = createLeaveTeamAccountService(
       getSupabaseServerAdminClient(),
     );
@@ -25,7 +23,5 @@ export const leaveTeamAccountAction = enhanceAction(
 
     revalidatePath('/home/[account]', 'layout');
 
-    return redirect('/home');
-  },
-  {},
-);
+    redirect('/home');
+  });
