@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { ArrowRightIcon, LayoutDashboard } from 'lucide-react';
+import { ArrowRightIcon, CalendarCheck } from 'lucide-react';
 
 import { PricingTable } from '@kit/billing-gateway/marketing';
 import {
@@ -20,7 +20,17 @@ import { Trans } from '@kit/ui/trans';
 
 import billingConfig from '~/config/billing.config';
 import pathsConfig from '~/config/paths.config';
+import { createI18nServerInstance } from '~/lib/i18n/i18n.server';
 import { withI18n } from '~/lib/i18n/with-i18n';
+
+export const generateMetadata = async () => {
+  const { t } = await createI18nServerInstance();
+
+  return {
+    title: t('marketing:homeTitle'),
+    description: t('marketing:homeDescription'),
+  };
+};
 
 function Home() {
   return (
@@ -28,10 +38,12 @@ function Home() {
       <div className={'mx-auto'}>
         <Hero
           pill={
-            <Pill label={'New'}>
-              <span>The SaaS Starter Kit for ambitious developers</span>
+            <Pill label={'Live'}>
+              <span>
+                Built for healthcare professionals who refuse to settle
+              </span>
               <PillActionButton asChild>
-                <Link href={'/auth/sign-up'}>
+                <Link href={pathsConfig.auth.signUp}>
                   <ArrowRightIcon className={'h-4 w-4'} />
                 </Link>
               </PillActionButton>
@@ -39,14 +51,16 @@ function Home() {
           }
           title={
             <span className="text-secondary-foreground">
-              <span>Ship a SaaS faster than ever.</span>
+              <span>Your practice is stuck in 2005. We fix that.</span>
             </span>
           }
           subtitle={
             <span>
-              Makerkit gives you a production-ready boilerplate to build your
-              SaaS faster than ever before with the next-gen SaaS Starter Kit.
-              Get started in minutes.
+              Doctors, radiologists, pathologists, dentists, physiotherapists
+              &mdash; you spent a decade mastering medicine. Why are you still
+              managing bookings on WhatsApp? This platform eliminates no-shows,
+              automates follow-ups, and turns your calendar into a revenue
+              engine. First principles. Zero nonsense.
             </span>
           }
           cta={<MainCallToActionButton />}
@@ -58,8 +72,8 @@ function Home() {
               }
               width={3558}
               height={2222}
-              src={`/images/dashboard.webp`}
-              alt={`App Image`}
+              src="/images/dashboard.webp"
+              alt={`Healthcare operations dashboard`}
             />
           }
         />
@@ -70,58 +84,58 @@ function Home() {
           <FeatureShowcase
             heading={
               <>
-                <b className="font-medium tracking-tight dark:text-white">
-                  The ultimate SaaS Starter Kit
+                <b className="dark:text-foreground font-medium tracking-tight">
+                  The operating system for modern healthcare
                 </b>
                 .{' '}
                 <span className="text-secondary-foreground/70 block font-normal tracking-tight">
-                  Unleash your creativity and build your SaaS faster than ever
-                  with Makerkit.
+                  We didn&apos;t build another appointment app. We built the
+                  infrastructure that makes your practice run like a machine.
                 </span>
               </>
             }
             icon={
               <FeatureShowcaseIconContainer>
-                <LayoutDashboard className="h-4 w-4" />
-                <span>All-in-one solution</span>
+                <CalendarCheck className="h-4 w-4" />
+                <span>Complete practice command center</span>
               </FeatureShowcaseIconContainer>
             }
           >
             <FeatureGrid>
               <FeatureCard
                 className={'relative col-span-1 overflow-hidden'}
-                label={'Beautiful Dashboard'}
-                description={`Makerkit provides a beautiful dashboard to manage your SaaS business.`}
+                label={'Smart Scheduling'}
+                description={`AI-optimized appointment slots that pack your calendar without burning out your staff. Every empty slot is lost revenue. We don't allow that.`}
               ></FeatureCard>
 
               <FeatureCard
                 className={'relative col-span-1 w-full overflow-hidden'}
-                label={'Authentication'}
-                description={`Makerkit provides a variety of providers to allow your users to sign in.`}
+                label={'No-Show Killer'}
+                description={`Automated reminders via SMS, WhatsApp, and email. Patients who ghost get waitlisted. Your chair stays warm. Average 40% reduction in no-shows.`}
               ></FeatureCard>
 
               <FeatureCard
                 className={'relative col-span-1 overflow-hidden'}
-                label={'Multi Tenancy'}
-                description={`Multi tenant memberships for your SaaS business.`}
+                label={'Follow-Up Autopilot'}
+                description={`Stop chasing patients manually. Automated follow-up sequences ensure continuity of care and keep your revenue pipeline flowing.`}
               />
 
               <FeatureCard
                 className={'relative col-span-1 overflow-hidden'}
-                label={'Billing'}
-                description={`Makerkit supports multiple payment gateways to charge your customers.`}
+                label={'Multi-Location Hub'}
+                description={`Run one clinic or twenty. Manage doctors, technicians, and equipment across every location from a single dashboard. Scale without chaos.`}
               />
 
               <FeatureCard
                 className={'relative col-span-1 overflow-hidden'}
-                label={'Plugins'}
-                description={`Extend your SaaS with plugins that you can install using the CLI.`}
+                label={'Revenue Analytics'}
+                description={`Real-time dashboards showing bookings, cancellations, revenue per provider, and utilization rates. What gets measured gets multiplied.`}
               />
 
               <FeatureCard
                 className={'relative col-span-1 overflow-hidden'}
-                label={'Documentation'}
-                description={`Makerkit provides a comprehensive documentation to help you get started.`}
+                label={'Patient Portal'}
+                description={`Patients book, reschedule, and manage their own appointments. Less phone calls for your staff. Better experience for everyone. Win-win.`}
               />
             </FeatureGrid>
           </FeatureShowcase>
@@ -130,13 +144,13 @@ function Home() {
 
       <div className={'container mx-auto'}>
         <EcosystemShowcase
-          heading="The ultimate SaaS Starter Kit for founders."
-          description="Unleash your creativity and build your SaaS faster than ever with Makerkit. Get started in minutes and ship your SaaS in no time."
+          heading="Healthcare runs on trust. Your scheduling should too."
+          description="From solo dental clinics to multi-chain diagnostic labs, thousands of healthcare professionals use our platform to reclaim their time and multiply their revenue. The best part? You can be live in under 10 minutes."
         >
           <Image
             className="rounded-md"
             src={'/images/sign-in.webp'}
-            alt="Sign in"
+            alt="Healthcare professional portal"
             width={1000}
             height={1000}
           />
@@ -151,8 +165,8 @@ function Home() {
         >
           <SecondaryHero
             pill={<Pill label="Start for free">No credit card required.</Pill>}
-            heading="Fair pricing for all types of businesses"
-            subheading="Get started on our free plan and upgrade when you are ready."
+            heading="Pricing that makes sense for every practice size"
+            subheading="Start free. Upgrade when you're printing money. We only win when you win."
           />
 
           <div className={'w-full'}>
@@ -176,7 +190,7 @@ function MainCallToActionButton() {
   return (
     <div className={'flex space-x-2.5'}>
       <CtaButton className="h-10 text-sm">
-        <Link href={'/auth/sign-up'}>
+        <Link href={pathsConfig.auth.signUp}>
           <span className={'flex items-center space-x-0.5'}>
             <span>
               <Trans i18nKey={'common:getStarted'} />
