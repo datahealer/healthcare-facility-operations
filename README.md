@@ -14,12 +14,11 @@ Before you begin, make sure you have:
 |------|-----------------|------------|---------|
 | **Node.js** | >= 20.10.0 | `node -v` | [nodejs.org](https://nodejs.org) |
 | **pnpm** | >= 10.x | `pnpm -v` | `npm install -g pnpm` |
-| **Docker** | Latest | `docker -v` | [Docker Desktop](https://www.docker.com/products/docker-desktop/) or [OrbStack](https://orbstack.dev) |
 | **Git** | Latest | `git --version` | [git-scm.com](https://git-scm.com) |
 
-**Accounts needed for production:**
-- [Supabase](https://supabase.com) — Database, auth, storage, realtime
-- [Stripe](https://stripe.com) — Payments and billing
+**Accounts / Access needed:**
+- **Supabase** — The project uses a shared cloud Supabase instance. Ask your manager for the Supabase Dashboard login credentials.
+- [Stripe](https://stripe.com) — Payments and billing (ask your manager for test-mode keys)
 - [Vercel](https://vercel.com) — Hosting and deployment
 
 ---
@@ -48,13 +47,13 @@ Before you begin, make sure you have:
 |-------|------------|
 | Framework | Next.js 16 (App Router) + React 19 |
 | Language | TypeScript |
-| Database | Supabase (PostgreSQL 17) |
+| Database | Supabase Cloud (PostgreSQL 17) |
 | Auth | Supabase Auth (email, password, magic link, OAuth, MFA) |
 | Payments | Stripe (subscriptions, per-seat billing) |
 | Styling | Tailwind CSS 4 + Shadcn UI (Radix primitives) |
 | Data Fetching | React Query (TanStack Query) |
 | Realtime | Supabase Realtime (WebSockets) |
-| Email | Nodemailer / Resend |
+| Email | Nodemailer / Resend (production only) |
 | File Storage | Supabase Storage (S3-compatible) |
 | Monorepo | Turborepo + pnpm workspaces |
 | Testing | Playwright (E2E), pgTAP (database) |
@@ -81,98 +80,71 @@ This installs all packages across the monorepo (apps + packages).
 
 ### 3. Environment Setup
 
-Copy the example environment files and configure them:
+The project uses **cloud Supabase** (not a local instance). All configuration lives in `apps/web/.env.development`.
+
+This file is already checked into the repo with the correct Supabase cloud URL and keys. Verify it contains:
 
 ```bash
-# The main env files are already tracked (non-secret values)
-# For local secrets, create .env.local (gitignored)
-cp apps/web/.env.development apps/web/.env.local
+# apps/web/.env.development
+
+# Supabase Cloud
+NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLIC_KEY=<anon-key>
+SUPABASE_SECRET_KEY=<service-role-key>
 ```
 
-Edit `apps/web/.env.local` with your local overrides:
+> **Don't have these values?** Ask your manager for the Supabase project credentials. You can also find them in the Supabase Dashboard under Settings → API.
+
+For **Stripe** (only needed if working on billing features):
 
 ```bash
-# Supabase (local — these are the defaults from supabase start)
-NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
-NEXT_PUBLIC_SUPABASE_PUBLIC_KEY=<anon-key-from-supabase-start-output>
-SUPABASE_SECRET_KEY=<service-role-key-from-supabase-start-output>
-
-# Stripe (optional for local dev — only needed if testing billing)
+# Also in apps/web/.env.development
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
 STRIPE_SECRET_KEY=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
-> **Note:** When you run `pnpm supabase:web:start`, it prints the anon key and service role key. Copy those into your `.env.local`.
-
 ---
 
 ## Running Locally
 
-### Start Everything
+### Start the Dev Server
 
 ```bash
-# Terminal 1 — Start local Supabase (requires Docker running)
-pnpm run supabase:web:start
-
-# Terminal 2 — Start the Next.js dev server
 pnpm dev
 ```
 
+That's it. The app connects to the cloud Supabase instance configured in `.env.development`.
+
 ### What's Running
 
-After startup, these services are available:
-
-| Service | URL | Purpose |
-|---------|-----|---------|
+| Service | URL | Notes |
+|---------|-----|-------|
 | **Next.js App** | http://localhost:3000 | The web application |
-| **Supabase API** | http://localhost:54321 | PostgREST API, Auth, Storage |
-| **Supabase Studio** | http://localhost:54323 | Database GUI — browse tables, run SQL, manage storage |
-| **Inbucket (Email)** | http://localhost:54324 | Catches all emails sent during development |
-| **PostgreSQL** | localhost:54322 | Direct database connection (user: `postgres`, password: `postgres`) |
-| **SMTP (Inbucket)** | localhost:54325 | SMTP server for local email testing |
-| **Analytics** | http://localhost:54327 | Supabase analytics (Logflare) |
+| **Supabase (Cloud)** | Configured in `.env.development` | Database, Auth, Storage, Realtime |
+| **Supabase Studio** | Log in at [supabase.com/dashboard](https://supabase.com/dashboard) | Browse tables, run SQL, manage storage, view auth users |
 
-### Connect to the Database Directly
-
-Use any PostgreSQL client (pgAdmin, DBeaver, TablePlus, psql):
+### Stop the Dev Server
 
 ```
-Host:     localhost
-Port:     54322
-Database: postgres
-User:     postgres
-Password: postgres
-```
-
-Or via command line:
-
-```bash
-psql postgresql://postgres:postgres@localhost:54322/postgres
-```
-
-### Stop Services
-
-```bash
-# Stop Supabase
-pnpm run supabase:web:stop
-
-# Stop dev server
-# Ctrl+C in the terminal running pnpm dev
+Ctrl+C in the terminal running pnpm dev
 ```
 
 ---
 
 ## Database Management
 
+The database runs on **Supabase Cloud**. There is no local database. All migrations are written locally and pushed to the cloud instance.
+
+> **Supabase Dashboard:** Log in at [supabase.com/dashboard](https://supabase.com/dashboard) to browse tables, run SQL, view auth users, manage storage, and check logs. Ask your manager for login credentials if you don't have access.
+
+### Commands
+
 | Command | Description |
 |---------|-------------|
-| `pnpm run supabase:web:start` | Start local Supabase (Docker containers) |
-| `pnpm run supabase:web:stop` | Stop local Supabase |
-| `pnpm run supabase:web:reset` | Reset DB — drops all data, re-runs all migrations and seeds |
-| `pnpm run supabase:web:typegen` | Regenerate TypeScript types from current schema |
-| `pnpm --filter web supabase migration new <name>` | Create a new migration file |
-| `pnpm --filter web supabase db push` | Push migrations to cloud Supabase (run from `apps/web/`) |
+| `pnpm --filter web supabase migration new <name>` | Create a new migration file locally |
+| `cd apps/web && npx supabase db push` | Push migrations to cloud Supabase |
+| `pnpm run supabase:web:typegen` | Regenerate TypeScript types from the cloud schema |
 
 ### Typical Workflow
 
@@ -183,15 +155,23 @@ pnpm --filter web supabase migration new add-appointments-table
 # 2. Write SQL in the generated file
 #    → apps/web/supabase/migrations/<timestamp>_add-appointments-table.sql
 
-# 3. Apply locally
-pnpm run supabase:web:reset
+# 3. Push to cloud
+cd apps/web && npx supabase db push
 
 # 4. Regenerate TypeScript types
 pnpm run supabase:web:typegen
-
-# 5. Push to cloud (when ready)
-cd apps/web && npx supabase db push
 ```
+
+### First-Time Setup: Link to Cloud Project
+
+Before you can push migrations, link the CLI to the cloud project (one-time step):
+
+```bash
+cd apps/web
+npx supabase link --project-ref <your-project-ref>
+```
+
+> **Important:** Always run Supabase CLI commands from the `apps/web/` directory, not the repo root. The `supabase/config.toml` and migrations live there.
 
 ---
 
@@ -204,11 +184,9 @@ cd apps/web && npx supabase db push
 | `pnpm typecheck` | Run TypeScript type checking across all packages |
 | `pnpm lint:fix` | Lint and auto-fix all packages |
 | `pnpm format:fix` | Format code with Prettier |
-| `pnpm run supabase:web:start` | Start local Supabase |
-| `pnpm run supabase:web:reset` | Reset local database |
 | `pnpm run supabase:web:typegen` | Generate TypeScript types from DB schema |
 | `pnpm --filter web supabase migration new <name>` | Create a new migration file |
-| `pnpm --filter web supabase db push` | Push migrations to cloud |
+| `cd apps/web && npx supabase db push` | Push migrations to cloud |
 | `pnpm run stripe:listen` | Start Stripe webhook listener (for billing dev) |
 
 ---
@@ -262,7 +240,7 @@ All documentation lives in the [`docs/`](docs/) directory. **Start here:**
 | # | Document | What You'll Learn |
 |---|----------|-------------------|
 | 8 | [Payments & Billing](docs/08-billing.md) | Stripe setup, billing schema, per-seat pricing, feature limits, enforcement |
-| 11 | [Email & Notifications](docs/11-email-notifications.md) | Mailer setup (Nodemailer/Resend), auth emails, templates, testing with Inbucket |
+| 11 | [Email & Notifications](docs/11-email-notifications.md) | Mailer setup (Nodemailer/Resend), auth emails, templates, production SMTP |
 | 12 | [File Storage](docs/12-file-storage.md) | Supabase Storage buckets, upload/download, RLS for files, signed URLs |
 
 ### Deployment
@@ -315,13 +293,8 @@ healthcare-facility-operations/
 
 ## Troubleshooting
 
-### Supabase won't start
-- Make sure Docker is running: `docker ps`
-- If ports are in use: `lsof -i :54321` and kill the conflicting process
-- Reset containers: `pnpm run supabase:web:stop && pnpm run supabase:web:start`
-
 ### `supabase db push` says "Remote database is up to date" but tables are missing
-- You probably ran it from the repo root. Run from `apps/web/`:
+- You probably ran it from the repo root. Always run from `apps/web/`:
   ```bash
   cd apps/web && npx supabase link --project-ref <your-ref> && npx supabase db push
   ```
@@ -329,10 +302,14 @@ healthcare-facility-operations/
 ### TypeScript errors after schema changes
 - Regenerate types: `pnpm run supabase:web:typegen`
 
-### Emails not appearing locally
-- Open Inbucket: http://localhost:54324
-- Check that Supabase is running (`pnpm run supabase:web:start`)
-
 ### Build fails with missing env vars
 - Config files use Zod validation. Check `apps/web/config/*.ts` for required variables
-- Ensure `.env.local` has all secrets (Supabase keys, Stripe keys)
+- Ensure `apps/web/.env.development` has all Supabase and Stripe keys
+
+### Can't access Supabase Dashboard
+- Go to [supabase.com/dashboard](https://supabase.com/dashboard)
+- Ask your manager for login credentials if you don't have access
+
+### App shows auth errors or empty data
+- Verify `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLIC_KEY` in `apps/web/.env.development` are correct
+- Check that your Supabase project is active (not paused) in the Dashboard
