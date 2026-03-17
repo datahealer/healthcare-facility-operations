@@ -70,7 +70,25 @@ git clone git@github-datahealer:datahealer/healthcare-facility-operations.git
 cd healthcare-facility-operations
 ```
 
-### 2. Install Dependencies
+### 2. Configure Git Identity (Required)
+
+Git pushes will be rejected unless your local git config for this repo uses the correct username and email. Run these commands from the repo root:
+
+```bash
+git config user.name "datahealer"
+git config user.email "vikas@inzint.com"
+```
+
+Verify with:
+
+```bash
+git config user.name   # Should output: datahealer
+git config user.email  # Should output: vikas@inzint.com
+```
+
+> **Note:** These are repo-level settings (no `--global` flag) so they won't affect your other projects.
+
+### 3. Install Dependencies
 
 ```bash
 pnpm install
@@ -78,7 +96,7 @@ pnpm install
 
 This installs all packages across the monorepo (apps + packages).
 
-### 3. Environment Setup
+### 4. Environment Setup
 
 The project uses **cloud Supabase** (not a local instance). All configuration lives in `apps/web/.env.development`.
 
@@ -209,6 +227,12 @@ All three must pass before committing.
 
 All documentation lives in the [`docs/`](docs/) directory. **Start here:**
 
+### New to the Project?
+
+| # | Document | What You'll Learn |
+|---|----------|-------------------|
+| 0 | **[Team Onboarding Script](docs/00-team-onboarding-script.md)** | **START HERE** — Why this architecture, how RLS replaces backend middleware, FAQ for developers |
+
 ### Getting Started
 
 | # | Document | What You'll Learn |
@@ -292,6 +316,13 @@ healthcare-facility-operations/
 ---
 
 ## Troubleshooting
+
+### `git push` rejected
+- Ensure your repo-level git identity is configured correctly:
+  ```bash
+  git config user.name "datahealer"
+  git config user.email "vikas@inzint.com"
+  ```
 
 ### `supabase db push` says "Remote database is up to date" but tables are missing
 - You probably ran it from the repo root. Always run from `apps/web/`:

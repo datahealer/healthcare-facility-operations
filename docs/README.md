@@ -4,6 +4,7 @@
 
 ## Table of Contents
 
+0. **[Team Onboarding Script](./00-team-onboarding-script.md)** - Presentation script: why this architecture, how RLS replaces middleware, addressing developer concerns, and handover
 1. [Introduction & Architecture](./01-introduction.md) - Project overview, tech stack, monorepo structure, routing, and setup
 2. [Customization](./02-customization.md) - Environment variables, theming, branding, fonts, feature flags, and configuration
 3. [Database](./03-database.md) - Supabase schema design, migrations, RLS policies, triggers, and best practices
