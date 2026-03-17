@@ -231,7 +231,7 @@ All documentation lives in the [`docs/`](docs/) directory. **Start here:**
 
 | # | Document | What You'll Learn |
 |---|----------|-------------------|
-| 0 | **[Team Onboarding Script](docs/00-team-onboarding-script.md)** | **START HERE** — Why this architecture, how RLS replaces backend middleware, FAQ for developers |
+| 0 | **[Message for Developers](docs/00-team-onboarding-script.md)** | **START HERE** — Why this architecture, how RLS replaces backend middleware, FAQ for developers |
 
 ### Getting Started
 
