@@ -15,6 +15,10 @@
 7. [Realtime Updates](./07-realtime.md) - Supabase Realtime subscriptions, polling, and bidirectional messaging
 8. [Payments & Billing](./08-billing.md) - Stripe setup, billing schema, per-seat pricing, feature limits, and enforcement
 9. [Deployment (Vercel)](./09-deployment.md) - Production Supabase, Stripe, environment variables, Vercel config, and post-launch checklist
+10. [Feature Configuration Guide](./10-feature-configuration-guide.md) - **READ BEFORE CODING** — Soft-toggle features, Supabase Dashboard features, and capabilities you must never reimplement
+11. [Email & Notifications](./11-email-notifications.md) - Mailer setup (Nodemailer/Resend), auth emails, templates, Inbucket testing, and production SMTP
+12. [File Storage](./12-file-storage.md) - Supabase Storage buckets, upload/download patterns, RLS for files, and signed URLs
+13. [Data Access & APIs](./13-data-access-apis.md) - Auto-generated REST API, RPC functions, GraphQL, Supabase clients, and testing
 
 ---
 

@@ -133,7 +133,7 @@ const client = getSupabaseServerClient();
 
 This client respects RLS — queries run as the authenticated user.
 
-### Server-Side Admin (Bypass RLS)
+### Server-Side Admin (Bypass RLS) — USE WITH EXTREME CAUTION
 
 ```typescript
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
@@ -141,7 +141,9 @@ import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client'
 const adminClient = getSupabaseServerAdminClient();
 ```
 
-Uses `SUPABASE_SERVICE_ROLE_KEY`. Only use when you need to bypass RLS (e.g., background jobs, webhooks). **Never expose to the client.**
+> **This client bypasses ALL RLS policies.** A query like `.from('appointments').select('*')` returns every row in the entire database, across all accounts. Using it because "RLS is inconvenient" is a security violation — fix the policy instead.
+>
+> **Acceptable uses only:** webhook handlers, background cron jobs, database seeding, and the anonymous widget API. See [RLS Deep Dive: Why the Admin Client is Dangerous](./03b-rls-deep-dive.md#why-the-admin-client-is-dangerous) for the full explanation.
 
 ### Client-Side (Client Components)
 

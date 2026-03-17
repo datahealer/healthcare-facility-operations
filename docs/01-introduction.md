@@ -147,8 +147,8 @@ Local Supabase routes all emails to Mailpit at http://localhost:54324. Use this 
 
 | Field | Value |
 |-------|-------|
-| Email | `test@makerkit.dev` (seeded in local DB) |
-| Password | `testingpassword` |
+| Email | `1993thakurvikas@gmail.com` |
+| Password | `1q2w3e4r5t6y` |
 
 ---
 
